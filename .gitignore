@@ -1,0 +1,22 @@
+# IDE
+.idea
+
+# NodeJS
+node_modules
+npm-debug.log
+
+# Dependencies
+
+
+# Temporary folders
+temp
+.tmp
+tests/reports
+
+# App files
+**/styles/*.css
+FRONTEND.md
+
+# Distribution folders
+dist
+package

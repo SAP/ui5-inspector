@@ -1,0 +1,45 @@
+//
+// CSS reset
+// --------------------------------------------------
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    color: @text-color;
+    display: flex;
+    flex-direction: column;
+    font-family: @font-family-windows;
+    font-size: @main-font-size-windows;
+    height: 100%;
+    line-height: @line-height;
+    flex-grow: 1;
+}
+
+body[os='linux'] {
+    font-family: @font-family-linux;
+    font-size: @main-font-size-linux;
+}
+
+body[os='mac'] {
+    font-family: @font-family-mac;
+    font-size: @main-font-size-mac;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+label {
+    cursor: pointer;
+    -webkit-user-select: none;
+}

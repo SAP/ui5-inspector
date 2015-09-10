@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>UI5 Inspector</title>
+        <link rel="stylesheet" href="/styles/main.css"/>
+    </head>
+    <body>
+        <tabbar id="ui5-tabbar">
+            <tabs>
+                <tab id="control-tree-tab" selected>Control Inspector</tab>
+                <tab id="app-info-tab">Application Information</tab>
+            </tabs>
+            <contents>
+
+                <!-- UI5 Tab /start-->
+                <content for="control-tree-tab">
+                    <splitter id="horizontal-splitter">
+                        <!-- SplitContainer left side /start-->
+                        <start>
+                            <control-tree id="control-tree"></control-tree>
+                        </start>
+                        <!-- SplitContainer left side /ends-->
+
+                        <!-- SplitContainer right side /start-->
+                        <end>
+                            <!-- Control tree tabbar /start-->
+                            <tabbar id="control-tree-tabbar">
+                                <tabs>
+                                    <tab id="tab-properties" selected>Properties</tab>
+                                    <tab id="tab-bindings">Bindings
+                                        <count></count>
+                                    </tab>
+                                </tabs>
+                                <contents>
+                                    <content for="tab-properties">
+                                        <data-view id="control-properties"></data-view>
+                                    </content>
+                                    <content for="tab-bindings">
+                                        <splitter id="control-bindings-splitter" orientation="vertical">
+                                            <start>
+                                                <data-view id="control-bindings-left"></data-view>
+                                            </start>
+                                            <end>
+                                                <data-view id="control-bindings-right"></data-view>
+                                            </end>
+                                        </splitter>
+                                    </content>
+                                </contents>
+                            </tabbar>
+                            <!-- Control tree tabbar /end-->
+                        </end>
+                        <!-- SplitContainer right side /ends-->
+                    </splitter>
+                </content>
+                <!-- UI5 Tab /ends-->
+
+                <!-- Application information /start-->
+                <content for="app-info-tab">
+                    <data-view id="app-info"></data-view>
+                </content>
+                <!-- Application information /ends-->
+            </contents>
+        </tabbar>
+
+        <!-- No UI5 dialog /start-->
+        <overlay id="supportability">
+            <section no-ui5-version>
+                <h1>There is no OpenUI5/SAPUI5 found on this page</h1>
+
+                <p>
+                    What is OpenUI5?<br/>
+                    Build enterprise-ready web applications, responsive to all devices and running on the browser of
+                    your choice
+                </p>
+
+                <p>
+                    Feature-Rich UI Controls <br/>
+                    Powerful Development Concepts <br/>
+                    Consistent User Experience <br/>
+                </p>
+
+                <p>
+                    Read more at <a href="http://openui5.org/" target="_openui5">http://openui5.org/</a>
+                </p>
+            </section>
+
+            <section unsupported-version>
+                <h1>Unsupported version</h1>
+
+                <p>This OpenUI5/SAPUI5 version is not supported by UI5 Inspector.</p>
+
+                <p>
+                    What can I do? <br/>
+                    Update to newer OpenUI5/SAPUI5 version or use Ctrl+Alt+Shift+S to launch the SAPUI5 Diagnostics tool
+                    for debugging.
+                </p>
+            </section>
+        </overlay>
+        <!-- No UI5 dialog /end-->
+
+        <!-- Scripts -->
+        <script src="/scripts/devtools/panel/ui5/main.js"></script>
+    </body>
+</html>

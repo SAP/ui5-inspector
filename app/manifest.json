@@ -1,0 +1,45 @@
+{
+    "manifest_version": 2,
+    "name": "UI5 Inspector",
+    "version": "0.2.0",
+    "background": {
+        "persistence": false,
+        "scripts": [
+            "/scripts/background/main.js"
+        ]
+    },
+    "content_scripts": [
+        {
+            "js": [
+                "/scripts/content/detectUI5.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "content_security_policy": "default-src 'self'; style-src 'unsafe-inline';",
+    "description": "Devtools extension for UI5 development",
+    "devtools_page": "/html/devtools/index.html",
+    "icons": {
+        "128": "/images/icon-128.png",
+        "16": "/images/icon-16.png"
+    },
+    "page_action": {
+        "default_icon": {
+            "19": "/images/icon-19.png",
+            "38": "/images/icon-38.png"
+        },
+        "default_popup": "/html/popup/index.html"
+    },
+    "permissions": [
+        "tabs",
+        "contextMenus",
+        "<all_urls>"
+    ],
+    "web_accessible_resources": [
+        "/scripts/injected/*.js",
+        "/vendor/ToolsAPI.js"
+    ]
+}

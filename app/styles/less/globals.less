@@ -1,0 +1,74 @@
+//
+// Global styles
+// --------------------------------------------------
+
+arrow,
+place-holder {
+    display: block;
+    height: @line-height;
+    width: @font-size;
+}
+
+arrow {
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    &[right] {
+        background-image: url("/images/arrows/arrow-right.png");
+        background-size: 7px 8px;
+    }
+    &[down] {
+        background-image: url("/images/arrows/arrow-down.png");
+        background-size: 8px 7px;
+    }
+}
+
+arrow {
+    cursor: pointer;
+}
+
+attribute,
+string {
+    color: @red;
+}
+
+attribute-value,
+boolean {
+    color: @blue;
+}
+
+key {
+    color: @red-saturated;
+}
+
+no-data {
+    color: @grey-light;
+    display: block;
+    padding-top: @padding-base-horizontal;
+    text-align: center;
+}
+
+pre {
+    display: inline;
+    word-wrap: break-word;
+}
+
+section-title, value {
+    color: @black
+}
+
+tag {
+    color: @purple;
+}
+
+[hidden] {
+    display: none;
+}
+
+opaque {
+    color: @grey-light;
+}
+
+[padding] {
+    padding: 10px;
+}

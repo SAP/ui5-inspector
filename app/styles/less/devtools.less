@@ -1,0 +1,25 @@
+overlay {
+    background: #fff;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 9999999;
+
+    & > section {
+        display: none;
+    }
+
+    h1 {
+        background: @bg-gray-lightest;
+        padding: 2rem 1rem;
+        line-height: 1.25;
+    }
+
+    p {
+        padding: 0 1rem;
+        margin: 1rem 0;
+        line-height: 1.25;
+    }
+}

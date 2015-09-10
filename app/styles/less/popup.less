@@ -1,0 +1,63 @@
+@import "reset.less";
+@import "variables.less";
+
+@icon-height: 16px;
+@icon-width: 16px;
+@icon-offset: 6px;
+
+[hidden] {
+    display: none;
+}
+
+popup {
+    color: @gray-darker;
+    display: inline-block;
+    padding: 5px 10px 5px 6px;
+
+    product {
+        display: block;
+        height: 16px;
+        line-height: 16px;
+        margin-top: -1px;
+        white-space: nowrap;
+    }
+
+    library {
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    buildtime {
+        display: inline-block;
+    }
+
+    logo {
+        background-image: url("/images/icon-38.png");
+        background-repeat: no-repeat;
+        background-position: left center;
+        background-size: 16px;
+        display: inline-block;
+        height: 16px;
+        width: @icon-width + @icon-offset;
+        vertical-align: bottom;
+    }
+
+    links {
+        display: block;
+        padding-left: @icon-width + @icon-offset;
+        margin-top: 4px;
+        margin-bottom: 5px;
+
+        a,
+        a:visited {
+            color: @link;
+            display: block;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+    }
+}

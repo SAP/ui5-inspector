@@ -1,0 +1,66 @@
+{
+  "name": "ui5inspector",
+  "version": "0.2.0",
+  "author": "SAP SE",
+  "license": {
+    "type": "Apache-2.0",
+    "url": "http://opensource.org/licenses/apache2.0.php"
+  },
+  "contributors": [
+    {
+      "name": "Krasimir Chariyski",
+      "email": "krasimir.chariyski@sap.com"
+    },
+    {
+      "name": "Ivan Kazandzhiev",
+      "email": "ivan.kazandzhiev@sap.com"
+    },
+    {
+      "name": "Nikolay Aleksandrenko",
+      "email": "nikolay.aleksandrenko@sap.com"
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "~10.0.0",
+    "browserify-istanbul": "~0.2.1",
+    "chai": "~2.2.0",
+    "chrome-stub": "^1.2.0",
+    "grunt": "~0.4.1",
+    "grunt-banner": "~0.3.1",
+    "grunt-browserify": "~4.0.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-compress": "~0.9.1",
+    "grunt-contrib-connect": "~0.7.1",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-jshint": "~0.11.2",
+    "grunt-contrib-less": "~1.0.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-jscs": "~2.1.0",
+    "grunt-karma": "~0.11.0",
+    "grunt-newer": "~1.1.0",
+    "grunt-text-replace": "~0.4.0",
+    "jshint-stylish": "~0.1.5",
+    "karma": "~0.12.31",
+    "karma-browserify": "~4.1.2",
+    "karma-chai": "~0.1.0",
+    "karma-chrome-launcher": "~0.2.0",
+    "karma-coverage": "~0.5.0",
+    "karma-mocha": "~0.1.10",
+    "karma-sinon": "~1.0.4",
+    "load-grunt-config": "~0.16.0",
+    "load-grunt-tasks": "~0.4.0",
+    "sinon": "~1.15.4",
+    "time-grunt": "~1.2.1"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SAP/ui5-inspector"
+  },
+  "scripts": {
+    "postinstall": "node -e \"require('grunt').tasks(['build']);\""
+  }
+}

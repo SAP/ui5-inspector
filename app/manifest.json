@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "UI5 Inspector",
-    "version": "0.2.0",
+    "version": "0.9.0",
     "background": {
         "persistence": false,
         "scripts": [
@@ -20,7 +20,7 @@
         }
     ],
     "content_security_policy": "default-src 'self'; style-src 'unsafe-inline';",
-    "description": "Devtools extension for UI5 development",
+    "description": "The UI5 Inspector is a standard Chrome DevTools extension for making debugging and getting to know a UI5 application.",
     "devtools_page": "/html/devtools/index.html",
     "icons": {
         "128": "/images/icon-128.png",

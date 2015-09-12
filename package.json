@@ -61,6 +61,6 @@
     "url": "https://github.com/SAP/ui5-inspector"
   },
   "scripts": {
-    "postinstall": "node -e \"require('grunt').tasks(['build']);\""
+    "postinstall": "node -e \"require('grunt').tasks(['dist']);\""
   }
 }

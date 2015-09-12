@@ -7,8 +7,7 @@
  */
 module.exports = function (grunt, config) {
     return {
-        chrome: {},
-        dist: {
+        all: {
             files: [{
                 dot: true,
                 src: [

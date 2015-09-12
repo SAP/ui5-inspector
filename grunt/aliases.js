@@ -5,32 +5,40 @@
  * @type {Object}
  */
 module.exports = {
-    preprocess: [
+
+    // Make sure code styles are up to par and there are no obvious mistakes.
+    lint: [
         'jshint',
-        'jscs',
+        'jscs'
+    ],
+
+    // Preprocess .js and .less files.
+    preprocess: [
         'browserify',
         'less'
     ],
-    tests: [
-        'jshint',
-        'jscs',
+
+    // Builds the project without running any test.
+    dist: [
+        'clean',
+        'preprocess',
+        'copy',
+        'replace',
+        'usebanner',
+        'compress'
+    ],
+
+    // Runs all tests for continues integration.
+    test: [
+        'lint',
         'less',
         'karma:CI'
     ],
-    dist: [
-        'clean:dist',
-        'preprocess',
-        'copy',
-        'replace'
-    ],
+
+    // Builds the project and monitor changes in files
     default: [
         'dist',
         'watch'
-    ],
-    build: [
-        'dist',
-        'usebanner',
-        'compress'
     ]
 };
 

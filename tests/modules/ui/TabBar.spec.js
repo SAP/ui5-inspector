@@ -1,6 +1,6 @@
 'use strict';
 
-var TabBar = require('../../../../app/scripts/modules/ui/TabBar.js');
+var TabBar = require('../../../app/scripts/modules/ui/TabBar.js');
 
 describe('TabBar', function () {
     var fixtures = document.getElementById('fixtures');

@@ -1,7 +1,7 @@
 'use strict';
 
-var DataViewComponent = require('../../../../app/scripts/modules/ui/DataView.js');
-var DataViewHelper = require('../../../../app/scripts/modules/ui/helpers/DataViewHelper.js');
+var DataViewComponent = require('../../../app/scripts/modules/ui/DataView.js');
+var DataViewHelper = require('../../../app/scripts/modules/ui/helpers/DataViewHelper.js');
 
 var mockDataViewFormattedObject = {
     options: {

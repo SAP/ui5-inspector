@@ -1,6 +1,6 @@
 'use strict';
 
-var JSONFormatter = require('../../../../app/scripts/modules/ui/JSONFormatter.js');
+var JSONFormatter = require('../../../app/scripts/modules/ui/JSONFormatter.js');
 
 var mockData = {
     title: 'Example Schema',

@@ -32,12 +32,7 @@ ContextMenu.prototype.create = function () {
         contexts: that._contexts
     });
 
-    chrome.contextMenus.onClicked.addListener(function (info, tabs) {
-            if (info.menuItemId === that._id) {
-                that.onClicked(info, tabs);
-            }
-        }
-    );
+    chrome.contextMenus.onClicked.addListener(that._onClickHandler.bind(that));
 };
 
 /**
@@ -53,6 +48,18 @@ ContextMenu.prototype.removeAll = function () {
  */
 ContextMenu.prototype.setRightClickTarget = function (target) {
     this._rightClickTarget = target;
+};
+
+/**
+ * Click handler.
+ * @param {Object} info - Information sent when a context menu item is clicked.
+ * @param {Object} tabs - The details of the tab where the click took place. If the click did not take place in a tab,
+ * this parameter will be missing.
+ */
+ContextMenu.prototype._onClickHandler = function (info, tabs) {
+    if (info.menuItemId === this._id) {
+        this.onClicked(info, tabs);
+    }
 };
 
 module.exports = ContextMenu;

@@ -24,19 +24,15 @@ function _showHighLighter() {
  * @private
  */
 function _createHighLighter() {
-    if (document.getElementById('ui5-highlighter')) {
-        return;
-    }
+    var highLighter = document.createElement('div');
+    highLighter.style.cssText = 'box-sizing: border-box;border:1px solid blue;background: rgba(20, 20, 200, 0.4);position: absolute';
 
-    var hightLighter = document.createElement('div');
-    hightLighter.style.cssText = 'box-sizing: border-box;border:1px solid blue;background: rgba(20, 20, 200, 0.4);position: absolute';
+    var highLighterWrapper = document.createElement('div');
+    highLighterWrapper.id = 'ui5-highlighter';
+    highLighterWrapper.style.cssText = 'position: fixed;top:0;right:0;bottom:0;left:0;z-index: 1000;overflow: hidden;';
+    highLighterWrapper.appendChild(highLighter);
 
-    var hightLighterWrapper = document.createElement('div');
-    hightLighterWrapper.id = 'ui5-highlighter';
-    hightLighterWrapper.style.cssText = 'position: fixed;top:0;right:0;bottom:0;left:0;z-index: 1000;overflow: hidden;';
-    hightLighterWrapper.appendChild(hightLighter);
-
-    document.body.appendChild(hightLighterWrapper);
+    document.body.appendChild(highLighterWrapper);
 
     // Save reference for later usage
     _highLighter = document.getElementById('ui5-highlighter');
@@ -60,7 +56,7 @@ module.exports = {
         var targetDomElement;
         var targetRect;
 
-        if (_highLighter === null) {
+        if (_highLighter === null && !document.getElementById('ui5-highlighter')) {
             _createHighLighter();
         } else {
             _showHighLighter();

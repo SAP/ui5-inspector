@@ -1,24 +1,22 @@
 'use strict';
 
-var _clickedElementId = null;
-
-/**
- * Mouse handler for right click.
- */
 module.exports = {
 
+    // Reference for the ID of the last click UI5 control.
+    _clickedElementId: null,
+
     /**
-     * Return the ID of the ui5 control that was clicked.
+     * Return the ID of the UI5 control that was clicked.
      * @returns {string}
      */
     getClickedElementId: function () {
-        return _clickedElementId;
+        return this._clickedElementId;
     },
 
     /**
-     * Set the ID of the ui5 control that was clicked.
+     * Set the ID of the UI5 control that was clicked.
      * @param {Element} target
-     * @returns {exports}
+     * @returns {string}
      */
     setClickedElementId: function (target) {
         while (!target.getAttribute('data-sap-ui')) {
@@ -28,7 +26,7 @@ module.exports = {
             target = target.parentNode;
         }
 
-        _clickedElementId = target.id;
+        this._clickedElementId = target.id;
         return this;
     }
 };

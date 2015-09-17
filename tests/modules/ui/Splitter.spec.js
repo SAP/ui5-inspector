@@ -1,6 +1,6 @@
 'use strict';
 
-var Splitter = require('../../../../app/scripts/modules/ui/SplitContainer.js');
+var Splitter = require('../../../app/scripts/modules/ui/SplitContainer.js');
 
 describe('Splitter', function () {
     var fixtures = document.getElementById('fixtures');

@@ -1,12 +1,6 @@
 'use strict';
 
-var TabBar = require('../../../../app/scripts/modules/ui/TabBar.js');
-
-describe('Check if', function () {
-    it(' TabBar exists', function () {
-        TabBar.should.be.a('Function');
-    });
-});
+var TabBar = require('../../../app/scripts/modules/ui/TabBar.js');
 
 describe('TabBar', function () {
     var fixtures = document.getElementById('fixtures');

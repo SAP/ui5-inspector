@@ -7,7 +7,7 @@
 var messenger = {
 
     // All connected ports
-    ports: {},
+    ports: Object.create(null),
 
     /**
      * Add port for continues messaging.
@@ -40,7 +40,7 @@ var messenger = {
 
         delete this.ports[tabId][port.name];
 
-        if (this.ports[tabId].length === 0) {
+        if (Object.keys(this.ports[tabId]).length === 0) {
             delete this.ports[tabId];
         }
     },
@@ -55,9 +55,7 @@ var messenger = {
         }
 
         for (var key in this.ports[tabId]) {
-            if (this.ports[tabId].hasOwnProperty(key)) {
-                this.ports[tabId][key].postMessage(message);
-            }
+            this.ports[tabId][key].postMessage(message);
         }
     }
 };

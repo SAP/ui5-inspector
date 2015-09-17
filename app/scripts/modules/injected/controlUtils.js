@@ -319,16 +319,17 @@ module.exports = {
 
     /**
      * Returns the entire control tree model.
+     * @param {Array} controlTreeModel - ToolsAPI.getRenderedControlTree()
+     * @param {Object} commonInformation - commonInformation property from ToolsAPI.getFrameworkInformation()
+     * @returns {{versionInfo: {version: (string|*), framework: (*|string)}, controls: *}}
      */
-    getControlTreeModel: function (ToolsAPI) {
-        var commonInformation = ToolsAPI.getFrameworkInformation().commonInformation;
-
+    getControlTreeModel: function (controlTreeModel, commonInformation) {
         return {
             versionInfo: {
                 version: commonInformation.version,
                 framework: commonInformation.frameworkName
             },
-            controls: ToolsAPI.getRenderedControlTree()
+            controls: controlTreeModel
         };
     },
 

@@ -28,6 +28,8 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          */
         _observer: new MutationObserver(function (mutations) {
             var isMutationValid = true;
+            var controlTreeModel;
+            var commonInformation;
 
             mutations.forEach(function (mutation) {
                 if (mutation.target.id === 'ui5-highlighter' || mutation.target.id === 'ui5-highlighter-container') {
@@ -37,9 +39,12 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             });
 
             if (isMutationValid === true) {
+                controlTreeModel = ToolsAPI.getRenderedControlTree();
+                commonInformation = ToolsAPI.getFrameworkInformation().commonInformation;
+
                 message.send({
                     action: 'on-application-dom-update',
-                    controlTree: controlUtils.getControlTreeModel(ToolsAPI)
+                    controlTree: controlUtils.getControlTreeModel(controlTreeModel, commonInformation)
                 });
             }
         }),
@@ -63,10 +68,13 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          * Send massage with the needed initial information for the extension.
          */
         'get-initial-information': function () {
+            var controlTreeModel = ToolsAPI.getRenderedControlTree();
+            var frameworkInformation = ToolsAPI.getFrameworkInformation();
+
             message.send({
                 action: 'on-receiving-initial-data',
-                applicationInformation: applicationUtils.getApplicationInfo(ToolsAPI),
-                controlTree: controlUtils.getControlTreeModel(ToolsAPI)
+                applicationInformation: applicationUtils.getApplicationInfo(frameworkInformation),
+                controlTree: controlUtils.getControlTreeModel(controlTreeModel, frameworkInformation.commonInformation)
             });
         },
 
@@ -74,9 +82,11 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          * Send framework information.
          */
         'get-framework-information': function () {
+            var frameworkInformation = ToolsAPI.getFrameworkInformation();
+
             message.send({
                 action: 'on-framework-information',
-                frameworkInformation: applicationUtils.getInformationForPopUp(ToolsAPI)
+                frameworkInformation: applicationUtils.getInformationForPopUp(frameworkInformation)
             });
         },
 

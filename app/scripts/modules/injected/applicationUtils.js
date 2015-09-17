@@ -4,7 +4,7 @@ var utils = require('../utils/utils.js');
 
 /**
  * Get common application information.
- * @returns {Object} commonInformation - ToolsAPI.commonInformation
+ * @returns {Object} commonInformation - commonInformation property from ToolsAPI.getFrameworkInformation()
  * @private
  */
 function _getCommonInformation(commonInformation) {
@@ -27,7 +27,7 @@ function _getCommonInformation(commonInformation) {
 
 /**
  * Get bootstrap configuration information.
- * @returns {Object} configurationBootstrap - ToolsAPI.configurationBootstrap
+ * @returns {Object} configurationBootstrap - configurationBootstrap property from ToolsAPI.getFrameworkInformation()
  * @private
  */
 function _getConfigurationBootstrap(configurationBootstrap) {
@@ -46,7 +46,7 @@ function _getConfigurationBootstrap(configurationBootstrap) {
 
 /**
  * Get loaded modules application information.
- * @returns {Object} loadedModules - ToolsAPI.loadedModules
+ * @returns {Object} loadedModules - loadedModules property from ToolsAPI.getFrameworkInformation()
  * @private
  */
 function _getLoadedModules(loadedModules) {
@@ -61,7 +61,7 @@ function _getLoadedModules(loadedModules) {
 
 /**
  * Get application URL parameters.
- * @returns {Object} URLParameters - ToolsAPI.URLParameters
+ * @returns {Object} URLParameters - URLParameters property from ToolsAPI.getFrameworkInformation()
  * @private
  */
 function _getURLParameters(URLParameters) {
@@ -79,12 +79,10 @@ module.exports = {
 
     /**
      * Get UI5 information for the current inspected page.
-     * @param {Object} ToolsAPI
+     * @param {Object} frameworkInformation - frameworkInformation property from ToolsAPI.getFrameworkInformation()
      * @returns {Object}
      */
-    getApplicationInfo: function (ToolsAPI) {
-        var frameworkInformation = ToolsAPI.getFrameworkInformation();
-
+    getApplicationInfo: function (frameworkInformation) {
         return {
             common: {
                 options: {
@@ -151,12 +149,10 @@ module.exports = {
 
     /**
      * Get the needed information for the popup.
-     * @param {Object} ToolsAPI
+     * @param {Object} frameworkInformation - frameworkInformation property from ToolsAPI.getFrameworkInformation();
      * @returns {Object}
      */
-    getInformationForPopUp: function (ToolsAPI) {
-        var frameworkInformation = ToolsAPI.getFrameworkInformation();
-
+    getInformationForPopUp: function (frameworkInformation) {
         return _getCommonInformation(frameworkInformation.commonInformation);
     }
 };

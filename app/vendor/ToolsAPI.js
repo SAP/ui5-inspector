@@ -4,10 +4,15 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
 
         var configurationInfo = sap.ui.getCore().getConfiguration();
 
-        //================================================================================
+        // ================================================================================
         // Technical Information
-        //================================================================================
+        // ================================================================================
 
+        /**
+         * Returns the framework name.
+         * @returns {string}
+         * @private
+         */
         function _getFrameworkName() {
             var versionInfo;
 
@@ -24,6 +29,11 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             }
         }
 
+        /**
+         * Creates an object with the libraries and their version from the version info file.
+         * @returns {Object}
+         * @private
+         */
         function _getLibraries() {
             var libraries = Global.versioninfo ? Global.versioninfo.libraries : undefined;
             var formattedLibraries = Object.create(null);
@@ -37,6 +47,11 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             return formattedLibraries;
         }
 
+        /**
+         * Creates an object with the loaded libraries and their version.
+         * @returns {Object}
+         * @private
+         */
         function _getLoadedLibraries() {
             var libraries = sap.ui.getCore().getLoadedLibraries();
             var formattedLibraries = Object.create(null);
@@ -49,7 +64,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
         }
 
         /**
-         * Get all the relevant information for the framework.
+         * Gets all the relevant information for the framework.
          * @returns {Object}
          * @private
          */
@@ -93,26 +108,26 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             };
         }
 
-        //================================================================================
+        // ================================================================================
         // Control tree Information
-        //================================================================================
+        // ================================================================================
 
         /**
          * Name space for all methods related to control trees
          */
         var controlTree = {
-
             /**
-             * Create data model of the rendered controls as a tree
-             * @param (Element) nodeElement - HTML DOM element from which the function will star searching
-             * @param {array} resultArray - Array that will contains all the information
+             * Creates data model of the rendered controls as a tree.
+             * @param {Element} nodeElement - HTML DOM element from which the function will star searching.
+             * @param {Array} resultArray - Array that will contains all the information.
+             * @private
              */
             _createRenderedTreeModel: function (nodeElement, resultArray) {
-                var node = nodeElement,
-                    childNode = node.firstElementChild,
-                    results = resultArray,
-                    subResult = results,
-                    control = sap.ui.getCore().byId(node.id);
+                var node = nodeElement;
+                var childNode = node.firstElementChild;
+                var results = resultArray;
+                var subResult = results;
+                var control = sap.ui.getCore().byId(node.id);
 
                 if (node.getAttribute('data-sap-ui') && control) {
                     results.push({
@@ -141,9 +156,9 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             }
         };
 
-        //================================================================================
+        // ================================================================================
         // Control Information
-        //================================================================================
+        // ================================================================================
 
         /**
          * Name space for all information relevant for UI5 control
@@ -151,17 +166,17 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
         var controlInformation = {
 
             // Control Properties Info
-            //================================================================================
+            // ================================================================================
 
             /**
-             *
-             * @param control
-             * @returns {Object|null}
+             * Creates an object with the control properties that are not inherited.
+             * @param {Object} control - UI5 control.
+             * @returns {Object}
              * @private
              */
             _getOwnProperties: function (control) {
-                var result = Object.create(null),
-                    controlPropertiesFromMetadata = control.getMetadata().getProperties();
+                var result = Object.create(null);
+                var controlPropertiesFromMetadata = control.getMetadata().getProperties();
 
                 result.meta = Object.create(null);
                 result.meta.controlName = control.getMetadata().getName();
@@ -177,15 +192,15 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             *
-             * @param control
-             * @param inheritedMetadata
+             * Copies the inherited properties of a UI5 control from the metadata.
+             * @param {Object} control - UI5 Control.
+             * @param {Object} inheritedMetadata - UI5 control metadata.
              * @returns {Object}
              * @private
              */
             _copyInheritedProperties: function (control, inheritedMetadata) {
-                var inheritedMetadataProperties = inheritedMetadata.getProperties(),
-                    result = Object.create(null);
+                var inheritedMetadataProperties = inheritedMetadata.getProperties();
+                var result = Object.create(null);
 
                 result.meta = Object.create(null);
                 result.meta.controlName = inheritedMetadata.getName();
@@ -201,8 +216,8 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             *
-             * @param control
+             * Creates an array with the control properties that are inherited.
+             * @param {Object} control - UI5 control.
              * @returns {Array}
              * @private
              */
@@ -219,7 +234,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             *
+             * Creates an object with all control properties.
              * @param {string} controlId
              * @returns {Object}
              * @private
@@ -237,20 +252,20 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             // Binding Info
-            //================================================================================
+            // ================================================================================
 
             /**
-             *
+             * Creates an object with the context model of a UI5 control.
              * @param {Object} control
              * @param {string} controlProperty
              * @returns {Object}
              * @private
              */
             _getModelFromContext: function (control, controlProperty) {
-                var bindingContext = control.getBinding(controlProperty),
-                    bindingContextModel = bindingContext.getModel(),
-                    bindingInfoParts = (control.getBindingInfo(controlProperty).parts) ? control.getBindingInfo(controlProperty).parts : [],
-                    modelNames = [];
+                var bindingContext = control.getBinding(controlProperty);
+                var bindingContextModel = bindingContext.getModel();
+                var bindingInfoParts = (control.getBindingInfo(controlProperty).parts) ? control.getBindingInfo(controlProperty).parts : [];
+                var modelNames = [];
 
                 for (var i = 0; i < bindingInfoParts.length; i++) {
                     modelNames.push(bindingInfoParts[i].model);
@@ -271,7 +286,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             *
+             * Creates an object with the properties bindings of a UI5 control.
              * @param {Object} control
              * @returns {Object}
              * @private
@@ -295,7 +310,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             *
+             * Creates an object with the agregations bindings of a UI5 control.
              * @param {Object} control
              * @returns {Object}
              * @private
@@ -315,9 +330,9 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             }
         };
 
-        //================================================================================
+        // ================================================================================
         // Public API
-        //================================================================================
+        // ================================================================================
 
         /**
          * Global object that provide common information for all support tools
@@ -332,7 +347,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             getFrameworkInformation: _getFrameworkInformation,
 
             /**
-             * Array model of the rendered control as a tree
+             * Array model of the rendered control as a tree.
              * @returns {Array}
              */
             getRenderedControlTree: function () {
@@ -343,7 +358,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             *
+             * Gets all control properties.
              * @param {string} controlId
              * @returns {Object}
              */
@@ -352,14 +367,14 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             *
-             * @param control
+             * Gets control binding information.
+             * @param {string} controlId
              * @returns {Object}
              */
             getControlBindings: function (controlId) {
-                var result = Object.create(null),
-                    control = sap.ui.getCore().byId(controlId),
-                    bindingContext;
+                var result = Object.create(null);
+                var control = sap.ui.getCore().byId(controlId);
+                var bindingContext;
 
                 if (!control) {
                     return result;

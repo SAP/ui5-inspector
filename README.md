@@ -27,4 +27,4 @@ You can get the source code locally and contribute the the project.
 
 ## License
 
-[![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](./LICENSE.txt)
+[![Apache 2](https://img.shields.io/badge/license-Apache%202-blue.svg)](./LICENSE.txt)

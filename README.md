@@ -2,6 +2,8 @@
 
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 [![Build Status](https://travis-ci.org/SAP/ui5-inspector.svg?branch=master)](https://travis-ci.org/SAP/ui5-inspector)
+
+[![ReviewNinja](http://app.review.ninja/assets/images/wereviewninja-32.png)](http://app.review.ninja/cla-assistant/cla-assistant)
 # UI5 Inspector 
 
 The UI5 Inspector is a standard Chrome extension for debugging and getting to know UI5 applications.

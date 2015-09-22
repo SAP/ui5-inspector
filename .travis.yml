@@ -13,7 +13,3 @@ before_script:
 
 after_script:
   - grunt travis
-
-branches:
-  except:
-    - gh-pages

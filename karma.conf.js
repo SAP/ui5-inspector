@@ -35,8 +35,7 @@ module.exports = function (config) {
             // Specify a common output directory
             dir: 'tests/reports/coverage',
             reporters: [
-                {type: 'html', subdir: 'report-html'},
-                {type: 'text', subdir: '.', file: 'report.txt'}
+                {type: 'lcov', subdir: 'report-lcov'}
             ],
             check: {
                 each: {

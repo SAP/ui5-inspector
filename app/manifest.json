@@ -20,7 +20,7 @@
         }
     ],
     "content_security_policy": "default-src 'self'; style-src 'unsafe-inline';",
-    "description": "The UI5 Inspector is a standard Chrome DevTools extension for making debugging and getting to know a UI5 application.",
+    "description": "With the UI5 Inspector, you can easily debug and support your OpenUI5 or SAPUI5-based apps.",
     "devtools_page": "/html/devtools/index.html",
     "icons": {
         "128": "/images/icon-128.png",

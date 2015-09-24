@@ -15,8 +15,7 @@
             ],
             "matches": [
                 "<all_urls>"
-            ],
-            "run_at": "document_end"
+            ]
         }
     ],
     "content_security_policy": "default-src 'self'; style-src 'unsafe-inline';",

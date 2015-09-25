@@ -262,6 +262,8 @@ function _getCorrectedValue(value) {
 
     if (value === 'true' || value === 'false') {
         value = (value === 'true');
+    } else if (value === '') {
+        value = null;
     } else if (!isNaN(+value) && value !== null) {
         value = +value;
     }

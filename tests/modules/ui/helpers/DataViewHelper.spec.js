@@ -399,6 +399,10 @@ describe('Helpers for DataView', function () {
             var shouldReturnNull = DVHelper.getCorrectedValue(nil);
             expect(shouldReturnNull).to.equal(nil);
         });
+
+        it('should return null if empty string passed in', function () {
+            var shouldReturnEmpty = DVHelper.getCorrectedValue('');
+            expect(shouldReturnEmpty).to.equal(null);
+        });
     });
 });
-

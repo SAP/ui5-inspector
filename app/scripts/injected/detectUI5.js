@@ -11,7 +11,7 @@
 
         var responseToContentScriptBody = responseToContentScript.detail;
 
-        if (window.sap) {
+        if (window.sap && window.sap.ui) {
 
             responseToContentScriptBody.action = 'on-ui5-detected';
             responseToContentScriptBody.framework = Object.create(null);

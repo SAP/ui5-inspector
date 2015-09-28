@@ -130,19 +130,24 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             var newValue = data.value;
 
             var control = sap.ui.getCore().byId(controlId);
-            if (control) {
+
+            if (!control) {
+                return;
+            }
+
+            try {
                 // Change the property through its setter
                 control['set' + property](newValue);
-
-                // Update properties and bindings
-                var controlProperties = ToolsAPI.getControlProperties(controlId);
-                var controlBindings = ToolsAPI.getControlBindings(controlId);
-                message.send({
-                    action: 'on-control-select',
-                    controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
-                    controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings)
-                });
+            } catch (error) {
+                console.warn(error);
             }
+
+            // Update the DevTools with the actual property value of the control
+            this['do-control-select']({
+                detail: {
+                    target: controlId
+                }
+            });
         }
     };
 

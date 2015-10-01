@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/SAP/ui5-inspector.svg?branch=master)](https://travis-ci.org/SAP/ui5-inspector)
 [![Coverage Status](https://coveralls.io/repos/SAP/ui5-inspector/badge.svg?branch=master&service=github)](https://coveralls.io/github/SAP/ui5-inspector?branch=master)
 
-[![ReviewNinja](http://app.review.ninja/assets/images/wereviewninja-32.png)](http://app.review.ninja/cla-assistant/cla-assistant)
+[![ReviewNinja](http://app.review.ninja/assets/images/wereviewninja-32.png)](https://app.review.ninja/SAP/ui5-inspector)
 # UI5 Inspector 
 
 The UI5 Inspector is a standard Chrome extension for debugging and getting to know UI5 applications.

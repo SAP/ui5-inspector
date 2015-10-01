@@ -24,6 +24,27 @@ function _assembleDataToView(options) {
 }
 
 /**
+ * Creates a binding info object with the given path.
+ *
+ * If the path contains a model specifier (prefix separated with a '>'),
+ * the <code>model</code> property is set as well and the prefix is
+ * removed from the path.
+ *
+ * @param {String} path
+ */
+function _makeSimpleBindingInfo(path) {
+    var index = path.indexOf('>');
+    var bindingInfo = { path : path };
+
+    if ( index > 0 ) {
+        bindingInfo.model = path.slice(0, index);
+        bindingInfo.path = path.slice(index + 1);
+    }
+
+    return bindingInfo;
+}
+
+/**
  * Create a clickable value for the DataView.
  * @param {Object} options
  * @constructor
@@ -216,7 +237,26 @@ var controlBindings = (function () {
                 expandable: false,
                 editableValues: false
             });
-            resultControlBindingData.contextPath.data.contextPath = initialControlBindingData.contextPath;
+            var bindingInfo = _makeSimpleBindingInfo(initialControlBindingData.contextPath);
+            resultControlBindingData.contextPath.data.modelName = new ClickableValue({
+                value: bindingInfo.model || '(none)',
+                eventData: {
+                    type: initialControlBindingData.model.getMetadata().getName(),
+                    data: initialControlBindingData.model.getData()
+                },
+                parent: 'contextPath',
+                key: 'modelName'
+            });
+            resultControlBindingData.contextPath.data.contextPath = new ClickableValue({
+                value: bindingInfo.path,
+                eventData: {
+                    type: initialControlBindingData.model.getMetadata().getName(),
+                    path: initialControlBindingData.contextPath,
+                    data: initialControlBindingData.model.getProperty(bindingInfo.path)
+                },
+                parent: 'contextPath',
+                key: 'contextPath'
+            });
         }
     };
 

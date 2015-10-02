@@ -255,6 +255,30 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             // ================================================================================
 
             /**
+             * Creates an object containing all information about a model, it's data and the
+             * data with respect to the given path.
+             *
+             * @param {Object} model
+             * @param {string} path
+             * @returns {Object}
+             * @private
+             */
+            _getModelInfo: function(model, path) {
+                if(model && path) {
+                    return {
+                        type: model.getMetadata().getName().split('.').pop(),
+                        modelData: model.getData && model.getData() || model.getObject && model.getObject(),
+                        path: path,
+                        pathData: model.getProperty(path.split('>').pop()),
+                        mode: model.getDefaultBindingMode && model.getDefaultBindingMode() ||
+                                model.getModel && model.getModel().getDefaultBindingMode()
+                    };
+                }
+
+                return null;
+            },
+
+            /**
              * Creates an object with the context model of a UI5 control.
              * @param {Object} control
              * @param {string} controlProperty
@@ -262,24 +286,20 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
              * @private
              */
             _getModelFromContext: function (control, controlProperty) {
-                var bindingContext = control.getBinding(controlProperty);
-                var bindingContextModel = bindingContext.getModel();
-                var bindingInfoParts = (control.getBindingInfo(controlProperty).parts) ? control.getBindingInfo(controlProperty).parts : [];
-                var modelNames = [];
+                var bindingInfo = control.getBindingInfo(controlProperty);
+                var binding = bindingInfo.binding;
+                var bindingParts = binding.getBindings && binding.getBindings();
+                var model = {};
 
-                for (var i = 0; i < bindingInfoParts.length; i++) {
-                    modelNames.push(bindingInfoParts[i].model);
-                }
-
-                var model = {
-                    names: modelNames,
-                    path: bindingContext.getPath()
-                };
-
-                if (bindingContextModel) {
-                    model.mode = bindingContextModel.getDefaultBindingMode();
-                    model.type = bindingContextModel.getMetadata().getName();
-                    model.data = bindingContextModel.getData ? bindingContextModel.getData('/') : undefined;
+                if(bindingInfo.parts) {
+                    // take care of multiple bindings of a property
+                    model.parts = bindingInfo.parts.map(function (bindingInfoPart, index) {
+                        var currentBinding = bindingParts && bindingParts[index] || binding;
+                        return this._getModelInfo(currentBinding.getContext() || currentBinding.getModel(),
+                                (bindingInfoPart.model ? bindingInfoPart.model + '>' : '') + bindingInfoPart.path);
+                    }.bind(this));
+                } else {
+                    model = this._getModelInfo(binding.getContext() || binding.getModel(), bindingInfo.path);
                 }
 
                 return model;
@@ -300,6 +320,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                         propertiesBindingData[key] = Object.create(null);
                         propertiesBindingData[key].path = control.getBinding(key).getPath();
                         propertiesBindingData[key].value = control.getBinding(key).getValue();
+                        propertiesBindingData[key].formattedValue = control.getBinding(key).getFormatter() && control.getProperty(key);
                         propertiesBindingData[key].type = control.getMetadata().getProperty(key).getType().getName ? control.getMetadata().getProperty(key).getType().getName() : '';
                         propertiesBindingData[key].mode = control.getBinding(key).getBindingMode();
                         propertiesBindingData[key].model = this._getModelFromContext(control, key);
@@ -384,7 +405,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
 
                 result.meta = Object.create(null);
                 result.contextPath = bindingContext ? bindingContext.getPath() : null;
-                result.model = bindingContext ? bindingContext.getModel() : null;
+                result.model = bindingContext && controlInformation._getModelInfo(bindingContext.getModel(), bindingContext.getPath());
                 result.aggregations = controlInformation._getBindDataForAggregations(control);
                 result.properties = controlInformation._getBindDataForProperties(control);
 

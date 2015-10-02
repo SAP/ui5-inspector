@@ -23,7 +23,15 @@
                 responseToContentScriptBody.framework.version = '';
             }
             try {
-                responseToContentScriptBody.framework.name = sap.ui.getVersionInfo().gav.indexOf('openui5') !== -1 ? 'OpenUI5' : 'SAPUI5';
+                var frameworkInfo;
+                if (sap.ui.getVersionInfo().gav) {
+                    // Use group artifact version for maven built UI5
+                    frameworkInfo = sap.ui.getVersionInfo().gav;
+                } else {
+                    // Use name for others (like SAPUI5-on-ABAP)
+                    frameworkInfo = sap.ui.getVersionInfo().name;
+                }
+                responseToContentScriptBody.framework.name = frameworkInfo.indexOf('openui5') !== -1 ? 'OpenUI5' : 'SAPUI5';
             } catch (e) {
                 responseToContentScriptBody.framework.name = '';
             }

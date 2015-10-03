@@ -130,8 +130,13 @@ DataView.prototype._generateHTMLFromObject = function (key, currentElement) {
 
     html += DVHelper.wrapInTag(tag, key, {});
 
-    if (options.showTypeInfo === true) {
-        html += DVHelper.addKeyTypeInfo(currentElement);
+    if (options.showTypeInfo) {
+
+        if (!options.hideTitle) {
+            html += ':&nbsp;';
+        }
+
+        html += DVHelper.addKeyTypeInfoBegin(currentElement.data);
     }
 
     return html;
@@ -146,8 +151,8 @@ DataView.prototype._generateHTMLFromObject = function (key, currentElement) {
 DataView.prototype._generateHTMLForEndOfObject = function (currentElement) {
     var html = '';
 
-    if (currentElement.options.showTypeInfo === true && DVHelper.getObjectLength(currentElement.data)) {
-        html += DVHelper.wrapInTag('value', '}');
+    if (currentElement.options.showTypeInfo) {
+        html += DVHelper.addKeyTypeInfoEnd(currentElement.data);
     }
 
     return html;
@@ -201,6 +206,7 @@ DataView.prototype._generateHTMLSection = function (viewObject) {
     var associations = viewObject.associations;
     var html = '';
     var options = viewObject.options;
+    var isDataArray = Array.isArray(data);
 
     html += DVHelper.openUL(DVHelper.getULAttributesFromOptions(options));
 
@@ -218,6 +224,10 @@ DataView.prototype._generateHTMLSection = function (viewObject) {
             html += this._generateHTMLForKeyValuePair(key, DVHelper.formatValueForDataView(key, currentElement));
         } else {
             html += this._generateHTMLForKeyValuePair(key, viewObject);
+        }
+
+        if (isDataArray && key < data.length - 1) {
+            html += ',';
         }
 
         html += DVHelper.closeLI();

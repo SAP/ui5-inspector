@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 /**
  * Generates attributes in HTML.
@@ -159,7 +159,7 @@ function _findNearestDOMElement(element, targetElementName) {
  * @private
  */
 function _toggleCollapse(target) {
-    var expandableLISibling = target.nextElementSibling;
+    var expandableLIChild = target.querySelector(':scope > ul');
     var arrow = target.querySelector('arrow');
 
     if (!arrow) {
@@ -170,11 +170,12 @@ function _toggleCollapse(target) {
         arrow.removeAttribute('right');
         arrow.setAttribute('down', 'true');
 
-        expandableLISibling.setAttribute('expanded', 'true');
+        expandableLIChild.setAttribute('expanded', 'true');
     } else if (arrow.getAttribute('down') === 'true') {
         arrow.removeAttribute('down');
         arrow.setAttribute('right', 'true');
-        expandableLISibling.removeAttribute('expanded');
+
+        expandableLIChild.removeAttribute('expanded');
     }
 }
 

@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 var JSONFormatter = require('../ui/JSONFormatter');
 var DVHelper = require('../ui/helpers/DataViewHelper');
@@ -134,8 +134,6 @@ DataView.prototype._generateHTMLFromObject = function (key, currentElement) {
         html += DVHelper.addKeyTypeInfo(currentElement);
     }
 
-    html += DVHelper.closeLI();
-
     return html;
 };
 
@@ -149,9 +147,7 @@ DataView.prototype._generateHTMLForEndOfObject = function (currentElement) {
     var html = '';
 
     if (currentElement.options.showTypeInfo === true && DVHelper.getObjectLength(currentElement.data)) {
-        html += DVHelper.openLI();
         html += DVHelper.wrapInTag('value', '}');
-        html += DVHelper.closeLI();
     }
 
     return html;
@@ -190,7 +186,6 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
     }
 
     html += DVHelper.wrapInTag('key', key) + ':&nbsp;' + valueHTML;
-    html += DVHelper.closeLI();
 
     return html;
 };
@@ -219,16 +214,13 @@ DataView.prototype._generateHTMLSection = function (viewObject) {
             html += this._generateHTMLFromObject(key, currentElement);
             html += this._generateHTMLSection(currentElement);
             html += this._generateHTMLForEndOfObject(currentElement);
-            continue;
-        }
-
-        // Same check here
-        if (currentElement && currentElement._isClickableValueForDataView) {
+        } else if (currentElement && currentElement._isClickableValueForDataView) {
             html += this._generateHTMLForKeyValuePair(key, DVHelper.formatValueForDataView(key, currentElement));
-            continue;
+        } else {
+            html += this._generateHTMLForKeyValuePair(key, viewObject);
         }
 
-        html += this._generateHTMLForKeyValuePair(key, viewObject);
+        html += DVHelper.closeLI();
     }
 
     for (var name in associations) {
@@ -295,8 +287,8 @@ DataView.prototype._addSectionTitle = function (config, htmlPart) {
     }
 
     html += DVHelper.wrapInTag('section-title', options.title);
-    html += DVHelper.closeLI();
     html += htmlPart;
+    html += DVHelper.closeLI();
     html += DVHelper.closeUL();
 
     return html;

@@ -156,14 +156,15 @@ function _findNearestDOMElement(element, targetElementName) {
 
 /**
  * @param {element} target - HTML DOM element
+ * @returns {boolean}
  * @private
  */
 function _toggleCollapse(target) {
     var expandableLIChild = target.querySelector(':scope > ul');
-    var arrow = target.querySelector('arrow');
+    var arrow = target.querySelector(':scope > arrow');
 
     if (!arrow) {
-        return;
+        return false;
     }
 
     if (arrow.getAttribute('right') === 'true') {
@@ -177,6 +178,8 @@ function _toggleCollapse(target) {
 
         expandableLIChild.removeAttribute('expanded');
     }
+
+    return true;
 }
 
 /**

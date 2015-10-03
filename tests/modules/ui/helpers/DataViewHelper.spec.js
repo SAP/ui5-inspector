@@ -181,23 +181,27 @@ describe('Helpers for DataView', function () {
     describe('#toggleCollapse', function () {
 
         var collapsableDOMStructure;
-        var liTag;
+        var collapsableLiTag;
+        var rootLiTag;
         var arrowTag;
         var ulTag;
+        var nestedUlTag;
 
         beforeEach(function () {
             collapsableDOMStructure = document.createDocumentFragment();
 
-            liTag = document.createElement('li');
-
+            rootLiTag = document.createElement('li');
+            ulTag = document.createElement('ul');
+            collapsableLiTag = document.createElement('li');
+            nestedUlTag = document.createElement('ul');
             arrowTag = document.createElement('arrow');
             arrowTag.setAttribute('right', 'true');
-            liTag.appendChild(arrowTag);
 
-            ulTag = document.createElement('ul');
-            liTag.appendChild(ulTag);
-
-            collapsableDOMStructure.appendChild(liTag);
+            rootLiTag.appendChild(ulTag);
+            ulTag.appendChild(collapsableLiTag);
+            collapsableLiTag.appendChild(arrowTag);
+            collapsableLiTag.appendChild(nestedUlTag);
+            collapsableDOMStructure.appendChild(rootLiTag);
         });
 
         afterEach(function () {
@@ -205,40 +209,57 @@ describe('Helpers for DataView', function () {
         });
 
         it('should set the arrow position to expanded (down)', function () {
-            // Setup
-            var targetDOMElement = collapsableDOMStructure.firstChild;
-            var arrowElement = targetDOMElement.querySelector('arrow');
-
             // Action
-            DVHelper.toggleCollapse(targetDOMElement);
+            var result = DVHelper.toggleCollapse(collapsableLiTag);
 
             // Assertion
-            arrowElement.getAttribute('down').should.equal('true');
+            expect(result).to.be.true;
+            arrowTag.getAttribute('down').should.equal('true');
         });
 
         it('should set the arrow position to collapsed (right)', function () {
             // Setup
-            var targetDOMElement = collapsableDOMStructure.firstChild;
-            var arrowElement = targetDOMElement.querySelector('arrow');
+            arrowTag.removeAttribute('right');
+            arrowTag.setAttribute('down', 'true');
 
             // Action
-            DVHelper.toggleCollapse(targetDOMElement);
+            var result = DVHelper.toggleCollapse(collapsableLiTag);
 
             // Assertion
-            arrowElement.getAttribute('down').should.equal('true');
+            expect(result).to.be.true;
+            arrowTag.getAttribute('right').should.equal('true');
         });
 
         it('should not find an arrow element', function () {
-            // Setup
-            var targetDOMElement = collapsableDOMStructure.firstChild;
-            var arrowElement = targetDOMElement.querySelector('arrow');
-            targetDOMElement.removeChild(arrowElement);
-
             // Action
-            var result = DVHelper.toggleCollapse(targetDOMElement);
+            var result = DVHelper.toggleCollapse(rootLiTag);
 
             // Assertion
-            expect(result).to.be.undefined;
+            expect(result).to.be.false;
+        });
+
+        it('should NOT change the arrow position to expanded (down)', function () {
+            // Action
+            var result = DVHelper.toggleCollapse(rootLiTag);
+
+            // Assertion
+            expect(result).to.be.false;
+            expect(arrowTag.getAttribute('down')).to.be.null;
+            arrowTag.getAttribute('right').should.equal('true');
+        });
+
+        it('should NOT change the arrow position to collapsed (right)', function () {
+            // Setup
+            arrowTag.removeAttribute('right');
+            arrowTag.setAttribute('down', 'true');
+
+            // Action
+            var result = DVHelper.toggleCollapse(rootLiTag);
+
+            // Assertion
+            expect(result).to.be.false;
+            expect(arrowTag.getAttribute('right')).to.be.null;
+            arrowTag.getAttribute('down').should.equal('true');
         });
     });
 

@@ -11,5 +11,5 @@ before_install:
 before_script:
   - npm install -g grunt-cli
 
-after_script:
+script:
   - grunt travis

@@ -14,7 +14,8 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
          * @private
          */
         function _getFrameworkName() {
-            var versionInfo, frameworkInfo;
+            var versionInfo;
+            var frameworkInfo;
 
             try {
                 versionInfo = sap.ui.getVersionInfo();
@@ -23,14 +24,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             }
 
             if (versionInfo) {
-                if (versionInfo.gav) {
-                    // Use group artifact version for maven built UI5
-                    frameworkInfo = versionInfo.gav;
-                } else {
-                    // Use name for others (like SAPUI5-on-ABAP)
-                    frameworkInfo = versionInfo.name;
-                }
-               return frameworkInfo.indexOf('openui5') !== -1 ? 'OpenUI5' : 'SAPUI5';
+                // Use group artifact version for maven builds or name for other builds (like SAPUI5-on-ABAP)
+                frameworkInfo = versionInfo.gav ? versionInfo.gav : versionInfo.name;
+
+                return frameworkInfo.indexOf('openui5') !== -1 ? 'OpenUI5' : 'SAPUI5';
             } else {
                 return '';
             }

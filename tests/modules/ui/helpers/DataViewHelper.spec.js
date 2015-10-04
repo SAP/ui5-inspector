@@ -189,13 +189,15 @@ describe('Helpers for DataView', function () {
             collapsableDOMStructure = document.createDocumentFragment();
 
             liTag = document.createElement('li');
+
             arrowTag = document.createElement('arrow');
             arrowTag.setAttribute('right', 'true');
             liTag.appendChild(arrowTag);
 
             ulTag = document.createElement('ul');
+            liTag.appendChild(ulTag);
+
             collapsableDOMStructure.appendChild(liTag);
-            collapsableDOMStructure.appendChild(ulTag);
         });
 
         afterEach(function () {

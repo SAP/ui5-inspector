@@ -122,17 +122,36 @@ function _valueNeedsQuotes(value, valueWrappedInHTML) {
  * @returns {string}
  * @private
  */
-function _addKeyTypeInfo(element) {
+function _addKeyTypeInfoBegin(element) {
 
     if (Array.isArray(element)) {
-        return ':&nbsp;' + '[' + _getObjectLength(element) + ']';
+        return '[';
     }
 
-    if (!_getObjectLength(element.data)) {
-        return ':&nbsp;' + '{}';
+    return '{';
+}
+
+/**
+ * @param {Array|Object} element
+ * @returns {string}
+ * @private
+ */
+function _addKeyTypeInfoEnd(element) {
+    var html = '';
+    var noOfElements = _getObjectLength(element);
+    var collapsedInfo = Array.isArray(element) ? noOfElements : '...';
+
+    if (noOfElements) {
+        html += _wrapInTag('collapsed-typeinfo', collapsedInfo);
     }
 
-    return ':&nbsp;' + '{';
+    if (Array.isArray(element)) {
+        html += ']';
+    } else {
+        html += '}';
+    }
+
+    return html;
 }
 
 /**
@@ -156,14 +175,15 @@ function _findNearestDOMElement(element, targetElementName) {
 
 /**
  * @param {element} target - HTML DOM element
+ * @returns {boolean}
  * @private
  */
 function _toggleCollapse(target) {
     var expandableLIChild = target.querySelector(':scope > ul');
-    var arrow = target.querySelector('arrow');
+    var arrow = target.querySelector(':scope > arrow');
 
     if (!arrow) {
-        return;
+        return false;
     }
 
     if (arrow.getAttribute('right') === 'true') {
@@ -177,6 +197,8 @@ function _toggleCollapse(target) {
 
         expandableLIChild.removeAttribute('expanded');
     }
+
+    return true;
 }
 
 /**
@@ -274,7 +296,8 @@ function _getCorrectedValue(value) {
 
 module.exports = {
     addArrow: _addArrow,
-    addKeyTypeInfo: _addKeyTypeInfo,
+    addKeyTypeInfoBegin: _addKeyTypeInfoBegin,
+    addKeyTypeInfoEnd: _addKeyTypeInfoEnd,
     closeLI: _closeLI,
     closeUL: _closeUL,
     findNearestDOMElement: _findNearestDOMElement,

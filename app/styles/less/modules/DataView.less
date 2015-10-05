@@ -63,6 +63,14 @@ data-view {
             display: flex;
             flex-direction: column;
         }
+
+        & > ul[expanded] ~ collapsed-typeinfo {
+            display: none;
+        }
+    }
+
+    section-title{
+        display: inline-block;
     }
 
     value[contentEditable=true]:focus {

@@ -134,20 +134,32 @@ describe('Helpers for DataView', function () {
 
         it('should return the correct string with an array of values', function () {
             var array = ['one', 'two', 'three'];
-            var resultString = DVHelper.addKeyTypeInfo(array);
-            resultString.should.equal(':&nbsp;' + '[' + array.length + ']');
+            var resultString = DVHelper.addKeyTypeInfoBegin(array) + DVHelper.addKeyTypeInfoEnd(array);
+            resultString.should.equal('[<collapsed-typeinfo>' + array.length + '</collapsed-typeinfo>]');
+        });
+
+        it('should return the correct string with a simple array', function () {
+            var array = [ ];
+            var resultString = DVHelper.addKeyTypeInfoBegin(array) + DVHelper.addKeyTypeInfoEnd(array);
+            resultString.should.equal('[]');
+        });
+
+        it('should return the correct string with an DataView object (nested)', function () {
+            var DVObject = {data: {one: 1, two: 2, three: 3, bool: false}};
+            var resultString = DVHelper.addKeyTypeInfoBegin(DVObject) + DVHelper.addKeyTypeInfoEnd(DVObject);
+            resultString.should.equal('{<collapsed-typeinfo>...</collapsed-typeinfo>}');
         });
 
         it('should return the correct string with an DataView object', function () {
-            var DVObject = {data: {one: 1, two: 2, three: 3, bool: false}};
-            var resultString = DVHelper.addKeyTypeInfo(DVObject);
-            resultString.should.equal(':&nbsp;{');
+            var DVObject = {one: 1, two: 2, three: 3, bool: false};
+            var resultString = DVHelper.addKeyTypeInfoBegin(DVObject) + DVHelper.addKeyTypeInfoEnd(DVObject);
+            resultString.should.equal('{<collapsed-typeinfo>...</collapsed-typeinfo>}');
         });
 
-        it('should return an empty object string with a simple object', function () {
-            var DVObject = {one: 1, two: 2, three: 3, bool: false};
-            var resultString = DVHelper.addKeyTypeInfo(DVObject);
-            resultString.should.equal(':&nbsp;{}');
+        it('should return the correct string with a simple object', function () {
+            var DVObject = {};
+            var resultString = DVHelper.addKeyTypeInfoBegin(DVObject) + DVHelper.addKeyTypeInfoEnd(DVObject);
+            resultString.should.equal('{}');
         });
     });
 

@@ -139,7 +139,7 @@ describe('Helpers for DataView', function () {
         });
 
         it('should return the correct string with a simple array', function () {
-            var array = [];
+            var array = [ ];
             var resultString = DVHelper.addKeyTypeInfoBegin(array) + DVHelper.addKeyTypeInfoEnd(array);
             resultString.should.equal('[]');
         });

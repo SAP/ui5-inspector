@@ -63,6 +63,10 @@ data-view {
             display: flex;
             flex-direction: column;
         }
+
+        & > ul[expanded] ~ collapsed-typeinfo {
+            display: none;
+        }
     }
 
     value[contentEditable=true]:focus {

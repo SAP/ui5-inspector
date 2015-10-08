@@ -35,7 +35,7 @@ Issue report checklist:
  * Well-documented
  * Minimal example
  * One bug per report
- * Use the [template](https://github.com/SAP/ui5-inspector/docs/bugreport_template.txt)
+ * Use the [template](docs/bugreport_template.txt)
 
 
 ### Requirements for a bug report
@@ -61,7 +61,7 @@ These seven requirements are the mandatory base of a good bug report:
  7. Minimal example: it is highly encouraged to provide a minimal example to reproduce in e.g. jsbin: isolate the application code which triggers the issue and strip it down as much as possible as long as the issue still occurs. If several files are required, you can create a gist. This may not always be possible and sometimes be overkill, but it always helps analyzing a bug.
  8. Only one bug per report: open different tickets for different issues
 
-You are encouraged to use [this template](https://github.com/SAP/ui5-inspector/docs/bugreport_template.txt).
+You are encouraged to use [this template](docs/bugreport_template.txt).
 
 Please report bugs in English, so all users can understand them.
 

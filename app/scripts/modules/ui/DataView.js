@@ -184,10 +184,6 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
         valueHTML = JSONFormatter.formatJSONtoHTML(value);
     } else {
         valueHTML = DVHelper.valueNeedsQuotes(value, DVHelper.wrapInTag('value', value, attributes));
-        if (key === 'showNavButton') {
-            console.log(value);
-            console.log(valueHTML);
-        }
     }
 
     html += DVHelper.wrapInTag('key', key) + ':&nbsp;' + valueHTML;
@@ -207,6 +203,7 @@ DataView.prototype._generateHTMLSection = function (viewObject) {
     var html = '';
     var options = viewObject.options;
     var isDataArray = Array.isArray(data);
+    var lastArrayElement = data.length - 1;
 
     html += DVHelper.openUL(DVHelper.getULAttributesFromOptions(options));
 
@@ -226,7 +223,7 @@ DataView.prototype._generateHTMLSection = function (viewObject) {
             html += this._generateHTMLForKeyValuePair(key, viewObject);
         }
 
-        if (isDataArray && key < data.length - 1) {
+        if (isDataArray && key < lastArrayElement) {
             html += ',';
         }
 

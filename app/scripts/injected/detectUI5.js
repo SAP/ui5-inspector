@@ -7,41 +7,38 @@
      */
     function createResponseToContentScript() {
         var responseToContentScript = Object.create(null);
-        responseToContentScript.detail = Object.create(null);
+        var responseToContentScriptBody;
+        var frameworkInfo;
+        var versionInfo;
 
-        var responseToContentScriptBody = responseToContentScript.detail;
+        responseToContentScript.detail = Object.create(null);
+        responseToContentScriptBody = responseToContentScript.detail;
 
         if (window.sap && window.sap.ui) {
-
             responseToContentScriptBody.action = 'on-ui5-detected';
             responseToContentScriptBody.framework = Object.create(null);
 
-            // Get minimal framework information
+            // Get framework version
             try {
                 responseToContentScriptBody.framework.version = sap.ui.getVersionInfo().version;
             } catch (e) {
                 responseToContentScriptBody.framework.version = '';
             }
+
+            // Get framework name
             try {
-                var frameworkInfo;
-                if (sap.ui.getVersionInfo().gav) {
-                    // Use group artifact version for maven built UI5
-                    frameworkInfo = sap.ui.getVersionInfo().gav;
-                } else {
-                    // Use name for others (like SAPUI5-on-ABAP)
-                    frameworkInfo = sap.ui.getVersionInfo().name;
-                }
+                versionInfo = sap.ui.getVersionInfo();
+
+                // Use group artifact version for maven builds or name for other builds (like SAPUI5-on-ABAP)
+                frameworkInfo = versionInfo.gav ? versionInfo.gav : versionInfo.name;
+
                 responseToContentScriptBody.framework.name = frameworkInfo.indexOf('openui5') !== -1 ? 'OpenUI5' : 'SAPUI5';
             } catch (e) {
-                responseToContentScriptBody.framework.name = '';
+                responseToContentScriptBody.framework.name = 'UI5';
             }
 
             // Check if the version is supported
-            if (sap.ui.require) {
-                responseToContentScriptBody.isVersionSupported = true;
-            } else {
-                responseToContentScriptBody.isVersionSupported = false;
-            }
+            responseToContentScriptBody.isVersionSupported = !!sap.ui.require;
 
         } else {
             responseToContentScriptBody.action = 'on-ui5-not-detected';

@@ -35,6 +35,10 @@ data-view {
         text-align: left;
     }
 
+    & ul li padding-base-left {
+        padding-left: @padding-base-horizontal;
+    }
+
     & > ul {
         border-bottom: 1px solid @gray-lighter;
         padding: 2px 2px 4px 4px;
@@ -44,8 +48,7 @@ data-view {
         white-space: nowrap;
     }
 
-    ul {
-
+    li {
         & > ul {
             display: none;
             padding-left: 19px;
@@ -56,14 +59,18 @@ data-view {
             }
         }
 
-        &[expanded] {
+        & > ul[expanded] {
             display: flex;
             flex-direction: column;
         }
 
-        li padding-base-left {
-            padding-left: @padding-base-horizontal;
+        & > ul[expanded] ~ collapsed-typeinfo {
+            display: none;
         }
+    }
+
+    section-title{
+        display: inline-block;
     }
 
     value[contentEditable=true]:focus {

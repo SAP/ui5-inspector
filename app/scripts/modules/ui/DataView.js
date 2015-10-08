@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 var JSONFormatter = require('../ui/JSONFormatter');
 var DVHelper = require('../ui/helpers/DataViewHelper');
@@ -130,11 +130,14 @@ DataView.prototype._generateHTMLFromObject = function (key, currentElement) {
 
     html += DVHelper.wrapInTag(tag, key, {});
 
-    if (options.showTypeInfo === true) {
-        html += DVHelper.addKeyTypeInfo(currentElement);
-    }
+    if (options.showTypeInfo) {
 
-    html += DVHelper.closeLI();
+        if (!options.hideTitle) {
+            html += ':&nbsp;';
+        }
+
+        html += DVHelper.addKeyTypeInfoBegin(currentElement.data);
+    }
 
     return html;
 };
@@ -148,10 +151,8 @@ DataView.prototype._generateHTMLFromObject = function (key, currentElement) {
 DataView.prototype._generateHTMLForEndOfObject = function (currentElement) {
     var html = '';
 
-    if (currentElement.options.showTypeInfo === true && DVHelper.getObjectLength(currentElement.data)) {
-        html += DVHelper.openLI();
-        html += DVHelper.wrapInTag('value', '}');
-        html += DVHelper.closeLI();
+    if (currentElement.options.showTypeInfo) {
+        html += DVHelper.addKeyTypeInfoEnd(currentElement.data);
     }
 
     return html;
@@ -190,7 +191,6 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
     }
 
     html += DVHelper.wrapInTag('key', key) + ':&nbsp;' + valueHTML;
-    html += DVHelper.closeLI();
 
     return html;
 };
@@ -206,6 +206,7 @@ DataView.prototype._generateHTMLSection = function (viewObject) {
     var associations = viewObject.associations;
     var html = '';
     var options = viewObject.options;
+    var isDataArray = Array.isArray(data);
 
     html += DVHelper.openUL(DVHelper.getULAttributesFromOptions(options));
 
@@ -219,16 +220,17 @@ DataView.prototype._generateHTMLSection = function (viewObject) {
             html += this._generateHTMLFromObject(key, currentElement);
             html += this._generateHTMLSection(currentElement);
             html += this._generateHTMLForEndOfObject(currentElement);
-            continue;
-        }
-
-        // Same check here
-        if (currentElement && currentElement._isClickableValueForDataView) {
+        } else if (currentElement && currentElement._isClickableValueForDataView) {
             html += this._generateHTMLForKeyValuePair(key, DVHelper.formatValueForDataView(key, currentElement));
-            continue;
+        } else {
+            html += this._generateHTMLForKeyValuePair(key, viewObject);
         }
 
-        html += this._generateHTMLForKeyValuePair(key, viewObject);
+        if (isDataArray && key < data.length - 1) {
+            html += ',';
+        }
+
+        html += DVHelper.closeLI();
     }
 
     for (var name in associations) {
@@ -295,8 +297,8 @@ DataView.prototype._addSectionTitle = function (config, htmlPart) {
     }
 
     html += DVHelper.wrapInTag('section-title', options.title);
-    html += DVHelper.closeLI();
     html += htmlPart;
+    html += DVHelper.closeLI();
     html += DVHelper.closeUL();
 
     return html;

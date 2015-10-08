@@ -214,6 +214,8 @@ var KEY_VALUE_HTML = '<key>key1</key>:&nbsp;&quot;<value>sap.m.Bar</value>&quot;
 
 var SIMPLE_DATA_NO_TITLE = '<ul expandable="true"><li><key>title</key>:&nbsp;"<value contenteditable="true" data-control-id="button_0" data-property-name="title">Simple Form</value>"</li><li><key>description</key>:&nbsp;"<value contenteditable="true" data-control-id="button_0" data-property-name="description"></value>"</li><li><key>icon</key>:&nbsp;"<value contenteditable="true" data-control-id="button_0" data-property-name="icon"></value>"</li><li><key>iconInset</key>:&nbsp;<value contenteditable="true" data-control-id="button_0" data-property-name="iconInset">true</value></li><li><key>iconDensityAware</key>:&nbsp;<value contenteditable="true" data-control-id="button_0" data-property-name="iconDensityAware">true</value></li><li><key>activeIcon</key>:&nbsp;"<value contenteditable="true" data-control-id="button_0" data-property-name="activeIcon">sap://icon</value>"</li><li><key>infoState</key>:&nbsp;"<value contenteditable="true" data-control-id="button_0" data-property-name="infoState">None</value>"</li><li><key>adaptTileSize</key>:&nbsp;<value contenteditable="true" data-control-id="button_0" data-property-name="adaptTileSize">true</value></li><li><key>titleTextDirection</key>:&nbsp;"<value contenteditable="true" data-control-id="button_0" data-property-name="titleTextDirection">inherit</value>"</li><li><key>infoTextDirection</key>:&nbsp;"<value contenteditable="true" data-control-id="button_0" data-property-name="infoTextDirection">inherit</value>"</li><li><arrow down="true"></arrow><section-title>Associations</section-title><ul expandable="true" expanded="true"><li><key>key1</key>:&nbsp;"<value>sap.m.Bar</value>"</li><li><key>key2</key>:&nbsp;"<value>sap.m.Button</value>"</li></ul></li><li><key>ariaDescribedBy</key>:&nbsp;<value>sap.ui.core.Control</value></li><li><key>ariaLabelledBy</key>:&nbsp;<value>sap.ui.core.Control</value></li></ul>';
 
+var SIMPLE_DATA_WITH_ARRAY = '<ul expandable="true"><li><arrow right="true"></arrow><section-title><anchor>#__button0</anchor> (sap.m.Button)</section-title><ul expandable="true"><li><key>0</key>:&nbsp;<value contenteditable="true" data-control-id="button_0" data-property-name="0">1</value>,</li><li><key>1</key>:&nbsp;<value contenteditable="true" data-control-id="button_0" data-property-name="1">2</value>,</li><li><key>2</key>:&nbsp;<value contenteditable="true" data-control-id="button_0" data-property-name="2">3</value></li><li><key>ariaDescribedBy</key>:&nbsp;<value>sap.ui.core.Control</value></li><li><key>ariaLabelledBy</key>:&nbsp;<value>sap.ui.core.Control</value></li></ul></li></ul>';
+
 describe('DataView', function () {
     var fixtures = document.getElementById('fixtures');
 
@@ -242,6 +244,16 @@ describe('DataView', function () {
             sampleView.setData(mockDataWithNestedObject);
             expect(dataViewElement.innerHTML).to.equal(SIMPLE_DATA_NO_TITLE);
             mockDataWithNestedObject.properties.options.hideTitle = false;
+
+        });
+
+        it('should render expanded array when setData', function () {
+            var dataViewElement = document.getElementById('data-view');
+            var oldData = mockDataWithNestedObject.properties.data;
+            mockDataWithNestedObject.properties.data = [1, 2, 3];
+            sampleView.setData(mockDataWithNestedObject);
+            expect(dataViewElement.innerHTML).to.equal(SIMPLE_DATA_WITH_ARRAY);
+            mockDataWithNestedObject.properties.data = oldData;
 
         });
 
@@ -374,7 +386,6 @@ describe('DataView', function () {
                 element.options.expandable = false;
                 html = sampleView._generateHTMLFromObject('assoc', element);
                 element.options.expandable = true;
-                console.log(html);
                 var arrowIndex = html.indexOf('<arrow down="true">');
                 expect(arrowIndex).to.be.equal(-1);
             });
@@ -474,10 +485,12 @@ describe('DataView', function () {
 
             it('should be render correct HTML String with simple mock data and showTypeInfo', function () {
                 mockDataWithNestedObject.properties.data.moreData.options.showTypeInfo = true;
+                mockDataWithNestedObject.properties.data.moreData.options.hideTitle = true;
                 sampleView.setData(mockDataWithNestedObject);
                 // Needed for later.
                 // var dataViewElement = document.getElementById('data-view');
                 // dataViewElement.innerHTML.should.equal(SIMPLE_HTML_OUTPUT);
+                mockDataWithNestedObject.properties.data.moreData.options.hideTitle = false;
                 mockDataWithNestedObject.properties.data.moreData.options.showTypeInfo = false;
             });
 

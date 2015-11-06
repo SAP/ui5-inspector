@@ -32,7 +32,7 @@ function ClickableValue(options) {
     // This is used for checking in the dataView
     this._isClickableValueForDataView = true;
     // This is shown in the data view
-    this.value = '<clickable-value key="' + options.key + '" parent="' + options.parent + '">' + options.value || '' + '</clickable-value>';
+    this.value = '<clickable-value key="' + options.key + '" parent="' + options.parent + '">' + (options.value || '') + '</clickable-value>';
     // This data is attached in the click event of the dataview
     this.eventData = options.eventData || {};
 }

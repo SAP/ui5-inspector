@@ -182,7 +182,7 @@ var clickableValueData = {
                         listMode: 'SingleSelectMaster'
                     }
                 },
-                value: '<clickable-value key="model" parent="counter">entity (TwoWay, JSONModel)',
+                value: '<clickable-value key="model" parent="counter">entity (TwoWay, JSONModel)</clickable-value>',
                 path: 'sampleCount',
                 type: 'int'
             }

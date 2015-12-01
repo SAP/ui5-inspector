@@ -219,7 +219,7 @@ SplitContainer.prototype._mouseMoveHandler = function (event) {
  */
 SplitContainer.prototype._mouseUpHandler = function () {
     this.$this.onmousemove = null;
-    // TODO.
+    // TODO...
     document.body.className = '';
 };
 

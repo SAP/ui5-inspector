@@ -219,8 +219,8 @@ SplitContainer.prototype._mouseMoveHandler = function (event) {
  */
 SplitContainer.prototype._mouseUpHandler = function () {
     this.$this.onmousemove = null;
-    // TODO...
-    document.body.className = '';
+    document.body.classList.remove('user-is-resizing-vertically');
+    document.body.classList.remove('user-is-resizing-horizontally');
 };
 
 /**
@@ -236,9 +236,9 @@ SplitContainer.prototype._mouseDownHandler = function (event) {
 
     // Add class to disable selection of dom elements while dragging
     if (that.isVerticalSplitter) {
-        document.body.className = 'user-is-resizing-vertically';
+        document.body.classList.add('user-is-resizing-vertically');
     } else {
-        document.body.className = 'user-is-resizing-horizontally';
+        document.body.classList.add('user-is-resizing-horizontally');
     }
 
     /**

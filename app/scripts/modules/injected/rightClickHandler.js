@@ -19,7 +19,7 @@ module.exports = {
      * @returns {string}
      */
     setClickedElementId: function (target) {
-        while (!target.getAttribute('data-sap-ui')) {
+        while (target && !target.getAttribute('data-sap-ui')) {
             if (target.nodeName === 'BODY') {
                 break;
             }

@@ -127,38 +127,34 @@ describe('Splitter', function () {
         afterEach(function () {
         });
 
-        it('should change the height of the end container', function () {
-            var expectedResult = window.innerHeight - 150 + 'px';
+        it('should change the style height of the end container', function () {
+            var splitterRect = splitter.$this.getBoundingClientRect();
+            var expectedResult = (splitterRect.top + splitterRect.height - mockEvent.clientY) + 'px';
 
             splitter._mouseMoveHandler(mockEvent);
 
             splitter._$endElement.style.height.should.be.equal(expectedResult);
         });
 
-        it('should change the height of the start container', function () {
-            var endContainerHeight = window.innerHeight - 150;
-            var expectedResult = window.innerHeight - endContainerHeight + 'px';
-
+        it('should not change the style height of the start container', function () {
             splitter._mouseMoveHandler(mockEvent);
 
-            splitter._$startElement.style.height.should.be.equal(expectedResult);
+            splitter._$startElement.style.height.should.be.equal('');
         });
 
-        it('should change the width of the end container', function () {
-            var expectedResult = window.innerWidth - 150 + 'px';
+        it('should change the style width of the end container', function () {
+            var horizontalSplitterRect = horizontalSplitter.$this.getBoundingClientRect();
+            var expectedResult = (horizontalSplitterRect.left + horizontalSplitterRect.width - mockEvent.clientX) + 'px';
 
             horizontalSplitter._mouseMoveHandler(mockEvent);
 
             horizontalSplitter._$endElement.style.width.should.be.equal(expectedResult);
         });
 
-        it('should change the width of the start container', function () {
-            var endContainerWidth = window.innerWidth - 150;
-            var expectedResult = window.innerWidth - endContainerWidth + 'px';
-
+        it('should not change the style width of the start container', function () {
             horizontalSplitter._mouseMoveHandler(mockEvent);
 
-            horizontalSplitter._$startElement.style.width.should.be.equal(expectedResult);
+            horizontalSplitter._$startElement.style.width.should.be.equal('');
         });
     });
 

@@ -197,19 +197,12 @@ SplitContainer.prototype.showEndContainer = function () {
  * @private
  */
 SplitContainer.prototype._mouseMoveHandler = function (event) {
-    var that = this;
-    var endContainerSize;
-    var windowWidth = window.innerWidth;
-    var windowHeight = window.innerHeight;
+    var splitContainerRect = this.$this.getBoundingClientRect();
 
-    if (that.isVerticalSplitter) {
-        endContainerSize = windowHeight - event.clientY;
-        that._$endElement.style.height = endContainerSize + 'px';
-        that._$startElement.style.height = (windowHeight - endContainerSize) + 'px';
+    if (this.isVerticalSplitter) {
+        this._$endElement.style.height = (splitContainerRect.top + splitContainerRect.height - event.clientY) + 'px';
     } else {
-        endContainerSize = windowWidth - event.clientX;
-        that._$endElement.style.width = endContainerSize + 'px';
-        that._$startElement.style.width = (windowWidth - endContainerSize) + 'px';
+        this._$endElement.style.width = (splitContainerRect.left + splitContainerRect.width - event.clientX) + 'px';
     }
 };
 

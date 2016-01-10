@@ -16,7 +16,7 @@ function _getResizeHolderHTML() {
  * @private
  */
 function _applyInlineStylesForStartContainer(_splitterInstance, skipSizing) {
-    var $start = _splitterInstance.$this.querySelector('start');
+    var $start = _splitterInstance._$startElement;
 
     $start.style.display = _splitterInstance._hideStartContainer ? 'none' : '';
     if (!skipSizing) {
@@ -32,7 +32,7 @@ function _applyInlineStylesForStartContainer(_splitterInstance, skipSizing) {
  * @private
  */
 function _applyInlineStylesForEndContainer(_splitterInstance, skipSizing) {
-    var $end = _splitterInstance.$this.querySelector('end');
+    var $end = _splitterInstance._$endElement;
 
     $end.style.display = _splitterInstance._hideEndContainer ? 'none' : '';
     if (!skipSizing) {
@@ -47,7 +47,7 @@ function _applyInlineStylesForEndContainer(_splitterInstance, skipSizing) {
  * @private
  */
 function _applyInlineStylesForCloseButton(_splitterInstance) {
-    var $closeButton = _splitterInstance.$this.querySelector('close-button');
+    var $closeButton = _splitterInstance._$endElement.querySelector(':scope > close-button');
 
     if ($closeButton) {
         if (_splitterInstance._hideEndContainer) {
@@ -66,7 +66,7 @@ function _applyInlineStylesForCloseButton(_splitterInstance) {
  */
 function _applyInlineStyles(_splitterInstance, _skipSizing) {
     var that = _splitterInstance;
-    var $end = that.$this.querySelector('end');
+    var $end = that._$endElement;
     var skipSizing = _skipSizing || false;
 
     if (that._isEndContainerClosable) {
@@ -91,7 +91,7 @@ function _createEndContainerHeader(splitterInstance) {
     var endContainerHeader = document.createElement('header');
     endContainerHeader.innerHTML = splitterInstance._endContainerTitle;
 
-    splitterInstance.$this.querySelector('end').appendChild(endContainerHeader);
+    splitterInstance._$endElement.appendChild(endContainerHeader);
 }
 
 /**
@@ -101,7 +101,7 @@ function _createEndContainerHeader(splitterInstance) {
  */
 function _createCloseButton(splitterInstance) {
     var closeButtonElement = document.createElement('close-button');
-    splitterInstance.$this.querySelector('end').appendChild(closeButtonElement);
+    splitterInstance._$endElement.appendChild(closeButtonElement);
 
     closeButtonElement.onclick = splitterInstance.hideEndContainer.bind(splitterInstance);
 }
@@ -170,9 +170,9 @@ function SplitContainer(domId, options) {
     /**
      * Place the resize holder HTML right after the 'start' element
      */
-    this.$this.querySelector(':scope > start').insertAdjacentHTML('afterend', _getResizeHolderHTML());
+    this._$startElement.insertAdjacentHTML('afterend', _getResizeHolderHTML());
 
-    this.$this.querySelector('handler').onmousedown = this._mouseDownHandler.bind(this);
+    this.$this.querySelector(':scope > divider > handler').onmousedown = this._mouseDownHandler.bind(this);
 }
 
 /**

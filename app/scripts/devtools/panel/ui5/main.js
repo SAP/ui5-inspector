@@ -82,7 +82,7 @@
                 action: 'do-control-property-change',
                 data: changeData
             });
-        }
+        }   
     });
 
     // Vertical splitter for 'Bindings' tab

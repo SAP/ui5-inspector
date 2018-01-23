@@ -100,17 +100,6 @@ describe('Splitter', function () {
         });
     });
 
-    // describe('#showEndContainer()', function () {
-    //     it('should show end container', function () {
-    //         var splitter = new Splitter('vertical-splitter');
-
-    //         splitter.hideEndContainer();
-    //         splitter.showEndContainer();
-
-    //         should.not.exist(splitter.$this.querySelector('end').getAttribute('style'));
-    //     });
-    // });
-
     describe('#_mouseMoveHandler()', function () {
         var splitter;
         var horizontalSplitter;

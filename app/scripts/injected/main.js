@@ -9,6 +9,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
 
     // Create global reference for the extension
     ui5inspector.createReferences();
+    
 
     /**
      * Mutation observer for DOM elements

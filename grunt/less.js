@@ -16,7 +16,8 @@ module.exports = function (grunt, config) {
                 cwd: '<%= app %>/styles/less',
                 dest: '<%= dist %>/styles',
                 src: [
-                    'main.less',
+                    'themes/light.less',
+                    'themes/dark.less',
                     'popup.less'
                 ],
                 ext: '.css'
@@ -28,7 +29,8 @@ module.exports = function (grunt, config) {
                 cwd: '<%= app %>/styles/less',
                 dest: '<%= tests %>/styles',
                 src: [
-                    'main.less'
+                    'themes/light.less',
+                    'themes/dark.less'
                 ],
                 ext: '.css'
             }]

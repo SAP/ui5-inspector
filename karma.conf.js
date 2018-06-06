@@ -55,7 +55,7 @@ module.exports = function (config) {
         // List of files / patterns to load in the browser
         files: [
             {pattern: 'karma.bootstrap.js', watched: true, included: true, served: true},
-            {pattern: 'tests/styles/main.css', watched: true, included: true, served: true},
+            {pattern: 'tests/styles/themes/light.css', watched: true, included: true, served: true},
             {pattern: 'tests/**/*spec.js', watched: true, included: true, served: true}
         ],
 

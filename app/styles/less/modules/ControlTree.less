@@ -38,6 +38,10 @@ control-tree {
     filter [type="search"] {
         border: solid 1px @border-gray-dark;
         border-radius: 2px;
+        background-color: @bg-search-field;
+        color: @text-color;
+        padding-left: 5px;
+        padding-right: 5px;
     }
 
     filter [type="checkbox"] {
@@ -67,7 +71,7 @@ control-tree {
     tree:not([show-filtered-elements]) {
 
         [matching] {
-            background: #ffff70;
+            background: @bg-highlight-color;
         }
 
         [selected] {
@@ -125,7 +129,7 @@ control-tree {
         word-break: break-word;
 
         &:hover {
-            background-color: rgba(56, 121, 217, 0.1);
+            background-color: @hover-highlight-color;
             cursor: default;
         }
 
@@ -142,7 +146,7 @@ control-tree {
             attribute,
             attribute-value,
             version {
-                color: @white;
+                color: @bg-selected-element-color;
             }
 
             arrow {

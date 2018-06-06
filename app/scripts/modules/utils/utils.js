@@ -79,10 +79,36 @@ function _setOSClassNameToBody() {
     document.querySelector('body').setAttribute('os', osName);
 }
 
+/**
+ * Applies the theme. Default is light.
+ * @private
+ */
+function _applyTheme(theme) {
+    var oldLink = document.getElementById('ui5inspector-theme');
+    var head = document.getElementsByTagName('head')[0];
+    var link = document.createElement('link');
+    var url = '/styles/themes/light/light.css';
+
+    if (oldLink) {
+        oldLink.remove();
+    }
+
+    if (theme === 'dark') {
+        url = '/styles/themes/dark/dark.css';
+    }
+
+    link.id = 'ui5inspector-theme';
+    link.rel = 'stylesheet';
+    link.href = url;
+
+    head.appendChild(link);
+}
+
 module.exports = {
     formatter: {
         convertUI5TimeStampToHumanReadableFormat: _convertUI5TimeStampToHumanReadableFormat
     },
     resolveMessage: _resolveMessage,
-    setOSClassName: _setOSClassNameToBody
+    setOSClassName: _setOSClassNameToBody,
+    applyTheme: _applyTheme
 };

@@ -116,4 +116,18 @@ describe('utils', function () {
             document.querySelector('body').getAttribute('os').should.equal('linux');
         });
     });
+
+    describe('#applyTheme()', function () {
+
+        it('should change theme', function () {
+
+            utils.applyTheme('dark');
+
+            expect(document.getElementById('ui5inspector-theme').href).to.have.string('/styles/themes/dark/dark.css');
+
+            utils.applyTheme('light');
+
+            expect(document.getElementById('ui5inspector-theme').href).to.have.string('/styles/themes/light/light.css');
+        });
+    });
 });

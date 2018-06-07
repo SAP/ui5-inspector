@@ -1,0 +1,495 @@
+arrow,
+place-holder {
+  display: block;
+  height: 14px;
+  width: 12px;
+}
+arrow {
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+arrow[right] {
+  background-image: url("/images/arrows/arrow-right.png");
+  background-size: 7px 8px;
+}
+arrow[down] {
+  background-image: url("/images/arrows/arrow-down.png");
+  background-size: 8px 7px;
+}
+arrow {
+  cursor: pointer;
+}
+attribute,
+string {
+  color: #994500;
+}
+attribute-value,
+boolean {
+  color: #1a1aa6;
+}
+key {
+  color: #c80000;
+}
+no-data {
+  color: #c0c0c0;
+  display: block;
+  padding-top: 12px;
+  text-align: center;
+}
+pre {
+  display: inline;
+  word-wrap: break-word;
+}
+section-title,
+value {
+  color: #000000;
+}
+tag {
+  color: #881280;
+}
+[hidden] {
+  display: none;
+}
+opaque {
+  color: #c0c0c0;
+}
+[padding] {
+  padding: 10px;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  color: #222222;
+  display: flex;
+  flex-direction: column;
+  font-family: Consolas, Lucida Console, monospace;
+  font-size: 12px;
+  height: 100%;
+  line-height: 14px;
+  flex-grow: 1;
+}
+body[os='linux'] {
+  font-family: dejavu sans mono, monospace;
+  font-size: 11px;
+}
+body[os='mac'] {
+  font-family: Menlo, monospace;
+  font-size: 11px;
+}
+ol,
+ul {
+  list-style: none;
+}
+label {
+  cursor: pointer;
+  -webkit-user-select: none;
+}
+overlay {
+  background: #fff;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 9999999;
+}
+overlay > section {
+  display: none;
+}
+overlay h1 {
+  background: #eeeeee;
+  padding: 2rem 1rem;
+  line-height: 1.25;
+}
+overlay p {
+  padding: 0 1rem;
+  margin: 1rem 0;
+  line-height: 1.25;
+}
+/* ==========================================================================
+   Tabs
+   ========================================================================== */
+tabbar {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+}
+/* Tab Links
+   ========================================================================== */
+tabbar > tabs {
+  background: #eeeeee;
+  border-bottom: 1px solid #bbbbbb;
+  display: flex;
+  height: 23px;
+  padding: 0 5px;
+  align-items: stretch;
+  -webkit-user-select: none;
+}
+tabbar > tabs > tab {
+  border: 1px solid transparent;
+  border-bottom: none;
+  cursor: pointer;
+  display: flex;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  margin-top: 2px;
+  overflow: hidden;
+  padding: 0 4px 1px;
+  white-space: nowrap;
+  align-items: center;
+}
+body[os='linux'] tabbar > tabs > tab {
+  font-family: Ubuntu, Arial, sans-serif;
+}
+body[os='mac'] tabbar > tabs > tab {
+  font-family: 'Lucida Grande', sans-serif;
+}
+tabbar > tabs > tab[selected] {
+  background: #ffffff;
+  border-color: #bbbbbb;
+}
+/* Content for Tabs
+   ========================================================================== */
+tabbar > contents {
+  display: flex;
+  overflow-y: auto;
+  -webkit-transform: translateZ(0);
+  flex: 1 1 0;
+}
+tabbar > contents > content {
+  display: none;
+}
+tabbar > contents > [selected] {
+  display: flex;
+  flex: 1 1 0;
+}
+/* ==========================================================================
+   ControlTree
+   ========================================================================== */
+control-tree {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: 30px;
+  position: relative;
+  flex: 1 1 0;
+  flex-wrap: nowrap;
+}
+control-tree filter {
+  border-bottom: solid 1px #c0c0c0;
+  display: flex;
+  left: 0;
+  line-height: 1;
+  min-width: 550px;
+  padding: 5px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  align-items: center;
+}
+control-tree filter > start,
+control-tree filter > end {
+  display: flex;
+}
+control-tree filter > start {
+  flex: 1 1 0;
+}
+control-tree filter [type="search"] {
+  border: solid 1px #a3a3a3;
+  border-radius: 2px;
+  background-color: #ffffff;
+  color: #222222;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+control-tree filter [type="checkbox"] {
+  margin-right: 2px;
+}
+control-tree filter label {
+  display: flex;
+  line-height: 20px;
+  padding: 0 6px;
+  white-space: nowrap;
+  align-items: center;
+}
+control-tree tree {
+  margin: 0;
+  overflow-x: hidden;
+  padding-top: 5px;
+  transform: translateZ(0);
+  flex: 1 1 0;
+}
+control-tree tree > :last-child {
+  margin-bottom: 10px;
+}
+control-tree tree:not([show-filtered-elements]) [matching] {
+  background: #ffff70;
+}
+control-tree tree:not([show-filtered-elements]) [selected] {
+  background: #3879d9;
+}
+control-tree tree:not([show-filtered-elements]) [selected] ::selection {
+  background: #a3a3a3;
+}
+control-tree [show-namespaces] namespace {
+  display: inline;
+}
+control-tree [show-attributes] attribute {
+  display: inline;
+}
+control-tree [show-filtered-elements] li {
+  display: none;
+}
+control-tree [show-filtered-elements] [visible],
+control-tree [show-filtered-elements] [matching] {
+  display: flex;
+}
+control-tree ul {
+  display: flex;
+  flex-direction: column;
+}
+control-tree ul > ul {
+  display: none;
+}
+control-tree ul[expanded] > ul {
+  display: flex;
+}
+control-tree li {
+  border-radius: 5px;
+  display: flex;
+  line-height: 14px;
+  padding-top: 1px;
+  position: relative;
+  word-break: break-word;
+}
+control-tree li:hover {
+  background-color: rgba(56, 121, 217, 0.1);
+  cursor: default;
+}
+control-tree li offset {
+  width: 0;
+  padding-right: 12px;
+}
+control-tree li[selected] {
+  background: #3879d9;
+  border-radius: 0;
+}
+control-tree li[selected] tag,
+control-tree li[selected] attribute,
+control-tree li[selected] attribute-value,
+control-tree li[selected] version {
+  color: #ffffff;
+}
+control-tree li[selected] arrow[right] {
+  background-image: url("/images/arrows/arrow-right-white.png");
+}
+control-tree li[selected] arrow[down] {
+  background-image: url("/images/arrows/arrow-down-white.png");
+}
+control-tree version {
+  color: #bbbbbb;
+  padding-left: 10px;
+}
+control-tree namespace,
+control-tree attribute {
+  display: none;
+}
+data-view {
+  flex-grow: 1;
+  flex-wrap: nowrap;
+  overflow: auto;
+  width: 100%;
+  -webkit-transform: translateZ(0);
+}
+data-view clickable-value {
+  color: #0000ee;
+}
+data-view anchor,
+data-view clickable-value {
+  cursor: pointer;
+  text-decoration: underline;
+}
+data-view anchor:hover,
+data-view clickable-value:hover {
+  text-decoration: none;
+}
+data-view arrow {
+  display: inline-block;
+  vertical-align: top;
+}
+data-view arrow ~ section-title {
+  cursor: default;
+}
+data-view ul no-data {
+  font-style: normal;
+  padding: 0;
+  text-align: left;
+}
+data-view ul li padding-base-left {
+  padding-left: 12px;
+}
+data-view > ul {
+  border-bottom: 1px solid #d4d4d4;
+  padding: 2px 2px 4px 4px;
+}
+data-view key {
+  white-space: nowrap;
+}
+data-view li > ul {
+  display: none;
+  padding-left: 19px;
+  padding-top: 2px;
+}
+data-view li > ul section-title {
+  color: #c80000;
+}
+data-view li > ul[expanded] {
+  display: flex;
+  flex-direction: column;
+}
+data-view li > ul[expanded] ~ collapsed-typeinfo {
+  display: none;
+}
+data-view section-title {
+  display: inline-block;
+}
+data-view value[contentEditable=true]:focus {
+  display: inline-block;
+  outline: 1px solid #bbbbbb;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #ffffff, 0 1px 2px 3px rgba(0, 0, 0, 0.6);
+}
+data-view [gray] {
+  color: #bbbbbb;
+}
+/* ==========================================================================
+   SplitContainer
+   ========================================================================== */
+.user-is-resizing-vertically,
+.user-is-resizing-horizontally {
+  cursor: ns-resize;
+  -webkit-user-select: none;
+}
+.user-is-resizing-horizontally {
+  cursor: ew-resize;
+}
+splitter {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  flex: 1 1 0;
+  /* right */
+  /* end right */
+}
+splitter > start {
+  display: flex;
+  overflow: auto;
+  position: relative;
+  transform: translateZ(0);
+  flex: 1;
+}
+splitter > end {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  transform: translateZ(0);
+  word-break: break-all;
+}
+splitter > end[withHeader] {
+  padding-top: 20px;
+}
+splitter > end > header {
+  background-color: #eeeeee;
+  border-bottom: solid 1px #bbbbbb;
+  left: 0;
+  line-height: 20px;
+  padding-left: 5px;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+splitter > end > close-button {
+  background: url("/images/close.png") no-repeat center;
+  content: '';
+  cursor: pointer;
+  display: none;
+  height: 15px;
+  opacity: 0.5;
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  transition: opacity 0.2s;
+  width: 15px;
+}
+splitter > end > close-button:hover {
+  opacity: 1;
+}
+splitter > end > content {
+  display: flex;
+  flex: 1;
+}
+splitter > end > content section {
+  border-bottom: solid 1px #a3a3a3;
+  padding: 4px 5px;
+  white-space: nowrap;
+}
+splitter > end > content section:last-child {
+  border-bottom: none;
+}
+splitter > end > content section[selected] {
+  flex: 1;
+}
+splitter > divider {
+  background: #a3a3a3;
+  display: flex;
+  position: relative;
+  width: 1px;
+}
+splitter > divider handler {
+  bottom: 0;
+  cursor: ew-resize;
+  left: -3px;
+  position: absolute;
+  right: -3px;
+  top: 0;
+}
+splitter[orientation="vertical"] {
+  flex-direction: column;
+}
+splitter[orientation="vertical"] > start {
+  flex: 1;
+}
+splitter[orientation="vertical"] > divider {
+  height: 1px;
+  width: auto;
+}
+splitter[orientation="vertical"] > end {
+  height: 400px;
+  width: auto;
+}
+splitter[orientation="vertical"] > divider handler {
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  top: -3px;
+  cursor: ns-resize;
+}
+[json] key {
+  color: #881280;
+}
+[json] string {
+  color: #222222;
+}
+[json] number {
+  color: #222222;
+}

@@ -1,9 +1,11 @@
-@import "reset.less";
-@import "variables.less";
+@import "themes/base/variables.less";
 
 @icon-height: 16px;
 @icon-width: 16px;
 @icon-offset: 6px;
+
+@gray-darker: #333;
+@popup-link-color: #0000ee;
 
 [hidden] {
     display: none;
@@ -50,7 +52,7 @@ popup {
 
         a,
         a:visited {
-            color: @link;
+            color: @popup-link-color;
             display: block;
             line-height: 1.3;
             white-space: nowrap;

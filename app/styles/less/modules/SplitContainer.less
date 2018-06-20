@@ -22,10 +22,11 @@ splitter {
 
     & > start {
         display: flex;
-        overflow: auto;
+        overflow: hidden;
         position: relative;
         transform: translateZ(0);
-        flex: 1;
+        flex: auto;
+        min-width: 50px;
     }
 
     & > end {
@@ -34,6 +35,8 @@ splitter {
         position: relative;
         transform: translateZ(0);
         word-break: break-all;
+        flex: none;
+        min-width: 50px;
     }
 
     /* right */
@@ -113,7 +116,8 @@ splitter {
         flex-direction: column;
 
         & > start {
-            flex: 1;
+            min-width: 0;
+            min-height: 50px;
         }
 
         & > divider {
@@ -122,7 +126,9 @@ splitter {
         }
 
         & > end {
+            min-height: 50px;
             height: 400px;
+            min-width: 0;
             width: auto;
         }
 

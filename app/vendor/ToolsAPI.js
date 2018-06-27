@@ -381,8 +381,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 for (var key in properties) {
                     if (properties.hasOwnProperty(key) && control.getBinding(key)) {
                         var binding = control.getBinding(key);
+                        var bindingInfo = control.getBindingInfo(key);
                         propertiesBindingData[key] = Object.create(null);
-                        propertiesBindingData[key].path = binding.getPath();
+                        // When we have composite binding getPath() function throws error so we need to check if this is the case.
+                        propertiesBindingData[key].path = bindingInfo.parts ? "" : binding.getPath();
                         propertiesBindingData[key].value = binding.getValue();
                         propertiesBindingData[key].formattedValue = control.getProperty(key);
                         propertiesBindingData[key].type =

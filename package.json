@@ -30,7 +30,15 @@
     {
       "name": "Nikolay Vankov",
       "email": "nikolay.vankov@sap.com"
-    }
+    },
+	{
+	  "name": "Stefan Minchev",
+	  "email": "stefan.minchev@sap.com"
+	},
+	{
+	  "name": "Svetoslav Spasov",
+	  "email": "svetoslav.spasov@sap.com"
+	}
   ],
   "dependencies": {
     "coveralls": "^3.0.0",

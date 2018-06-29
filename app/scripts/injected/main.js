@@ -7,7 +7,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
     var rightClickHandler = require('../modules/injected/rightClickHandler.js');
     var applicationUtils = require('../modules/injected/applicationUtils');
 
-    // Create global reference for the extension
+    // Create global reference for the extension.
     ui5inspector.createReferences();
 
     /**

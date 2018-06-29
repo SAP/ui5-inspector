@@ -293,6 +293,23 @@ function _getCorrectedValue(value) {
 
     return value;
 }
+/**
+ * Access (nested) object properties by a full path similar to.
+ * @param {Object} sourceObject
+ * @param {string} path
+ * @returns {any}
+ * @private
+ */
+function _getObjectProperty(sourceObject, path) {
+    if (path === undefined || path === null) {
+        return undefined;
+    }
+    // Strip leading slash.
+    path = path.replace(/^\//, '');
+    return path.split('/').reduce(function (currentObject, currentPath) {
+        return currentObject ? currentObject[currentPath] : undefined;
+    }, sourceObject);
+}
 
 module.exports = {
     addArrow: _addArrow,
@@ -304,6 +321,7 @@ module.exports = {
     formatValueForDataView: _formatValueForDataView,
     getCorrectedValue: _getCorrectedValue,
     getObjectLength: _getObjectLength,
+    getObjectProperty:_getObjectProperty,
     getULAttributesFromOptions: _getULAttributesFromOptions,
     getNoDataHTML: _getNoDataHTML,
     openUL: _openUL,

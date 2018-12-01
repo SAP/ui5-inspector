@@ -17,6 +17,10 @@
     var DataView = require('../../../modules/ui/DataView.js');
     var Splitter = require('../../../modules/ui/SplitContainer.js');
 
+    // Apply theme
+    // ================================================================================
+    utils.applyTheme(chrome.devtools.panels.themeName);
+
     // Create a port with background page for continuous message communication
     // ================================================================================
     var port = chrome.extension.connect({name: 'devtools-tabId-' + chrome.devtools.inspectedWindow.tabId});

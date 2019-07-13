@@ -82,6 +82,32 @@ function _addArrow(isExpanded) {
 }
 
 /**
+ * Adding 'select' HTML Element options with data for the property variations.
+ * @param {string} value
+ * @param {Object} type
+ * @returns {string}
+ * @private
+ */
+
+function _generateValueOptions(value, type) {
+    var html = '',
+        types;
+
+    if (Object.keys(type).length)
+    {
+        types = Object.keys(type);
+
+        for (var i = 0; i < types.length; i++) {
+            html += '<option value="' + type[types[i]] + '"' + (type[types[i]] === value ? ' selected': '') + '>' +
+            types[i] + '</option>';
+        }
+
+    }
+
+    return html;
+}
+
+/**
  * @param {string} tag - name of HTML tag
  * @param {string|number|boolean} value
  * @param {Object} attributes
@@ -97,9 +123,26 @@ function _wrapInTag(tag, value, attributes) {
 
     html += '<' + tag;
     html += _generateTagAttributes(attributes);
-    html += '>' + value + '</' + tag + '>';
+    html += '>' +  value + '</' + tag + '>';
     return html;
 }
+
+/**
+ * @param {string} tag - name of HTML tag
+ * @param {string|number|boolean} value
+ * @param {Object} attributes
+ * @returns {string}
+ * @private
+ */
+var _wrapInSelectTag = function (value, attributes, type) {
+    var html = '';
+
+    html += '<select';
+    html += _generateTagAttributes(attributes);
+    html += '>' + (type? _generateValueOptions(value, type) : value) + '</select>';
+    return html;
+};
+
 
 /**
  * Check if property value needs quotes.
@@ -329,5 +372,6 @@ module.exports = {
     selectEditableContent: _selectEditableContent,
     toggleCollapse: _toggleCollapse,
     wrapInTag: _wrapInTag,
+    wrapInSelectTag: _wrapInSelectTag,
     valueNeedsQuotes: _valueNeedsQuotes
 };

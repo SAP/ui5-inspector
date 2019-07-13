@@ -45,6 +45,19 @@ var mockDataWithNestedObject = {
             'infoTextDirection': 'inherit',
             'moreData': mockDataViewFormattedObject
         },
+        'types': {
+            'title': 'string',
+            'description': 'string',
+            'icon': 'string',
+            'iconInset': 'boolean',
+            'iconDensityAware': 'boolean',
+            'activeIcon': 'string',
+            'infoState': 'sap.ui.core.ValueState',
+            'adaptTileSize': 'boolean',
+            'titleTextDirection': 'sap.ui.core.TextDirection',
+            'infoTextDirection': 'sap.ui.core.TextDirection',
+            'moreData': 'object'
+        },
         associations: {
             ariaDescribedBy: 'sap.ui.core.Control',
             ariaLabelledBy: 'sap.ui.core.Control'
@@ -706,6 +719,37 @@ describe('DataView', function () {
             it('should call on blur handler without target', function () {
                 sampleView._onBlurHandler();
             });
+        });
+
+
+        describe('_changeHandler', function () {
+            var sampleView;
+            var blurHandlerSpy;
+            var changeHandlerSpy;
+            var dataViewElement;
+            var editableElements;
+            var selectbox;
+
+            beforeEach(function () {
+                sampleView = new DataViewComponent('data-view');
+                sampleView.setData(mockDataWithNestedObject);
+                dataViewElement = document.getElementById('data-view');
+                blurHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onBlurHandler');
+                changeHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onChangeHandler');
+                selectbox = dataViewElement.querySelector('select');
+            });
+
+            afterEach(function () {
+                dataViewElement = null;
+                blurHandlerSpy.restore();
+                changeHandlerSpy.restore();
+            });
+
+            it('should not trigger blur handler', function () {
+                selectbox.dispatchEvent(new Event('change'));
+                expect(blurHandlerSpy).callCount.should.equal(0);
+            });
+
         });
 
         describe('_onEnterHandler', function () {

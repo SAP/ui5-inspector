@@ -222,8 +222,11 @@ var controlProperties = (function () {
                 title: title
             });
 
+            parent.types = {};
+
             for (var key in props) {
                 parent.data[key] = props[key].value;
+                parent.types[key]  =  props[key].type ? _formatTypes (props[key].type) : '';
             }
 
             var parentTitle = '<span gray>Inherits from</span>';
@@ -322,13 +325,14 @@ var controlProperties = (function () {
 
         var title = properties[OWN].meta.controlName;
         var props = properties[OWN].properties;
+        var types = {};
 
         for (var key in props) {
             if (props[key].type === 'object') {
                 props[key] = _formatNestedProperties(props[key], key);
                 continue;
             }
-
+            types[key] = props[key].type ? _formatTypes (props[key].type) : '';
             props[key] = props[key].value;
         }
 
@@ -338,6 +342,7 @@ var controlProperties = (function () {
             title: title
         });
         properties[OWN].data = props;
+        properties[OWN].types = types;
         properties[OWN].options.title = '#' + controlId + ' <span gray>(' + title + ')</span>';
 
         _formatInheritedProperties(controlId, properties);
@@ -345,6 +350,43 @@ var controlProperties = (function () {
         _formatAssociations(properties[OWN]);
 
         return properties;
+    };
+
+     /**
+     * Formatter for the type enums.
+     * @param {string} type
+     * @private
+     */
+
+    var _formatTypes = function (type) {
+        var objectType;
+        if (sap.ui.base.DataType.getType(type).isEnumType()) {
+            objectType = _transformStringTypeToObject(type);
+        }
+        else {
+            objectType = type;
+        }
+
+        return objectType;
+    };
+
+
+    /**
+     * Formatter for global namespaced enum objects.
+     * @param {string} type
+     * @private
+     */
+
+    var _transformStringTypeToObject = function(type) {
+        var parts = type.split('.'),
+        obj = window,
+        i;
+
+        for (i = 0; i < parts.length; i++) {
+            obj = obj[parts[i]];
+        }
+
+        return obj;
     };
 
     return {

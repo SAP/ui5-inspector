@@ -169,6 +169,7 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
     var html = '';
     var value = currentView.data[key];
     var options = currentView.options;
+    var type = currentView.types[key];
     var attributes = {};
     var valueHTML;
 
@@ -182,6 +183,8 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
 
     if (value && typeof value === 'object') {
         valueHTML = JSONFormatter.formatJSONtoHTML(value);
+    } else if (typeof type === 'object') {
+        valueHTML = DVHelper.valueNeedsQuotes(value, DVHelper.wrapInTag('select', value, attributes, type));
     } else {
         valueHTML = DVHelper.valueNeedsQuotes(value, DVHelper.wrapInTag('value', value, attributes));
     }
@@ -349,6 +352,10 @@ DataView.prototype._onClickHandler = function () {
             });
         }
 
+        if (targetElement.nodeName === 'SELECT') {
+            that._onChangeHandler(targetElement);
+        }
+
     };
 };
 
@@ -413,6 +420,44 @@ DataView.prototype._onBlurHandler = function (target) {
         that.onPropertyUpdated(propertyData);
 
         target.removeEventListener('onblur', this);
+        that._selectValue = true;
+    };
+};
+
+/**
+ * Change event handler for the selectable values.
+ * @param {element} target - HTML DOM element
+ * @private
+ */
+
+DataView.prototype._onChangeHandler = function (target) {
+    var that = this;
+
+    if (!target) {
+        return;
+    }
+
+    /**
+     * Handler for change event.
+     * @param {Object} e
+     */
+    target.onchange = function (e) {
+        var propertyData = {};
+        var target = e.target;
+        var propertyName;
+        var value;
+
+        propertyData.controlId = target.getAttribute('data-control-id');
+
+        propertyName = target.getAttribute('data-property-name');
+        propertyData.property = propertyName.charAt(0).toUpperCase() + propertyName.slice(1);
+
+        value = target.selectedOptions[0].value;
+        propertyData.value = DVHelper.getCorrectedValue(value);
+
+        that.onPropertyUpdated(propertyData);
+
+        target.removeEventListener('onchange', this);
         that._selectValue = true;
     };
 };

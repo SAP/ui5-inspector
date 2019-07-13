@@ -88,7 +88,7 @@ function _addArrow(isExpanded) {
  * @returns {string}
  * @private
  */
-function _wrapInTag(tag, value, attributes) {
+function _wrapInTag(tag, value, attributes, type) {
     var html = '';
 
     if (!tag || typeof tag !== 'string') {
@@ -97,7 +97,7 @@ function _wrapInTag(tag, value, attributes) {
 
     html += '<' + tag;
     html += _generateTagAttributes(attributes);
-    html += '>' + value + '</' + tag + '>';
+    html += '>' + (type? _generateValue(value, type) : value) + '</' + tag + '>';
     return html;
 }
 
@@ -309,6 +309,32 @@ function _getObjectProperty(sourceObject, path) {
     return path.split('/').reduce(function (currentObject, currentPath) {
         return currentObject ? currentObject[currentPath] : undefined;
     }, sourceObject);
+}
+
+/**
+ * Adding 'select' HTML Element options with data for the property variations.
+ * @param {string} value
+ * @param {Object} type
+ * @returns {string}
+ * @private
+ */
+
+function _generateValue(value, type) {
+    var html = '',
+        types;
+
+    if (Object.keys(type).length)
+    {
+        types = Object.keys(type);
+
+        for (var i = 0; i < types.length; i++) {
+            html += '<option value="' + type[types[i]] + '"' + (type[types[i]] === value ? ' selected': '') + '>'
+            + types[i] + '</option>';
+        }
+
+    }
+
+    return html;
 }
 
 module.exports = {

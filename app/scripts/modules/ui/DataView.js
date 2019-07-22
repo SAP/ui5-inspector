@@ -169,7 +169,7 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
     var html = '';
     var value = currentView.data[key];
     var options = currentView.options;
-    var type = currentView.types[key];
+    var type = currentView.types? currentView.types[key]: "";
     var attributes = {};
     var valueHTML;
 

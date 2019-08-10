@@ -429,7 +429,6 @@ DataView.prototype._onBlurHandler = function (target) {
  * @param {element} target - HTML DOM element
  * @private
  */
-
 DataView.prototype._onChangeHandler = function (target) {
     var that = this;
 

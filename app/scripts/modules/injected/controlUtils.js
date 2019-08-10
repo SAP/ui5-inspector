@@ -200,6 +200,39 @@ var controlProperties = (function () {
     var INHERITED = 'inherited';
 
     /**
+     * Formatter for global namespaced enum objects.
+     * @param {string} type
+     * @private
+     */
+    function _transformStringTypeToObject (type) {
+        var parts = type.split('.');
+        var obj = window;
+        var i;
+
+        for (i = 0; i < parts.length; i++) {
+            obj = obj[parts[i]];
+        }
+
+        return obj;
+    }
+
+    /**
+     * Formatter for the type enums.
+     * @param {string} type
+     * @private
+     */
+    function _formatTypes (type) {
+        var objectType;
+        if (sap.ui.base.DataType.getType(type).isEnumType()) {
+            objectType = _transformStringTypeToObject(type);
+        } else {
+            objectType = type;
+        }
+
+        return objectType;
+    }
+
+    /**
      * Formatter for the inherited properties.
      * @param {string} controlId
      * @param {Object} properties - UI5 control properties
@@ -350,43 +383,6 @@ var controlProperties = (function () {
         _formatAssociations(properties[OWN]);
 
         return properties;
-    };
-
-     /**
-     * Formatter for the type enums.
-     * @param {string} type
-     * @private
-     */
-
-    var _formatTypes = function (type) {
-        var objectType;
-        if (sap.ui.base.DataType.getType(type).isEnumType()) {
-            objectType = _transformStringTypeToObject(type);
-        }
-        else {
-            objectType = type;
-        }
-
-        return objectType;
-    };
-
-
-    /**
-     * Formatter for global namespaced enum objects.
-     * @param {string} type
-     * @private
-     */
-
-    var _transformStringTypeToObject = function(type) {
-        var parts = type.split('.'),
-        obj = window,
-        i;
-
-        for (i = 0; i < parts.length; i++) {
-            obj = obj[parts[i]];
-        }
-
-        return obj;
     };
 
     return {

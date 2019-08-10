@@ -88,17 +88,17 @@ function _addArrow(isExpanded) {
  * @returns {string}
  * @private
  */
-
 function _generateValueOptions(value, type) {
-    var html = '',
-        types;
+    var html = '';
+    var types;
+    var i;
 
     if (Object.keys(type).length)
     {
         types = Object.keys(type);
 
-        for (var i = 0; i < types.length; i++) {
-            html += '<option value="' + type[types[i]] + '"' + (type[types[i]] === value ? ' selected': '') + '>' +
+        for (i = 0; i < types.length; i++) {
+            html += '<option value="' + type[types[i]] + '"' + (type[types[i]] === value ? ' selected' : '') + '>' +
             types[i] + '</option>';
         }
 
@@ -128,21 +128,20 @@ function _wrapInTag(tag, value, attributes) {
 }
 
 /**
- * @param {string} tag - name of HTML tag
  * @param {string|number|boolean} value
  * @param {Object} attributes
+ * @param {Object} type - predefined type
  * @returns {string}
  * @private
  */
-var _wrapInSelectTag = function (value, attributes, type) {
+function _wrapInSelectTag (value, attributes, type) {
     var html = '';
 
     html += '<select';
     html += _generateTagAttributes(attributes);
-    html += '>' + (type? _generateValueOptions(value, type) : value) + '</select>';
+    html += '>' + (type ? _generateValueOptions(value, type) : value) + '</select>';
     return html;
-};
-
+}
 
 /**
  * Check if property value needs quotes.

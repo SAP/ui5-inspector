@@ -721,7 +721,6 @@ describe('DataView', function () {
             });
         });
 
-
         describe('_changeHandler', function () {
             var sampleView;
             var blurHandlerSpy;

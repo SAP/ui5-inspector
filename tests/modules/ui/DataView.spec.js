@@ -45,6 +45,36 @@ var mockDataWithNestedObject = {
             'infoTextDirection': 'inherit',
             'moreData': mockDataViewFormattedObject
         },
+        associations: {
+            ariaDescribedBy: 'sap.ui.core.Control',
+            ariaLabelledBy: 'sap.ui.core.Control'
+        }
+    }
+};
+
+var mockDataWithTypes = {
+
+    'properties': {
+        'options': {
+            'title': '<anchor>#__button0</anchor> (sap.m.Button)',
+            'expandable': true,
+            'editableValues': true,
+            'showTypeInfo': true,
+            'controlId': 'button_0'
+        },
+        'data': {
+            'title': 'Simple Form',
+            'description': '',
+            'icon': '',
+            'iconInset': true,
+            'iconDensityAware': true,
+            'activeIcon': 'sap://icon',
+            'infoState': 'None',
+            'adaptTileSize': true,
+            'titleTextDirection': 'inherit',
+            'infoTextDirection': 'inherit',
+            'moreData': mockDataViewFormattedObject
+        },
         'types': {
             'title': 'string',
             'description': 'string',
@@ -54,8 +84,16 @@ var mockDataWithNestedObject = {
             'activeIcon': 'string',
             'infoState': 'sap.ui.core.ValueState',
             'adaptTileSize': 'boolean',
-            'titleTextDirection': 'sap.ui.core.TextDirection',
-            'infoTextDirection': 'sap.ui.core.TextDirection',
+            'titleTextDirection': {
+                Inherit: 'Inherit',
+                LTR: 'LTR',
+                RTL: 'RTL'
+            },
+            'infoTextDirection': {
+                Inherit: 'Inherit',
+                LTR: 'LTR',
+                RTL: 'RTL'
+            },
             'moreData': 'object'
         },
         associations: {
@@ -727,15 +765,15 @@ describe('DataView', function () {
             var changeHandlerSpy;
             var dataViewElement;
             var editableElements;
-            var selectbox;
+            var selectBox;
 
             beforeEach(function () {
                 sampleView = new DataViewComponent('data-view');
-                sampleView.setData(mockDataWithNestedObject);
+                sampleView.setData(mockDataWithTypes);
                 dataViewElement = document.getElementById('data-view');
                 blurHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onBlurHandler');
                 changeHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onChangeHandler');
-                selectbox = dataViewElement.querySelector('select');
+                selectBox = dataViewElement.querySelector('select');
             });
 
             afterEach(function () {
@@ -745,10 +783,9 @@ describe('DataView', function () {
             });
 
             it('should not trigger blur handler', function () {
-                selectbox.dispatchEvent(new Event('change'));
-                expect(blurHandlerSpy).callCount.should.equal(0);
+                selectBox.dispatchEvent(new Event('change'));
+                expect(blurHandlerSpy.notCalled).to.equal(true);
             });
-
         });
 
         describe('_onEnterHandler', function () {

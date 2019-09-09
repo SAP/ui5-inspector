@@ -101,6 +101,5 @@
         "that"
     ],
     "validateIndentation": 4,
-    "validateLineBreaks": "LF",
     "validateQuoteMarks": true
 }

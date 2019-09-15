@@ -144,7 +144,7 @@ describe('Splitter', function () {
 
         it('should change the style width of the end container', function () {
             var horizontalSplitterRect = horizontalSplitter.$this.getBoundingClientRect();
-            var expectedResult = (horizontalSplitterRect.left + horizontalSplitterRect.width - mockEvent.clientX).toFixed(1) + 'px';
+            var expectedResult = (horizontalSplitterRect.left + horizontalSplitterRect.width - mockEvent.clientX) + 'px';
 
             horizontalSplitter._mouseMoveHandler(mockEvent);
 

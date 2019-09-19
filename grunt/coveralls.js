@@ -8,7 +8,7 @@
 module.exports = function (grunt, config) {
     return {
         target: {
-            src: '<%= tests %>/reports/coverage/report-lcov/lcov.info'
+            src: '<%= tests %>/reports/coverage/lcov.info'
         }
     };
 };

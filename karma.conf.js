@@ -18,7 +18,7 @@ module.exports = function (config) {
             'browserify',
             'browserify-istanbul',
             'karma-browserify',
-            'karma-coverage',
+            'karma-coverage-istanbul-reporter',
             'karma-mocha',
             'karma-chai',
             'karma-sinon',
@@ -31,7 +31,7 @@ module.exports = function (config) {
             transform: ['browserify-istanbul']
         },
 
-        coverageReporter: {
+        coverageIstanbulReporter: {
             // Specify a common output directory
             dir: 'tests/reports/coverage',
             reporters: [
@@ -73,7 +73,7 @@ module.exports = function (config) {
         // Test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress', 'coverage'],
+        reporters: ['progress', 'coverage-istanbul'],
 
         // Web server port
         port: 9876,
@@ -90,11 +90,11 @@ module.exports = function (config) {
 
         // Start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome'],
+        browsers: ['ChromeHeadless'],
 
         customLaunchers: {
             Chrome_travis_ci: {
-                base: 'Chrome',
+                base: 'ChromeHeadless',
                 flags: ['--no-sandbox']
             }
         },

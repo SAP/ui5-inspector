@@ -101,9 +101,7 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false,
-
-        concurrency: 2
+        singleRun: false
     };
 
     if (process.env.TRAVIS) {

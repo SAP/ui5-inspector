@@ -200,6 +200,39 @@ var controlProperties = (function () {
     var INHERITED = 'inherited';
 
     /**
+     * Formatter for global namespaced enum objects.
+     * @param {string} type
+     * @private
+     */
+    function _transformStringTypeToObject (type) {
+        var parts = type.split('.');
+        var obj = window;
+        var i;
+
+        for (i = 0; i < parts.length; i++) {
+            obj = obj[parts[i]];
+        }
+
+        return obj;
+    }
+
+    /**
+     * Formatter for the type enums.
+     * @param {string} type
+     * @private
+     */
+    function _formatTypes (type) {
+        var objectType;
+        if (sap.ui.base.DataType.getType(type).isEnumType()) {
+            objectType = _transformStringTypeToObject(type);
+        } else {
+            objectType = type;
+        }
+
+        return objectType;
+    }
+
+    /**
      * Formatter for the inherited properties.
      * @param {string} controlId
      * @param {Object} properties - UI5 control properties
@@ -222,8 +255,11 @@ var controlProperties = (function () {
                 title: title
             });
 
+            parent.types = {};
+
             for (var key in props) {
                 parent.data[key] = props[key].value;
+                parent.types[key]  =  props[key].type ? _formatTypes (props[key].type) : '';
             }
 
             var parentTitle = '<span gray>Inherits from</span>';
@@ -322,6 +358,7 @@ var controlProperties = (function () {
 
         var title = properties[OWN].meta.controlName;
         var props = properties[OWN].properties;
+        var types = {};
 
         for (var key in props) {
             if (props[key].type === 'object') {
@@ -329,6 +366,7 @@ var controlProperties = (function () {
                 continue;
             }
 
+            types[key] = props[key].type ? _formatTypes (props[key].type) : '';
             props[key] = props[key].value;
         }
 
@@ -338,6 +376,7 @@ var controlProperties = (function () {
             title: title
         });
         properties[OWN].data = props;
+        properties[OWN].types = types;
         properties[OWN].options.title = '#' + controlId + ' <span gray>(' + title + ')</span>';
 
         _formatInheritedProperties(controlId, properties);

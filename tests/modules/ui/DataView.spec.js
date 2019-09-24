@@ -52,6 +52,57 @@ var mockDataWithNestedObject = {
     }
 };
 
+var mockDataWithTypes = {
+
+    'properties': {
+        'options': {
+            'title': '<anchor>#__button0</anchor> (sap.m.Button)',
+            'expandable': true,
+            'editableValues': true,
+            'showTypeInfo': true,
+            'controlId': 'button_0'
+        },
+        'data': {
+            'title': 'Simple Form',
+            'description': '',
+            'icon': '',
+            'iconInset': true,
+            'iconDensityAware': true,
+            'activeIcon': 'sap://icon',
+            'infoState': 'None',
+            'adaptTileSize': true,
+            'titleTextDirection': 'inherit',
+            'infoTextDirection': 'inherit',
+            'moreData': mockDataViewFormattedObject
+        },
+        'types': {
+            'title': 'string',
+            'description': 'string',
+            'icon': 'string',
+            'iconInset': 'boolean',
+            'iconDensityAware': 'boolean',
+            'activeIcon': 'string',
+            'infoState': 'sap.ui.core.ValueState',
+            'adaptTileSize': 'boolean',
+            'titleTextDirection': {
+                Inherit: 'Inherit',
+                LTR: 'LTR',
+                RTL: 'RTL'
+            },
+            'infoTextDirection': {
+                Inherit: 'Inherit',
+                LTR: 'LTR',
+                RTL: 'RTL'
+            },
+            'moreData': 'object'
+        },
+        associations: {
+            ariaDescribedBy: 'sap.ui.core.Control',
+            ariaLabelledBy: 'sap.ui.core.Control'
+        }
+    }
+};
+
 var mockDataWithPropertiesInfo = {
     'properties': {
         'options': {
@@ -705,6 +756,35 @@ describe('DataView', function () {
 
             it('should call on blur handler without target', function () {
                 sampleView._onBlurHandler();
+            });
+        });
+
+        describe('_changeHandler', function () {
+            var sampleView;
+            var blurHandlerSpy;
+            var changeHandlerSpy;
+            var dataViewElement;
+            var editableElements;
+            var selectBox;
+
+            beforeEach(function () {
+                sampleView = new DataViewComponent('data-view');
+                sampleView.setData(mockDataWithTypes);
+                dataViewElement = document.getElementById('data-view');
+                blurHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onBlurHandler');
+                changeHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onChangeHandler');
+                selectBox = dataViewElement.querySelector('select');
+            });
+
+            afterEach(function () {
+                dataViewElement = null;
+                blurHandlerSpy.restore();
+                changeHandlerSpy.restore();
+            });
+
+            it('should not trigger blur handler', function () {
+                selectBox.dispatchEvent(new Event('change'));
+                expect(blurHandlerSpy.notCalled).to.equal(true);
             });
         });
 

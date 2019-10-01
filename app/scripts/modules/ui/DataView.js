@@ -184,7 +184,7 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
     if (value && typeof value === 'object') {
         valueHTML = JSONFormatter.formatJSONtoHTML(value);
     } else if (typeof type === 'object') {
-        valueHTML = DVHelper.valueNeedsQuotes(value, DVHelper.wrapInSelectTag(value, attributes, type));
+        valueHTML = DVHelper.wrapInSelectTag(value, attributes, type);
     } else {
         valueHTML = DVHelper.valueNeedsQuotes(value, DVHelper.wrapInTag('value', value, attributes));
     }

@@ -764,7 +764,6 @@ describe('DataView', function () {
             var blurHandlerSpy;
             var changeHandlerSpy;
             var dataViewElement;
-            var editableElements;
             var selectBox;
 
             beforeEach(function () {
@@ -783,8 +782,10 @@ describe('DataView', function () {
             });
 
             it('should not trigger blur handler', function () {
+                selectBox.click();
                 selectBox.dispatchEvent(new Event('change'));
                 expect(blurHandlerSpy.notCalled).to.equal(true);
+                expect(changeHandlerSpy.notCalled).to.equal(false);
             });
         });
 

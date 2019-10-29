@@ -199,32 +199,16 @@ var controlProperties = (function () {
     var OWN = 'own';
     var INHERITED = 'inherited';
 
-    /**
-     * Formatter for global namespaced enum objects.
-     * @param {string} type
-     * @private
-     */
-    function _transformStringTypeToObject (type) {
-        var parts = type.split('.');
-        var obj = window;
-        var i;
-
-        for (i = 0; i < parts.length; i++) {
-            obj = obj[parts[i]];
-        }
-
-        return obj;
-    }
 
     /**
      * Formatter for the type enums.
-     * @param {string} type
+     * @param {string | Object} type
      * @private
      */
     function _formatTypes (type) {
         var objectType;
         if (sap.ui.base.DataType.getType(type).isEnumType()) {
-            objectType = _transformStringTypeToObject(type);
+            objectType = sap.ui.base.DataType.getType(type).getEnumValues();
         } else {
             objectType = type;
         }

@@ -201,7 +201,7 @@ var controlProperties = (function () {
 
     /**
      * Formatter for global namespaced enum objects.
-     * @param {string} type
+     * @param {string | Object} type
      * @private
      */
     function _transformStringTypeToObject (type) {
@@ -210,7 +210,7 @@ var controlProperties = (function () {
         var i;
 
         for (i = 0; i < parts.length; i++) {
-            obj = obj[parts[i]];
+            obj = obj[parts[i]] ? obj[parts[i]] : '';
         }
 
         return obj;
@@ -218,12 +218,12 @@ var controlProperties = (function () {
 
     /**
      * Formatter for the type enums.
-     * @param {string} type
+     * @param {string | Object} type
      * @private
      */
     function _formatTypes (type) {
         var objectType;
-        if (sap.ui.base.DataType.getType(type).isEnumType()) {
+        if (type.startsWith('sap.') && sap.ui.base.DataType.getType(type).getDefaultValue()) {
             objectType = _transformStringTypeToObject(type);
         } else {
             objectType = type;

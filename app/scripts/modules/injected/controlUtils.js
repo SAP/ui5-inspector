@@ -228,7 +228,6 @@ var controlProperties = (function () {
         } else {
             objectType = type;
         }
-
         return objectType;
     }
 

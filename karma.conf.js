@@ -35,7 +35,8 @@ module.exports = function (config) {
             // Specify a common output directory
             dir: 'tests/reports/coverage',
             reporters: [
-                {type: 'lcov', subdir: 'report-lcov'}
+                {type: 'lcov', subdir: 'report-lcov'},
+                {type : 'html', subdir : './'}
             ],
             check: {
                 each: {
@@ -101,7 +102,9 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false
+        singleRun: false,
+
+        concurrency: 2
     };
 
     if (process.env.TRAVIS) {

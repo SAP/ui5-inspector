@@ -3,12 +3,16 @@
     <head lang="en">
         <meta charset="UTF-8">
         <title>UI5 Inspector</title>
+        <link rel="stylesheet" href="/styles/main.css"/>
+        <script src="../../../vendor/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../../vendor/vkbeautify.js" type="text/javascript" charset="utf-8"></script>
     </head>
     <body>
         <tabbar id="ui5-tabbar">
             <tabs>
                 <tab id="control-tree-tab" selected>Control Inspector</tab>
                 <tab id="app-info-tab">Application Information</tab>
+                <tab id="odata-tab">OData Requests</tab>
             </tabs>
             <contents>
 
@@ -59,6 +63,30 @@
                     <data-view id="app-info"></data-view>
                 </content>
                 <!-- Application information /ends-->
+
+                <!-- OData /start-->
+                <content for="odata-tab" class="blockList">
+                    <h1><button id="clear">Clear</button></h1>
+                    <splitter id="odata-horizontal-splitter">
+                        <!-- SplitContainer top side /start-->
+                        <start>
+                            <div id="outer">
+                                <table>
+                                    <tbody id="list"></tbody>
+                                </table>
+                            </div>
+                        </start>
+                        <!-- SplitContainer top side /ends-->
+
+                        <!-- SplitContainer bottom side /start-->
+                        <end>
+                            <div id="editor"></div>
+                            <div class="editorAlt">No response body</div>
+                        </end>
+                        <!-- SplitContainer bottom side /ends-->
+                    </splitter>
+                </content>
+                <!-- OData /ends-->
             </contents>
         </tabbar>
 

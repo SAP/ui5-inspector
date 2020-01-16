@@ -16,10 +16,7 @@
     var ControlTree = require('../../../modules/ui/ControlTree.js');
     var DataView = require('../../../modules/ui/DataView.js');
     var Splitter = require('../../../modules/ui/SplitContainer.js');
-
-    // Apply theme
-    // ================================================================================
-    utils.applyTheme(chrome.devtools.panels.themeName);
+    var odata = require('../../../modules/utils/odata.js');
 
     // Create a port with background page for continuous message communication
     // ================================================================================
@@ -34,7 +31,8 @@
 
     // Horizontal Splitter for 'Control Inspector' tab
     var controlInspectorHorizontalSplitter = new Splitter('horizontal-splitter', {
-        endContainerWidth: '400px'
+        endContainerWidth: '400px',
+        isEndContainerClosable: true
     });
 
     // Control tree
@@ -129,6 +127,15 @@
 
     // Dataview for 'Application information' tab
     var appInfo = new DataView('app-info');
+
+
+    // Bootstrap for 'OData' tab
+    // ================================================================================
+    var odataHorizontalSplitter = new Splitter('odata-horizontal-splitter', {
+        endContainerWidth: '50%',
+        isEndContainerClosable: true
+    });
+    window['splitterRef'] = odataHorizontalSplitter; //TODO
 
     // ================================================================================
     // Communication

@@ -144,6 +144,29 @@ function _wrapInSelectTag (value, attributes, type) {
 }
 
 /**
+ * @param {boolean} value
+ * @param {Object} attributes
+ * @returns {string}
+ * @private
+ */
+function _wrapInCheckBox (value, attributes) {
+    var html = '';
+
+    html = '<input type="checkbox" id="';
+    html += attributes['data-property-name'];
+    html += '" ';
+    html += _generateTagAttributes(attributes);
+    html += value ? ' checked />' : ' />';
+    html += '<label for="';
+    html += attributes['data-property-name'];
+    html += '" gray>';
+    html += value;
+    html += '</label>';
+
+    return html;
+}
+
+/**
  * Check if property value needs quotes.
  * @param {string|boolean|number|null} value
  * @param {string} valueWrappedInHTML
@@ -372,5 +395,6 @@ module.exports = {
     toggleCollapse: _toggleCollapse,
     wrapInTag: _wrapInTag,
     wrapInSelectTag: _wrapInSelectTag,
+    wrapInCheckBox: _wrapInCheckBox,
     valueNeedsQuotes: _valueNeedsQuotes
 };

@@ -483,9 +483,9 @@ DataView.prototype._onCheckBoxHandler = function (target) {
      * @param {Object} e
      */
     target.onchange = function (e) {
-        var propertyData = {},
-            propertyName,
-            target = e.target;
+        var propertyData = {};
+        var propertyName;
+        var target = e.target;
 
         propertyData.controlId = target.getAttribute('data-control-id');
 

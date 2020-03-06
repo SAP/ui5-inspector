@@ -41,6 +41,28 @@ describe('message.js', function () {
             myObject.should.have.property("undefined");
             myObject.should.not.be.equal(customEvent.args[0][0].detail);
         });
+        it('should send simple inputs', function () {
+            var customEvent = sinon.spy();
+            document.addEventListener('ui5-communication-with-content-script', customEvent);
+
+            message.send(5);
+            customEvent.args[0][0].detail.should.be.equal(5);
+            message.send("Hello World");
+            customEvent.args[1][0].detail.should.be.equal("Hello World");
+            message.send(true);
+            customEvent.args[2][0].detail.should.be.equal(true);
+        });
+        it('should send null if input is null, undefined or a function', function () {
+            var customEvent = sinon.spy();
+            document.addEventListener('ui5-communication-with-content-script', customEvent);
+
+            message.send(null);
+            expect(customEvent.args[0][0].detail).to.be.null;
+            message.send(undefined);
+            expect(customEvent.args[1][0].detail).to.be.null;
+            message.send(function () {});
+            expect(customEvent.args[2][0].detail).to.be.null;
+        });
         it('should send a valid json message equivalent to JSON.parse(JSON.stringify(myObject))', function () {
             var customEvent = sinon.spy();
             var myObject = {

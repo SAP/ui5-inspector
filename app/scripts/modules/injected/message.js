@@ -7,8 +7,11 @@
  * @private
  */
 function _prepareMessage(object) {
-    if (object === null || object === undefined) {
+    if (object === null || object === undefined || typeof object === "function") {
         return null;
+    }
+    if (typeof object !== "object") {
+        return object;
     }
 
     var target = Array.isArray(object) ? [] : {},

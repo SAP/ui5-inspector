@@ -41,6 +41,10 @@ pre {
   word-wrap: break-word;
   white-space: pre-wrap;
 }
+[verical-aligment] {
+  display: inline-block;
+  vertical-align: middle;
+}
 section-title,
 value {
   color: #cbcbcb;

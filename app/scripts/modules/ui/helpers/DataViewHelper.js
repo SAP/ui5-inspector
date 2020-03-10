@@ -152,13 +152,13 @@ function _wrapInSelectTag (value, attributes, type) {
 function _wrapInCheckBox (value, attributes) {
     var html = '';
 
-    html = '<input type="checkbox" id="';
-    html += attributes['data-property-name'];
-    html += '" ';
+    attributes.id = attributes['data-property-name'];
+
+    html = '<input verical-aligment type="checkbox"';
     html += _generateTagAttributes(attributes);
     html += value ? ' checked />' : ' />';
-    html += '<label for="';
-    html += attributes['data-property-name'];
+    html += '<label verical-aligment for="';
+    html += attributes["id"];
     html += '" gray>';
     html += value;
     html += '</label>';

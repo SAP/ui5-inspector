@@ -21,11 +21,11 @@ function _prepareMessage(object) {
                 continue;
             }
             var child = current.source[sKey];
-            var index;
             if (child === undefined || typeof child === 'function') {
                 // Ignore undefined and functions (similar to JSON.stringify)
                 continue;
             }
+            var index;
             if ((index = done.indexOf(child)) !== -1) {
                 // Detect and resolve circular references, use already parsed/created target
                 current.target[sKey] = doneTargets[index];

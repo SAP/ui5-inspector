@@ -25,9 +25,9 @@ function _prepareMessage(object) {
                 // Ignore undefined and functions (similar to JSON.stringify)
                 continue;
             }
-            var index;
-            if ((index = done.indexOf(child)) !== -1) {
-                // Detect and resolve circular references, use already parsed/created target
+            var index = done.indexOf(child);
+            if (index !== -1) {
+                // Resolve detected circular references by using already parsed/created target
                 current.target[sKey] = doneTargets[index];
             } else if (child !== null && typeof child === 'object') {
                 // Deep copy objects by adding them to the to-do list (iterative approach)

@@ -30,11 +30,14 @@ function _prepareMessage(object) {
             if (child === undefined || typeof child === "function") {
                 // ignore undefined and functions (similar to JSON.stringify)
             } else if ((index = done.indexOf(child)) !== -1) {
+                // detect and resolve circular references, use already parsed/created target
                 current.target[sKey] = doneTargets[index];
             } else if (child !== null && typeof child === "object") {
+                // deep copy objects by adding them to the to-do list (iterative approach)
                 current.target[sKey] = Array.isArray(child) ? [] : {};
                 todo.push({ target: current.target[sKey], source: child });
             } else {
+                // copy the unhandled types that are left: "number", "boolean", "string", and null
                 current.target[sKey] = child;
             }
         });

@@ -2,48 +2,39 @@
 
 /**
  * Parses given object into a JSON object removing all functions and handle circular references.
- * @param {Object} object input object
+ * @param {Object} object - input object, must not be null
  * @returns {Object} JSON object
  * @private
  */
 function _prepareMessage(object) {
-    if (object === null || object === undefined || typeof object === 'function') {
-        return null;
-    }
-    if (typeof object !== 'object') {
-        return object;
-    }
-
-    var target = Array.isArray(object) ? [] : {},
-        todo = [{ source: object, target: target }],
-        done = [],
-        doneTargets = [],
-        index,
-        current,
-        child,
-        sKey;
+    var target = {};
+    var todo = [{source: object, target: target}];
+    var done = [];
+    var doneTargets = [];
+    var current;
 
     while ((current = todo.pop()) !== undefined) {
         done.push(current.source);
         doneTargets.push(current.target);
-        for (sKey in current.source) {
+        for (var sKey in current.source) {
             if (!current.source.hasOwnProperty(sKey)) {
                 continue;
             }
-            child = current.source[sKey];
+            var child = current.source[sKey];
+            var index;
             if (child === undefined || typeof child === 'function') {
-                // ignore undefined and functions (similar to JSON.stringify)
+                // Ignore undefined and functions (similar to JSON.stringify)
                 continue;
             }
             if ((index = done.indexOf(child)) !== -1) {
-                // detect and resolve circular references, use already parsed/created target
+                // Detect and resolve circular references, use already parsed/created target
                 current.target[sKey] = doneTargets[index];
             } else if (child !== null && typeof child === 'object') {
-                // deep copy objects by adding them to the to-do list (iterative approach)
+                // Deep copy objects by adding them to the to-do list (iterative approach)
                 current.target[sKey] = Array.isArray(child) ? [] : {};
-                todo.push({ target: current.target[sKey], source: child });
+                todo.push({target: current.target[sKey], source: child});
             } else {
-                // copy the unhandled types that are left: 'number', 'boolean', 'string', and null
+                // Copy the unhandled types that are left: 'number', 'boolean', 'string', and null
                 current.target[sKey] = child;
             }
         }

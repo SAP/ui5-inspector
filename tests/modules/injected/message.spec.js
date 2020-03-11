@@ -27,7 +27,12 @@ describe('message.js', function () {
         it('should parse input but not alter it', function () {
             var customEvent = sinon.spy();
             var myObject = {
-                function: function () { console.log("remove me") },
+                /**
+                 * Dummy function.
+                 */
+                function: function () {
+                    console.log('remove me');
+                },
                 array: [],
                 undefined: undefined
             };
@@ -35,51 +40,29 @@ describe('message.js', function () {
 
             message.send(myObject);
 
-            customEvent.args[0][0].detail.should.not.have.property("function");
-            customEvent.args[0][0].detail.should.not.have.property("undefined");
-            myObject.should.have.property("function");
-            myObject.should.have.property("undefined");
+            customEvent.args[0][0].detail.should.not.have.property('function');
+            customEvent.args[0][0].detail.should.not.have.property('undefined');
+            myObject.should.have.property('function');
+            myObject.should.have.property('undefined');
             myObject.should.not.be.equal(customEvent.args[0][0].detail);
-        });
-        it('should send simple inputs', function () {
-            var customEvent = sinon.spy();
-            document.addEventListener('ui5-communication-with-content-script', customEvent);
-
-            message.send(5);
-            customEvent.args[0][0].detail.should.be.equal(5);
-            message.send("Hello World");
-            customEvent.args[1][0].detail.should.be.equal("Hello World");
-            message.send(true);
-            customEvent.args[2][0].detail.should.be.equal(true);
-        });
-        it('should send null if input is null, undefined or a function', function () {
-            var customEvent = sinon.spy();
-            document.addEventListener('ui5-communication-with-content-script', customEvent);
-
-            message.send(null);
-            expect(customEvent.args[0][0].detail).to.be.null;
-            message.send(undefined);
-            expect(customEvent.args[1][0].detail).to.be.null;
-            message.send(function () {});
-            expect(customEvent.args[2][0].detail).to.be.null;
         });
         it('should send a valid json message equivalent to JSON.parse(JSON.stringify(myObject))', function () {
             var customEvent = sinon.spy();
             var myObject = {
                 number: 5,
                 boolean: true,
-                string: "Hello World",
+                string: 'Hello World',
                 object: {
-                    another: "object",
+                    another: 'object',
                     emptyArray: []
                 },
                 array: [
                     {
-                        hello: "world"
+                        hello: 'world'
                     },
                     5,
                     false,
-                    "Hello World",
+                    'Hello World',
                     [
                         null,
                         1
@@ -87,7 +70,12 @@ describe('message.js', function () {
                 ],
                 null: null,
                 undefined: undefined,
-                function: function () { console.log("remove me") }
+                /**
+                 * Dummy function.
+                 */
+                function: function () {
+                    console.log('remove me');
+                }
             };
             document.addEventListener('ui5-communication-with-content-script', customEvent);
 
@@ -99,19 +87,24 @@ describe('message.js', function () {
             var customEvent = sinon.spy();
             var myObject = {
                 object: {
-                    function: function () { console.log("remove me") },
-                    another: "object",
+                    /**
+                     * Dummy function.
+                     */
+                    function: function () {
+                        console.log('remove me');
+                    },
+                    another: 'object',
                     array: [
                         5,
-                        "this becomes a circular dependency"
+                        'this becomes a circular dependency'
                     ]
                 },
                 array: [
                     {
-                        reference:  "this becomes a circular dependency"
+                        reference:  'this becomes a circular dependency'
                     }
                 ],
-                anotherRef: "this becomes a circular dependency"
+                anotherRef: 'this becomes a circular dependency'
             };
             myObject.object.array[1] = myObject.object;
             myObject.array[0].reference = myObject.array;
@@ -123,7 +116,7 @@ describe('message.js', function () {
             customEvent.args[0][0].detail.object.array[1].should.be.equal(customEvent.args[0][0].detail.object);
             customEvent.args[0][0].detail.array[0].reference.should.be.equal(customEvent.args[0][0].detail.array);
             customEvent.args[0][0].detail.anotherRef.should.be.equal(customEvent.args[0][0].detail);
-            customEvent.args[0][0].detail.object.should.not.have.property("function");
+            customEvent.args[0][0].detail.object.should.not.have.property('function');
         });
     });
 });

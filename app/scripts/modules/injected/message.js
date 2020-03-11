@@ -7,10 +7,10 @@
  * @private
  */
 function _prepareMessage(object) {
-    if (object === null || object === undefined || typeof object === "function") {
+    if (object === null || object === undefined || typeof object === 'function') {
         return null;
     }
-    if (typeof object !== "object") {
+    if (typeof object !== 'object') {
         return object;
     }
 
@@ -20,27 +20,33 @@ function _prepareMessage(object) {
         doneTargets = [],
         index,
         current,
-        child;
+        child,
+        sKey;
 
     while ((current = todo.pop()) !== undefined) {
         done.push(current.source);
         doneTargets.push(current.target);
-        Object.keys(current.source).forEach(function (sKey) {
+        for (sKey in current.source) {
+            if (!current.source.hasOwnProperty(sKey)) {
+                continue;
+            }
             child = current.source[sKey];
-            if (child === undefined || typeof child === "function") {
+            if (child === undefined || typeof child === 'function') {
                 // ignore undefined and functions (similar to JSON.stringify)
-            } else if ((index = done.indexOf(child)) !== -1) {
+                continue;
+            }
+            if ((index = done.indexOf(child)) !== -1) {
                 // detect and resolve circular references, use already parsed/created target
                 current.target[sKey] = doneTargets[index];
-            } else if (child !== null && typeof child === "object") {
+            } else if (child !== null && typeof child === 'object') {
                 // deep copy objects by adding them to the to-do list (iterative approach)
                 current.target[sKey] = Array.isArray(child) ? [] : {};
                 todo.push({ target: current.target[sKey], source: child });
             } else {
-                // copy the unhandled types that are left: "number", "boolean", "string", and null
+                // copy the unhandled types that are left: 'number', 'boolean', 'string', and null
                 current.target[sKey] = child;
             }
-        });
+        }
     }
 
     return target;

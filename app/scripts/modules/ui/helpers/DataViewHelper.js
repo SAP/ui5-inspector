@@ -158,7 +158,7 @@ function _wrapInCheckBox (value, attributes) {
     html += _generateTagAttributes(attributes);
     html += value ? ' checked />' : ' />';
     html += '<label verical-aligment for="';
-    html += attributes["id"];
+    html += attributes.id;
     html += '" gray>';
     html += value;
     html += '</label>';

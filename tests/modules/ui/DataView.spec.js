@@ -759,7 +759,7 @@ describe('DataView', function () {
             });
         });
 
-        describe('_changeHandler', function () {
+        describe('_changeHandler enum type', function () {
             var sampleView;
             var blurHandlerSpy;
             var changeHandlerSpy;
@@ -786,6 +786,36 @@ describe('DataView', function () {
                 selectBox.dispatchEvent(new Event('change'));
                 expect(blurHandlerSpy.notCalled).to.equal(true);
                 expect(changeHandlerSpy.notCalled).to.equal(false);
+            });
+        });
+
+        describe('_changeHandler boolean type', function () {
+            var sampleView;
+            var blurHandlerSpy;
+            var checkBoxHandler;
+            var dataViewElement;
+            var selectBox;
+
+            beforeEach(function () {
+                sampleView = new DataViewComponent('data-view');
+                sampleView.setData(mockDataWithTypes);
+                dataViewElement = document.getElementById('data-view');
+                blurHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onBlurHandler');
+                checkBoxHandler = sinon.spy(DataViewComponent.prototype, '_onCheckBoxHandler');
+                selectBox = dataViewElement.querySelector('input[type="checkbox"][data-control-id]');
+            });
+
+            afterEach(function () {
+                dataViewElement = null;
+                blurHandlerSpy.restore();
+                checkBoxHandler.restore();
+            });
+
+            it('should not trigger blur handler', function () {
+                selectBox.click();
+                selectBox.dispatchEvent(new Event('change'));
+                expect(blurHandlerSpy.notCalled).to.equal(true);
+                expect(checkBoxHandler.notCalled).to.equal(false);
             });
         });
 

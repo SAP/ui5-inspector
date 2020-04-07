@@ -102,6 +102,9 @@
     // Dataview for control binding information
     var controlBindingInfoRightDataView = new DataView('control-bindings-right');
 
+    // Dataview for control aggregations
+    var controlAggregations = new DataView('control-aggregations');
+
     // Dataview for control binding information - left part
     var controlBindingInfoLeftDataView = new DataView('control-bindings-left', {
 
@@ -228,6 +231,7 @@
         'on-control-select': function (message) {
             controlProperties.setData(message.controlProperties);
             controlBindingInfoLeftDataView.setData(message.controlBindings);
+            controlAggregations.setData(message.controlAggregations);
 
             // Set bindings count
             document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';

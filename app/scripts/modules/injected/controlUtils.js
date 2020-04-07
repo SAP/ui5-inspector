@@ -483,6 +483,120 @@ var controlBindings = (function () {
 }());
 
 // ================================================================================
+// Control Aggregations Info
+// ================================================================================
+var controlAggregations = (function () {
+
+    var OWN = 'own';
+    var INHERITED = 'inherited';
+
+    /**
+     * Formatter for the inherited aggregations.
+     * @param {string} controlId
+     * @param {Object} aggregations - UI5 control aggregations
+     * @private
+     */
+    var _formatInheritedAggregations = function (controlId, aggregations) {
+
+        if (!aggregations[INHERITED]) {
+            return;
+        }
+
+        for (var i = 0; i < aggregations[INHERITED].length; i++) {
+            var parent = aggregations[INHERITED][i];
+            var title = parent.meta.controlName;
+            var aggrs = parent.aggregations;
+
+            parent = _assembleDataToView({
+                controlId: controlId,
+                expandable: false,
+                title: title,
+                editableValues: false
+            });
+
+            for (var key in aggrs) {
+                parent.data[key] = _formatAggregationValues(key, aggrs[key].value, aggrs[key].type);
+            }
+
+            var parentTitle = '<span gray>Inherits from</span>';
+            parentTitle += ' (' + title + ')';
+            parent.options.title = parentTitle;
+            aggregations[INHERITED + i] = parent;
+        }
+
+        delete aggregations[INHERITED];
+    };
+
+    var _formatAggregationValues = function (aggregationName, aggregationValue, aggregationType) {
+        var isAggrPopulatedArr = Array.isArray(aggregationValue) && aggregationValue.length > 0,
+            idString = "content (id)",
+            aggrTypeString = "aggregation type",
+            aggr = _assembleDataToView({
+                title: aggregationName,
+                expandable: true,
+                expanded: typeof aggregationValue === "string" || isAggrPopulatedArr,
+                editableValues: false,
+                showTypeInfo: true,
+            });
+
+        if (isAggrPopulatedArr) {
+            aggr.data[idString] = _assembleDataToView({
+                title: idString,
+                expandable: true,
+                expanded: false,
+                editableValues: false,
+                showTypeInfo: true,
+                data: aggregationValue
+            });
+        } else {
+            aggr.data[idString] = aggregationValue;
+        }
+
+        aggr.data[aggrTypeString] = aggregationType;
+
+        return aggr;
+    }
+
+    /**
+     * Formatter function for the control aggregations data.
+     * @param {string} controlId
+     * @param {Object} aggregations
+     * @returns {Object}
+     * @private
+     */
+    var _formatControlAggregations = function (controlId, aggregations) {
+
+        if (Object.keys(aggregations).length === 0) {
+            return aggregations;
+        }
+
+        var title = aggregations[OWN].meta.controlName;
+        var aggrs = aggregations[OWN].aggregations;
+
+        for (var key in aggrs) {
+            aggrs[key] = _formatAggregationValues(key, aggrs[key].value, aggrs[key].type);
+        }
+
+        aggregations[OWN] = _assembleDataToView({
+            controlId: controlId,
+            expandable: false,
+            title: title,
+            editableValues: false
+        });
+        aggregations[OWN].data = aggrs;
+        aggregations[OWN].options.title = '#' + controlId + ' <span gray>(' + title + ')</span>';
+
+        _formatInheritedAggregations(controlId, aggregations);
+
+        return aggregations;
+    };
+
+    return {
+        formatControlAggregations: _formatControlAggregations
+    };
+}());
+
+// ================================================================================
 // Public API
 // ================================================================================
 module.exports = {
@@ -511,6 +625,16 @@ module.exports = {
      */
     getControlPropertiesFormattedForDataView: function (controlId, properties) {
         return controlProperties.formatControlProperties(controlId, properties);
+    },
+
+    /**
+     * Returns aggregations for control in a formatted way.
+     * @param {string} controlId
+     * @param {Object} aggregations
+     * @returns {Object}
+     */
+    getControlAggregationsFormattedForDataView: function (controlId, aggregations) {
+        return controlAggregations.formatControlAggregations(controlId, aggregations);
     },
 
     /**

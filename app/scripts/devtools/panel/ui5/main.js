@@ -124,6 +124,21 @@
     // Dataview for control binding information
     var controlBindingInfoRightDataView = new DataView('control-bindings-right');
 
+    // Dataview for control events
+    var controlEvents = new DataView('control-events', {
+
+        /**
+         * Method fired when a clickable element is clicked.
+         * @param {Object} event
+         */
+        onValueClick: function (event) {
+            port.postMessage({
+                action: 'do-console-log-event-listener',
+                data: event.data
+            });
+        }
+    });
+
     // Bootstrap for 'Control inspector' tab
     // ================================================================================
 
@@ -203,6 +218,7 @@
         'on-control-select': function (message) {
             controlProperties.setData(message.controlProperties);
             controlBindingInfoLeftDataView.setData(message.controlBindings);
+            controlEvents.setData(message.controlEvents);
 
             // Set bindings count
             document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';

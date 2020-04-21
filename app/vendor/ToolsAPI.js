@@ -169,6 +169,89 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
          */
         var controlInformation = {
 
+            // Control Events Info
+            // ================================================================================
+
+            /**
+             * Creates an array with the control events that are inherited.
+             * @param {Object} control - UI5 control.
+             * @returns {Array}
+             * @private
+             */
+            _getInheritedEvents: function (control) {
+                var result = [];
+                var inheritedMetadata = control.getMetadata().getParent();
+
+                while (inheritedMetadata instanceof ElementMetadata) {
+                    result.push(this._prepareOwnOrInheritedEvents(control, inheritedMetadata));
+                    inheritedMetadata = inheritedMetadata.getParent();
+                }
+
+                return result;
+            },
+
+            /**
+             * Creates an object with all public control events.
+             * @param {Object} control - UI5 control.
+             * @param {Object} metadata - UI5 control metadata.
+             * @returns {Object}
+             * @private
+             */
+            _prepareOwnOrInheritedEvents: function (control, metadata) {
+                var result = Object.create(null),
+                    controlEventsFromMetadata = metadata.getEvents(),
+                    eventRegistry = control.mEventRegistry,
+                    metaParams, currRegistry, listener, view;
+
+                result.meta = Object.create(null);
+                result.meta.controlName = metadata.getName();
+
+                result.events = Object.create(null);
+                Object.keys(controlEventsFromMetadata).forEach(function (key) {
+                    metaParams = controlEventsFromMetadata[key].appData && controlEventsFromMetadata[key].appData.parameters;
+                    currRegistry = eventRegistry[key];
+                    result.events[key] = Object.create(null);
+                    result.events[key].paramsType = Object.create(null);
+                    
+                    if (metaParams) {
+                        for (var param in metaParams) {
+                            result.events[key].paramsType[param] = metaParams[param].type;
+                        }
+                    }
+
+                    result.events[key].registry = currRegistry && currRegistry.map(function(currListener) {
+                        view = currListener.oListener && currListener.oListener.oView;
+                        listener = Object.create(null);
+                        listener.viewId = view && view.sId;
+                        listener.controllerName = view && view._controllerName;
+                        listener.name = currListener.fFunction.name || "Anonymous";
+                        listener.body = currListener.fFunction;
+                        return listener;
+                    }, this);
+
+                }, this);
+
+                return result;
+            },
+
+            /**
+             * Creates an object with all control events.
+             * @param {string} controlId
+             * @returns {Object}
+             * @private
+             */
+            _getEvents: function (controlId) {
+                var control = sap.ui.getCore().byId(controlId);
+                var events = Object.create(null);
+
+                if (control) {
+                    events.own = this._prepareOwnOrInheritedEvents(control, control.getMetadata());
+                    events.inherited = this._getInheritedEvents(control);
+                }
+
+                return events;
+            },
+
             // Control Properties Info
             // ================================================================================
 
@@ -551,7 +634,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
 
         /**
          * Global object that provide common information for all support tools
-         * @type {{getFrameworkInformation: Function, getRenderedControlTree: Function, getControlProperties: Function, getControlAggregations: Function, getControlBindingInformation: Function}}
+         * @type {{getFrameworkInformation: Function, getRenderedControlTree: Function, getControlProperties: Function, getControlAggregations: Function, getControlEvents: Function, getControlBindingInformation: Function}}
          */
         return {
 
@@ -610,6 +693,15 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 result.context = controlInformation._getBindingContextsForControl(control);
 
                 return result;
+            },
+
+            /**
+             * Gets all control events.
+             * @param {string} controlId
+             * @returns {Object}
+             */
+            getControlEvents: function (controlId) {
+                return controlInformation._getEvents(controlId);
             }
         };
 

@@ -527,6 +527,14 @@ var controlAggregations = (function () {
         delete aggregations[INHERITED];
     };
 
+    /**
+     * Formatter function for each of the control's aggregations.
+     * @param {string} aggregationName
+     * @param {string, Array} aggregationValue
+     * @param {string} aggregationType
+     * @returns {Object}
+     * @private
+     */
     var _formatAggregationValues = function (aggregationName, aggregationValue, aggregationType) {
         var isAggrPopulatedArr = Array.isArray(aggregationValue) && aggregationValue.length > 0,
             idString = "content (id)",

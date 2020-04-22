@@ -219,23 +219,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 return result;
             },
 
-            /**
-             * Creates an array with the control aggregations that are inherited.
-             * @param {Object} control - UI5 control.
-             * @returns {Array}
-             * @private
-             */
-            _getInheritedAggregations: function (control) {
-                var result = [];
-                var inheritedMetadata = control.getMetadata().getParent();
-
-                while (inheritedMetadata instanceof ElementMetadata) {
-                    result.push(this._prepareOwnOrInheritedAggregations(control, inheritedMetadata));
-                    inheritedMetadata = inheritedMetadata.getParent();
-                }
-
-                return result;
-            },
 
             /**
              * Creates an array with the control properties that are inherited.
@@ -271,6 +254,27 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 }
 
                 return properties;
+            },
+
+            // Control Aggregations Info
+            // ================================================================================
+
+            /**
+             * Creates an array with the control aggregations that are inherited.
+             * @param {Object} control - UI5 control.
+             * @returns {Array}
+             * @private
+             */
+            _getInheritedAggregations: function (control) {
+                var result = [];
+                var inheritedMetadata = control.getMetadata().getParent();
+
+                while (inheritedMetadata instanceof ElementMetadata) {
+                    result.push(this._prepareOwnOrInheritedAggregations(control, inheritedMetadata));
+                    inheritedMetadata = inheritedMetadata.getParent();
+                }
+
+                return result;
             },
 
             /**

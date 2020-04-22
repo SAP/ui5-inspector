@@ -530,26 +530,25 @@ var controlAggregations = (function () {
     /**
      * Formatter function for each of the control's aggregations.
      * @param {string} aggregationName
-     * @param {string, Array} aggregationValue
+     * @param {Array} aggregationValue
      * @param {string} aggregationType
      * @returns {Object}
      * @private
      */
     var _formatAggregationValues = function (aggregationName, aggregationValue, aggregationType) {
-        var isAggrPopulatedArr = Array.isArray(aggregationValue) && aggregationValue.length > 0,
-            idString = "content (id)",
-            aggrTypeString = "aggregation type",
-            aggr = _assembleDataToView({
+        var isAggrPopulatedArr = Array.isArray(aggregationValue) && aggregationValue.length > 0;
+        var idString = 'content (id)';
+        var aggrTypeString = 'aggregation type';
+        var aggr = _assembleDataToView({
                 title: aggregationName,
                 expandable: true,
-                expanded: typeof aggregationValue === "string" || isAggrPopulatedArr,
+                expanded: typeof aggregationValue === 'string' || isAggrPopulatedArr,
                 editableValues: false,
                 showTypeInfo: true,
             });
 
         if (isAggrPopulatedArr) {
             aggr.data[idString] = _assembleDataToView({
-                title: idString,
                 expandable: true,
                 expanded: false,
                 editableValues: false,
@@ -563,7 +562,7 @@ var controlAggregations = (function () {
         aggr.data[aggrTypeString] = aggregationType;
 
         return aggr;
-    }
+    };
 
     /**
      * Formatter function for the control aggregations data.

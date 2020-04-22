@@ -201,7 +201,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 var result = Object.create(null),
                     controlEventsFromMetadata = metadata.getEvents(),
                     eventRegistry = control.mEventRegistry,
-                    metaParams, currRegistry, listener;
+                    metaParams, currRegistry, listener, view;
 
                 result.meta = Object.create(null);
                 result.meta.controlName = metadata.getName();
@@ -220,9 +220,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                     }
 
                     result.events[key].registry = currRegistry && currRegistry.map(function(currListener) {
+                        view = currListener.oListener && currListener.oListener.oView;
                         listener = Object.create(null);
-                        listener.viewId = currListener.oListener && currListener.oListener.oView.sId;
-                        listener.controllerName = currListener.oListener && currListener.oListener.oView._controllerName;
+                        listener.viewId = view && view.sId;
+                        listener.controllerName = view && view._controllerName;
                         listener.name = currListener.fFunction.name || "Anonymous";
                         listener.body = currListener.fFunction;
                         return listener;

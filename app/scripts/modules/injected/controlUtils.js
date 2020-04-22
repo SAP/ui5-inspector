@@ -494,7 +494,7 @@ var controlEvents = (function () {
                     curr.data["view id"] = listener.viewId;
                     curr.data["controller name"] = listener.controllerName;
                     curr.data[listenerBodyString] = new ClickableValue({
-                        value: "Log in DevTools",
+                        value: "Log in DevTools Console",
                         eventData: {
                             controlId: controlId,
                             eventName: eventName,

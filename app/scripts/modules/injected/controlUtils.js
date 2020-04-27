@@ -415,6 +415,7 @@ var controlEvents = (function () {
             var title = parent.meta.controlName;
             var evts = parent.events;
             var inheritedIncremented = INHERITED + i;
+            var listenerConfig;
 
             parent = _assembleDataToView({
                 controlId: controlId,
@@ -424,7 +425,11 @@ var controlEvents = (function () {
             });
 
             for (var key in evts) {
-                parent.data[key] = _formatEventValues(key, evts[key].paramsType, evts[key].registry, inheritedIncremented, controlId);
+                listenerConfig = Object.create(null);
+                listenerConfig.eventRegistry = evts[key].registry;
+                listenerConfig.rootObjectName = inheritedIncremented;
+                listenerConfig.controlId = controlId;
+                parent.data[key] = _formatEventValues(key, evts[key].paramsType, listenerConfig);
             }
 
             var parentTitle = '<span gray>Inherits from</span>';
@@ -440,19 +445,17 @@ var controlEvents = (function () {
      * Formatter function for a given control event.
      * @param {string} eventName
      * @param {string} eventParamsType
-     * @param {Array} eventRegistry
-     * @param {string} rootObjectName
-     * @param {string} controlId
-     * @param {Object} controlId
+     * @param {Object} listenerConfig
      * @returns {Object}
      * @private
      */
-    var _formatEventValues = function (eventName, eventParamsType, eventRegistry, rootObjectName, controlId) {
-        var listenersString = "listeners",
-            listenerBodyString = "function",
-            isParamsEmpty = Object.keys(eventParamsType).length === 0,
-            isRegistryPopulatedArray = Array.isArray(eventRegistry) && eventRegistry.length > 0,
-            evt;
+    var _formatEventValues = function (eventName, eventParamsType, listenerConfig) {
+        var listenersString = 'listeners';
+        var listenerBodyString = 'function';
+        var isParamsEmpty = Object.keys(eventParamsType).length === 0;
+        var evtRegistry = listenerConfig.eventRegistry;
+        var isRegistryPopulatedArray = Array.isArray(evtRegistry) && evtRegistry.length > 0;
+        var evt;
 
         // If there are no meta parameteres and no listeners, no further operations are needed
         if (isParamsEmpty && !isRegistryPopulatedArray) {
@@ -467,7 +470,7 @@ var controlEvents = (function () {
             showTypeInfo: true,
         });
 
-        evt.data["parameters"] = isParamsEmpty ? eventParamsType : 
+        evt.data.parameters = isParamsEmpty ? eventParamsType :
             _assembleDataToView({
                 expandable: true,
                 expanded: true,
@@ -482,7 +485,7 @@ var controlEvents = (function () {
                 expanded: true,
                 editableValues: false,
                 showTypeInfo: true,
-                data: eventRegistry.map(function (listener, index) {
+                data: evtRegistry.map(function (listener, index) {
                     var curr = _assembleDataToView({
                         title: listener.name,
                         expandable: true,
@@ -490,18 +493,18 @@ var controlEvents = (function () {
                         editableValues: false,
                         showTypeInfo: true
                     });
-    
-                    curr.data["view id"] = listener.viewId;
-                    curr.data["controller name"] = listener.controllerName;
+
+                    curr.data['view id'] = listener.viewId;
+                    curr.data['controller name'] = listener.controllerName;
                     curr.data[listenerBodyString] = new ClickableValue({
-                        value: "Log in DevTools Console",
+                        value: 'Log in DevTools Console',
                         eventData: {
-                            controlId: controlId,
+                            controlId: listenerConfig.controlId,
                             eventName: eventName,
                             listenerIndex: index
                         },
                         key: listenerBodyString,
-                        parent: _buildStringPathForListener([rootObjectName, eventName, listenersString, index])
+                        parent: _buildStringPathForListener([listenerConfig.rootObjectName, eventName, listenersString, index])
                     });
 
                     return curr;
@@ -509,7 +512,7 @@ var controlEvents = (function () {
             });
 
         return evt;
-    }
+    };
 
     /**
      * Helper function for building listener's path in the data.
@@ -518,10 +521,10 @@ var controlEvents = (function () {
      * @private
      */
     var _buildStringPathForListener = function (pathArr) {
-        var path = "";
+        var path = '';
 
         pathArr.forEach(function (pathQuery) {
-            path += pathQuery + "/data/"
+            path += pathQuery + '/data/';
         });
 
         return path;
@@ -542,9 +545,14 @@ var controlEvents = (function () {
 
         var title = events[OWN].meta.controlName;
         var evts = events[OWN].events;
+        var listenerConfig;
 
         for (var key in evts) {
-            evts[key] = _formatEventValues(key, evts[key].paramsType, evts[key].registry, OWN, controlId);
+            listenerConfig = Object.create(null);
+            listenerConfig.eventRegistry = evts[key].registry;
+            listenerConfig.rootObjectName = OWN;
+            listenerConfig.controlId = controlId;
+            evts[key] = _formatEventValues(key, evts[key].paramsType, listenerConfig);
         }
 
         events[OWN] = _assembleDataToView({

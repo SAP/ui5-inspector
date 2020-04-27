@@ -219,6 +219,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 return result;
             },
 
+
             /**
              * Creates an array with the control properties that are inherited.
              * @param {Object} control - UI5 control.
@@ -253,6 +254,96 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 }
 
                 return properties;
+            },
+
+            // Control Aggregations Info
+            // ================================================================================
+
+            /**
+             * Creates an array with the control aggregations that are inherited.
+             * @param {Object} control - UI5 control.
+             * @returns {Array}
+             * @private
+             */
+            _getInheritedAggregations: function (control) {
+                var result = [];
+                var inheritedMetadata = control.getMetadata().getParent();
+
+                while (inheritedMetadata instanceof ElementMetadata) {
+                    result.push(this._prepareOwnOrInheritedAggregations(control, inheritedMetadata));
+                    inheritedMetadata = inheritedMetadata.getParent();
+                }
+
+                return result;
+            },
+
+            /**
+             * Creates an object with all public control aggregations.
+             * @param {Object} control - UI5 control.
+             * @param {Object} metadata - UI5 control metadata.
+             * @returns {Object}
+             * @private
+             */
+            _prepareOwnOrInheritedAggregations: function (control, metadata) {
+                var result = Object.create(null),
+                    controlAggregationsFromMetadata = metadata.getAggregations();
+
+                result.meta = Object.create(null);
+                result.meta.controlName = metadata.getName();
+
+                result.aggregations = Object.create(null);
+                Object.keys(controlAggregationsFromMetadata).forEach(function (key) {
+                    result.aggregations[key] = Object.create(null);
+                    result.aggregations[key].value = this._getAggregationContent(control.getAggregation(key));
+                    result.aggregations[key].type = controlAggregationsFromMetadata[key].type;
+                }, this);
+
+                return result;
+            },
+
+            /**
+             * Gets the content of an aggregation.
+             * If the content has an ID, it returns the ID.
+             * It returns string, array or null depending on the aggregation status.
+             * @param {Object} aggregation
+             * @private
+             */
+            _getAggregationContent: function (aggregation) {
+                var content;
+
+                if (aggregation === null) {
+                    content = null;
+                } else if (aggregation.getId) {
+                    content = aggregation.getId();
+                } else if (Array.isArray(aggregation)) {
+                    content = aggregation.map(function(currAggregation) {
+                        return currAggregation.getId()
+                    });
+                } else {
+                    // In some cases like the sap.ui.core.TooltipBase, the aggregation
+                    // itself might be of primitive (String) type
+                    content = aggregation;
+                }
+
+                return content;
+            },
+
+            /**
+             * Creates an object with all control aggregations.
+             * @param {string} controlId
+             * @returns {Object}
+             * @private
+             */
+            _getAggregations: function (controlId) {
+                var control = sap.ui.getCore().byId(controlId);
+                var aggregations = Object.create(null);
+
+                if (control) {
+                    aggregations.own = this._prepareOwnOrInheritedAggregations(control, control.getMetadata());
+                    aggregations.inherited = this._getInheritedAggregations(control);
+                }
+
+                return aggregations;
             },
 
             // Binding Info
@@ -400,7 +491,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             * Creates an object with the agregations bindings of a UI5 control.
+             * Creates an object with the aggregations bindings of a UI5 control.
              * @param {Object} control
              * @returns {Object}
              * @private
@@ -460,7 +551,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
 
         /**
          * Global object that provide common information for all support tools
-         * @type {{getFrameworkInformation: Function, getRenderedControlTree: Function, getControlProperties: Function, getControlBindingInformation: Function}}
+         * @type {{getFrameworkInformation: Function, getRenderedControlTree: Function, getControlProperties: Function, getControlAggregations: Function, getControlBindingInformation: Function}}
          */
         return {
 
@@ -488,6 +579,15 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
              */
             getControlProperties: function (controlId) {
                 return controlInformation._getProperties(controlId);
+            },
+
+            /**
+             * Gets all control aggregations.
+             * @param {string} controlId
+             * @returns {Object}
+             */
+            getControlAggregations: function (controlId) {
+                return controlInformation._getAggregations(controlId);
             },
 
             /**

@@ -98,11 +98,13 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             var controlId = event.detail.target;
             var controlProperties = ToolsAPI.getControlProperties(controlId);
             var controlBindings = ToolsAPI.getControlBindings(controlId);
+            var controlAggregations = ToolsAPI.getControlAggregations(controlId);
 
             message.send({
                 action: 'on-control-select',
                 controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
-                controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings)
+                controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
+                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations)
             });
         },
 

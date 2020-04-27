@@ -35,6 +35,7 @@ function _applyInlineStylesForEndContainer(_splitterInstance, skipSizing) {
     var $end = _splitterInstance.$this.querySelector('end');
 
     $end.style.display = _splitterInstance._hideEndContainer ? 'none' : '';
+    _splitterInstance.$this.classList.toggle("endVisible", !_splitterInstance._hideEndContainer);
     if (!skipSizing) {
         $end.style.width = _splitterInstance._endContainerWidth || undefined;
         $end.style.height = _splitterInstance._endContainerHeight || undefined;

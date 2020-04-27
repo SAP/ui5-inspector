@@ -185,6 +185,8 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
         valueHTML = JSONFormatter.formatJSONtoHTML(value);
     } else if (typeof type === 'object') {
         valueHTML = DVHelper.wrapInSelectTag(value, attributes, type);
+    } else if (type === 'boolean') {
+        valueHTML = DVHelper.wrapInCheckBox(value, attributes);
     } else {
         valueHTML = DVHelper.valueNeedsQuotes(value, DVHelper.wrapInTag('value', value, attributes));
     }
@@ -355,6 +357,10 @@ DataView.prototype._onClickHandler = function () {
         if (targetElement.nodeName === 'SELECT') {
             that._onChangeHandler(targetElement);
         }
+
+        if (targetElement.nodeName === 'INPUT') {
+            that._onCheckBoxHandler(targetElement);
+        }
     };
 };
 
@@ -452,6 +458,41 @@ DataView.prototype._onChangeHandler = function (target) {
 
         value = target.selectedOptions[0].value;
         propertyData.value = DVHelper.getCorrectedValue(value);
+
+        that.onPropertyUpdated(propertyData);
+
+        target.removeEventListener('onchange', this);
+        that._selectValue = true;
+    };
+};
+
+/**
+ * Change event handler for the boolean values.
+ * @param {element} target - HTML DOM element
+ * @private
+ */
+DataView.prototype._onCheckBoxHandler = function (target) {
+    var that = this;
+
+    if (!target) {
+        return;
+    }
+
+    /**
+     * Handler for change event.
+     * @param {Object} e
+     */
+    target.onchange = function (e) {
+        var propertyData = {};
+        var propertyName;
+        var target = e.target;
+
+        propertyData.controlId = target.getAttribute('data-control-id');
+
+        propertyName = target.getAttribute('data-property-name');
+        propertyData.property = propertyName.charAt(0).toUpperCase() + propertyName.slice(1);
+
+        propertyData.value = target.checked;
 
         that.onPropertyUpdated(propertyData);
 

@@ -41,6 +41,10 @@ pre {
   word-wrap: break-word;
   white-space: pre-wrap;
 }
+[verical-aligment] {
+  display: inline-block;
+  vertical-align: middle;
+}
 section-title,
 value {
   color: #000000;
@@ -114,121 +118,6 @@ overlay p {
   padding: 0 1rem;
   margin: 1rem 0;
   line-height: 1.25;
-}
-.blockList {
-  flex-direction: column;
-  background-color: white;
-  /* Text and background color for dark mode */
-}
-.blockList article {
-  border-color: black;
-  border-style: solid;
-  border-width: 1px 1px 1px;
-  margin-bottom: 3px;
-  padding: 2px;
-}
-.blockList section {
-  border-color: black;
-  border-style: dotted;
-  border-width: 1px 0 0;
-}
-.blockList h3,
-.blockList h4,
-.blockList p {
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-.blockList .clickable {
-  text-decoration: underline;
-}
-.blockList .error {
-  color: red;
-}
-.blockList tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-.blockList td.status,
-.blockList td.method {
-  min-width: 30px;
-}
-.blockList td.note {
-  min-width: 100px;
-}
-.blockList tr:hover {
-  background-color: AliceBlue;
-}
-.blockList .hidden {
-  visibility: hidden;
-}
-.blockList .editorAlt {
-  margin: auto;
-}
-@media (max-width: 80em) {
-  .blockList #outer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 70%;
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
-  }
-  .blockList #list {
-    position: relative;
-    word-wrap: break-word;
-    word-break: break-all;
-    width: 100%;
-    padding: 2px;
-  }
-  .blockList #editor {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    min-width: 60em /* left: 0; */;
-  }
-}
-@media (min-width: 80em) {
-  .blockList #outer {
-    position: absolute;
-    top: 0;
-    /* right: 0; */
-    bottom: 0;
-    width: 100%;
-    overflow-y: scroll;
-  }
-  .blockList #list {
-    position: relative;
-    word-wrap: break-word;
-    word-break: break-all;
-    width: 97%;
-    padding: 2px;
-  }
-  .blockList #editor {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 40%;
-    min-width: 60em /* left: 0; */;
-  }
-}
-@media (prefers-color-scheme: dark) {
-  .blockList body {
-    color: #ddd;
-    background-color: #222;
-  }
-  .blockList article {
-    border-color: white;
-  }
-  .blockList section {
-    border-color: white;
-  }
-  .blockList a {
-    color: lightblue;
-  }
 }
 /* ==========================================================================
    Tabs
@@ -611,4 +500,495 @@ splitter[orientation="vertical"] > divider handler {
 }
 [json] number {
   color: #222222;
+}
+.data-grid {
+  height: 100%;
+}
+span.batchIcon,
+span.requestIcon {
+  margin-left: 1px;
+  margin-right: 4px;
+}
+span.requestIcon {
+  font-size: 1rem;
+  vertical-align: middle;
+}
+odata-master-view,
+odata-detail-view {
+  height: 100%;
+}
+.odataTab {
+  flex-direction: column;
+  background-color: white;
+  /* Text and background color for dark mode */
+}
+.odataTab .data-grid:focus {
+  outline: none;
+}
+.odataTab h3,
+.odataTab h4,
+.odataTab p {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.odataTab .error {
+  color: red;
+}
+.odataTab span.url {
+  margin-right: 0.15rem;
+  margin-left: 0.15rem;
+  font-size: medium;
+  vertical-align: middle;
+}
+.odataTab tr.batch span.url {
+  font-size: small;
+  vertical-align: baseline;
+}
+.odataTab td.url {
+  padding-bottom: 0.3rem;
+  padding-top: 0.3rem;
+}
+.odataTab .secondLevel td.url {
+  padding-left: 1rem;
+}
+.odataTab tr:nth-child(even) {
+  background-color: white;
+}
+.odataTab tr {
+  padding: 0.05rem;
+}
+.odataTab td.status,
+.odataTab td.method {
+  min-width: 30px;
+}
+.odataTab td.note {
+  min-width: 100px;
+}
+.odataTab splitter.endVisible td.note {
+  display: none;
+}
+.odataTab tr.data-grid-data-grid-node:hover {
+  background-color: AliceBlue;
+  cursor: pointer;
+}
+.odataTab tr.selected {
+  background-color: Lightblue;
+}
+.odataTab .hidden {
+  visibility: hidden;
+}
+.odataTab .editorAlt {
+  display: flex;
+}
+.odataTab .editorAlt div {
+  margin: auto;
+}
+.odataTab splitter {
+  background-color: #f2f2f2;
+}
+.odataTab splitter start {
+  flex-direction: column;
+}
+.odataTab splitter > end > close-button {
+  top: 0.15rem;
+  left: 0.2rem;
+  right: auto;
+  opacity: 0.7;
+}
+.odataTab splitter > start clear-button {
+  height: 1.3rem;
+  width: 1.3rem;
+  padding-top: 0.15rem;
+  padding-left: 0.15rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  color: #838181;
+  font-weight: bold;
+  display: block;
+}
+.odataTab splitter > start clear-button:hover {
+  opacity: 1;
+}
+.odataTab .data-grid,
+.odataTab #editor,
+.odataTab .editorAlt {
+  position: absolute;
+  top: 1.3rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+}
+.odataTab table {
+  width: 100%;
+}
+@media (prefers-color-scheme: dark) {
+  .odataTab body {
+    color: #ddd;
+    background-color: #222;
+  }
+  .odataTab section {
+    border-color: white;
+  }
+  .odataTab a {
+    color: lightblue;
+  }
+}
+/*
+ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *        notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *        notice, this list of conditions and the following disclaimer in the
+ *        documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.         IN NO EVENT SHALL APPLE INC. OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+.data-grid {
+  position: relative;
+  line-height: 120%;
+  border: 1px solid #cccccc !important;
+}
+.data-grid table {
+  table-layout: fixed;
+  border-spacing: 0px;
+  border-collapse: separate;
+  height: 100%;
+  width: 100%;
+}
+.data-grid .header-container,
+.data-grid .data-container {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  overflow-x: hidden;
+}
+.data-grid .header-container {
+  top: 0px;
+  height: 21px;
+}
+.data-grid .data-container {
+  top: 21px;
+  bottom: 0px;
+  overflow-y: overlay;
+  transform: translateZ(0px);
+}
+.data-grid .aria-live-label {
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.data-grid.inline .header-container,
+.data-grid.inline .data-container {
+  position: static;
+}
+.data-grid.inline .corner {
+  display: none;
+}
+.platform-mac .data-grid .corner,
+.data-grid.data-grid-fits-viewport .corner {
+  display: none;
+}
+.data-grid .corner {
+  width: 14px;
+  padding-right: 0px;
+  padding-left: 0px;
+  border-left: 0px none transparent !important;
+}
+.data-grid .top-filler-td,
+.data-grid .bottom-filler-td {
+  height: auto !important;
+  padding: 0px !important;
+}
+.data-grid table.data {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  border-top: 0px none transparent;
+  table-layout: fixed;
+}
+.data-grid.inline table.data {
+  position: static;
+}
+.data-grid table.data tr {
+  display: none;
+  height: 20px;
+}
+.data-grid table.data tr.revealed {
+  display: table-row;
+}
+.striped-data-grid .revealed.data-grid-data-grid-node:nth-child(2n+1),
+.striped-data-grid-starts-with-odd .revealed.data-grid-data-grid-node:nth-child(2n) {
+  background-color: #f2f7fd;
+}
+.data-grid td,
+.data-grid th {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 18px;
+  height: 18px;
+  border-left: 1px solid #aaaaaa;
+  padding: 1px 4px;
+}
+.data-grid th:first-child,
+.data-grid td:first-child {
+  border-left: none !important;
+}
+.data-grid td {
+  vertical-align: top;
+  user-select: text;
+}
+.data-grid th {
+  text-align: left;
+  background-color: var(--toolbar-bg-color);
+  border-bottom: 1px solid #aaaaaa;
+  font-weight: normal;
+  vertical-align: middle;
+}
+.data-grid td > div,
+.data-grid th > div {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.data-grid td.editing > div {
+  text-overflow: clip;
+}
+.data-grid .center {
+  text-align: center;
+}
+.data-grid .right {
+  text-align: right;
+}
+.data-grid th.sortable {
+  position: relative;
+}
+.data-grid th.sortable:active::after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+.data-grid th .sort-order-icon-container {
+  position: absolute;
+  top: 1px;
+  right: 0px;
+  bottom: 1px;
+  display: flex;
+  align-items: center;
+}
+.data-grid th .sort-order-icon {
+  margin-right: 4px;
+  margin-bottom: -2px;
+  display: none;
+}
+.data-grid th.sort-ascending .sort-order-icon,
+.data-grid th.sort-descending .sort-order-icon {
+  display: block;
+}
+.data-grid th.sortable:hover {
+  background-color: #e6e6e6;
+}
+.data-grid .top-filler-td {
+  border-bottom: 0px none transparent;
+  line-height: 0;
+}
+.data-grid button {
+  line-height: 18px;
+  color: inherit;
+}
+.data-grid td.disclosure::before {
+  user-select: none;
+  -webkit-mask-image: url("/images/treeoutlineTriangles.svg");
+  -webkit-mask-position: 0px 0px;
+  -webkit-mask-size: 32px 24px;
+  float: left;
+  width: 8px;
+  height: 12px;
+  margin-right: 2px;
+  content: "";
+  position: relative;
+  top: 3px;
+  background-color: #6e6e6e;
+}
+.data-grid tr:not(.parent) td.disclosure::before {
+  background-color: transparent;
+}
+.data-grid tr.expanded td.disclosure::before {
+  -webkit-mask-position: -16px 0px;
+}
+.data-grid table.data tr.revealed.selected {
+  background-color: #d4d4d4;
+  color: inherit;
+}
+.data-grid:focus table.data tr.selected {
+  background-color: var(--selection-bg-color);
+  color: var(--selection-fg-color);
+}
+.data-grid:focus tr.selected .devtools-link {
+  color: var(--selection-fg-color);
+}
+.data-grid:focus tr.parent.selected td.disclosure::before {
+  background-color: var(--selection-fg-color);
+  -webkit-mask-position: 0px 0px;
+}
+.data-grid:focus tr.expanded.selected td.disclosure::before {
+  background-color: var(--selection-fg-color);
+  -webkit-mask-position: -16px 0px;
+}
+.data-grid tr.inactive {
+  color: #808080;
+  font-style: italic;
+}
+.data-grid tr.dirty {
+  background-color: #ffd6d6;
+  color: red;
+  font-style: normal;
+}
+.data-grid:focus tr.selected.dirty {
+  background-color: #ff6666;
+}
+.data-grid td.show-more {
+  white-space: normal;
+}
+.data-grid td.show-more::before {
+  display: none;
+}
+.data-grid-resizer {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  width: 5px;
+  z-index: 500;
+}
+.data-grid {
+  cursor: default;
+  font-family: ".SFNSDisplay-Regular", "Helvetica Neue", "Lucida Grande", sans-serif;
+  font-size: 12px;
+  tab-size: 4;
+  user-select: none;
+  color: #222222;
+  background: white;
+}
+.data-grid * {
+  min-width: 0px;
+  min-height: 0px;
+}
+.data-grid * {
+  box-sizing: border-box;
+}
+.data-grid :focus {
+  outline-width: 0px;
+}
+.data-grid input[type="radio"]:focus {
+  outline: -webkit-focus-ring-color auto 5px;
+}
+.data-grid img {
+  -webkit-user-drag: none;
+}
+.data-grid iframe,
+.data-grid a img {
+  border: none;
+}
+.data-grid button,
+.data-grid input,
+.data-grid select {
+  font-family: inherit;
+  font-size: inherit;
+}
+.data-grid input {
+  background-color: white;
+  color: inherit;
+}
+.data-grid input::placeholder {
+  color: rgba(0, 0, 0, 0.54);
+}
+.data-grid span[is="dt-icon-label"] {
+  flex: 0 0 auto;
+}
+.data-grid [is="ui-icon"] {
+  display: inline-block;
+  flex-shrink: 0;
+}
+.data-grid [is="ui-icon"].icon-mask {
+  background-color: #6e6e6e;
+  -webkit-mask-position: var(--spritesheet-position);
+}
+.data-grid .spritesheet-smallicons:not(.icon-mask) {
+  background-image: url("/images/smallIcons.svg");
+}
+.data-grid .spritesheet-smallicons.icon-mask {
+  -webkit-mask-image: url("/images/smallIcons.svg");
+}
+.data-grid .spritesheet-largeicons.icon-mask {
+  -webkit-mask-image: url("Images/largeIcons.svg");
+}
+.data-grid .spritesheet-mediumicons.icon-mask {
+  -webkit-mask-image: url("Images/mediumIcons.svg");
+}
+.data-grid :host-context(.force-white-icons) [is="ui-icon"].spritesheet-smallicons,
+.data-grid .force-white-icons [is="ui-icon"].spritesheet-smallicons,
+.data-grid [is="ui-icon"].force-white-icons.spritesheet-smallicons,
+.data-grid -theme-preserve {
+  -webkit-mask-image: url("/images/smallIcons.svg");
+  -webkit-mask-position: var(--spritesheet-position);
+  background: #fafafa !important;
+}
+.data-grid ::selection {
+  background-color: #bbdefb;
+}
+.data-grid [data-aria-utils-animation-hack] {
+  animation: 0s ease 0s 1 normal none running ANIMATION-HACK;
+}
+:root {
+  height: 100%;
+  overflow: hidden;
+}
+:root {
+  --accent-color: #1a73e8;
+  --accent-fg-color: #1a73e8;
+  --accent-color-hover: #3b86e8;
+  --active-control-bg-color: #5a5a5a;
+  --focus-bg-color: #e2eaf3;
+  --input-validation-error: #db1600;
+  --toolbar-bg-color: #f3f3f3;
+  --toolbar-hover-bg-color: #eaeaea;
+  --selection-fg-color: white;
+  --selection-inactive-fg-color: #5a5a5a;
+  --selection-inactive-bg-color: #dadada;
+  --tab-selected-fg-color: #333;
+  --tab-selected-bg-color: var(--toolbar-bg-color);
+  --drop-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+  --divider-color: #d0d0d0;
+  --focus-ring-inactive-shadow: 0 0 0 1px #e0e0e0;
+  --item-selection-bg-color: #cfe8fc;
+  --item-selection-inactive-bg-color: #e0e0e0;
+}
+:root {
+  --focus-ring-active-shadow: 0 0 0 1px var(--accent-color);
+  --selection-bg-color: var(--accent-color);
+  --divider-border: 1px solid var(--divider-color);
+  --item-hover-color: rgba(56, 121, 217, 0.1);
 }

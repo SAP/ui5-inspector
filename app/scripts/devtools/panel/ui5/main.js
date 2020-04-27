@@ -16,7 +16,12 @@
     var ControlTree = require('../../../modules/ui/ControlTree.js');
     var DataView = require('../../../modules/ui/DataView.js');
     var Splitter = require('../../../modules/ui/SplitContainer.js');
-    var odata = require('../../../modules/utils/odata.js');
+    var ODataDetailView = require('../../../modules/ui/ODataDetailView.js');
+    var ODataMasterView = require('../../../modules/ui/ODataMasterView.js');
+
+    // Apply theme
+    // ================================================================================
+    utils.applyTheme(chrome.devtools.panels.themeName);
 
     // Create a port with background page for continuous message communication
     // ================================================================================
@@ -133,9 +138,22 @@
     // ================================================================================
     var odataHorizontalSplitter = new Splitter('odata-horizontal-splitter', {
         endContainerWidth: '50%',
-        isEndContainerClosable: true
+        isEndContainerClosable: true,
+        hideEndContainer: true
     });
-    window['splitterRef'] = odataHorizontalSplitter; //TODO
+
+    var oDataDetailView = new ODataDetailView("odata-tab-detail");
+    new ODataMasterView("odata-tab-master", {
+        onSelectItem: function(data) {
+            odataHorizontalSplitter.showEndContainer();
+            oDataDetailView.update(data);
+        },
+        onClearItems: function() {
+            oDataDetailView.clear();
+            odataHorizontalSplitter.hideEndContainer();
+        }
+    });
+
 
     // ================================================================================
     // Communication

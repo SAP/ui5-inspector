@@ -96,6 +96,9 @@
         endContainerTitle: 'Model Information'
     });
 
+    // Dataview for control aggregations
+    var controlAggregations = new DataView('control-aggregations');
+
     // Dataview for control binding information - left part
     var controlBindingInfoLeftDataView = new DataView('control-bindings-left', {
 
@@ -218,6 +221,7 @@
         'on-control-select': function (message) {
             controlProperties.setData(message.controlProperties);
             controlBindingInfoLeftDataView.setData(message.controlBindings);
+            controlAggregations.setData(message.controlAggregations);
             controlEvents.setData(message.controlEvents);
 
             // Set bindings count

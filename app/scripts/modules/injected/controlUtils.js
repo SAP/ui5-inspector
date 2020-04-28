@@ -391,6 +391,190 @@ var controlProperties = (function () {
 }());
 
 // ================================================================================
+// Control Events Info
+// ================================================================================
+var controlEvents = (function () {
+
+    var OWN = 'own';
+    var INHERITED = 'inherited';
+
+    /**
+     * Formatter for the inherited events.
+     * @param {string} controlId
+     * @param {Object} events - UI5 control events
+     * @private
+     */
+    var _formatInheritedEvents = function (controlId, events) {
+
+        if (!events[INHERITED]) {
+            return;
+        }
+
+        for (var i = 0; i < events[INHERITED].length; i++) {
+            var parent = events[INHERITED][i];
+            var title = parent.meta.controlName;
+            var evts = parent.events;
+            var inheritedIncremented = INHERITED + i;
+            var listenerConfig;
+
+            parent = _assembleDataToView({
+                controlId: controlId,
+                expandable: false,
+                title: title,
+                editableValues: false
+            });
+
+            for (var key in evts) {
+                listenerConfig = Object.create(null);
+                listenerConfig.eventRegistry = evts[key].registry;
+                listenerConfig.rootObjectName = inheritedIncremented;
+                listenerConfig.controlId = controlId;
+                parent.data[key] = _formatEventValues(key, evts[key].paramsType, listenerConfig);
+            }
+
+            var parentTitle = '<span gray>Inherits from</span>';
+            parentTitle += ' (' + title + ')';
+            parent.options.title = parentTitle;
+            events[inheritedIncremented] = parent;
+        }
+
+        delete events[INHERITED];
+    };
+
+    /**
+     * Formatter function for a given control event.
+     * @param {string} eventName
+     * @param {string} eventParamsType
+     * @param {Object} listenerConfig
+     * @returns {Object}
+     * @private
+     */
+    var _formatEventValues = function (eventName, eventParamsType, listenerConfig) {
+        var listenersString = 'listeners';
+        var listenerBodyString = 'function';
+        var isParamsEmpty = Object.keys(eventParamsType).length === 0;
+        var evtRegistry = listenerConfig.eventRegistry;
+        var isRegistryPopulatedArray = Array.isArray(evtRegistry) && evtRegistry.length > 0;
+        var evt;
+
+        // If there are no meta parameteres and no listeners, no further operations are needed
+        if (isParamsEmpty && !isRegistryPopulatedArray) {
+            return Object.create(null);
+        }
+
+        evt = _assembleDataToView({
+            title: eventName,
+            expandable: true,
+            expanded: true,
+            editableValues: false,
+            showTypeInfo: true,
+        });
+
+        evt.data.parameters = isParamsEmpty ? eventParamsType :
+            _assembleDataToView({
+                expandable: true,
+                expanded: true,
+                editableValues: false,
+                showTypeInfo: true,
+                data: eventParamsType
+            });
+
+        evt.data[listenersString] = !isRegistryPopulatedArray ? [] :
+            _assembleDataToView({
+                expandable: true,
+                expanded: true,
+                editableValues: false,
+                showTypeInfo: true,
+                data: evtRegistry.map(function (listener, index) {
+                    var curr = _assembleDataToView({
+                        title: listener.name,
+                        expandable: true,
+                        expanded: true,
+                        editableValues: false,
+                        showTypeInfo: true
+                    });
+
+                    curr.data['view id'] = listener.viewId;
+                    curr.data['controller name'] = listener.controllerName;
+                    curr.data[listenerBodyString] = new ClickableValue({
+                        value: 'Log in DevTools Console',
+                        eventData: {
+                            controlId: listenerConfig.controlId,
+                            eventName: eventName,
+                            listenerIndex: index
+                        },
+                        key: listenerBodyString,
+                        parent: _buildStringPathForListener([listenerConfig.rootObjectName, eventName, listenersString, index])
+                    });
+
+                    return curr;
+                })
+            });
+
+        return evt;
+    };
+
+    /**
+     * Helper function for building listener's path in the data.
+     * @param {Array} pathArr
+     * @returns {string}
+     * @private
+     */
+    var _buildStringPathForListener = function (pathArr) {
+        var path = '';
+
+        pathArr.forEach(function (pathQuery) {
+            path += pathQuery + '/data/';
+        });
+
+        return path;
+    };
+
+    /**
+     * Formatter function for the control events data.
+     * @param {string} controlId
+     * @param {Object} events
+     * @returns {Object}
+     * @private
+     */
+    var _formatControlEvents = function (controlId, events) {
+
+        if (Object.keys(events).length === 0) {
+            return events;
+        }
+
+        var title = events[OWN].meta.controlName;
+        var evts = events[OWN].events;
+        var listenerConfig;
+
+        for (var key in evts) {
+            listenerConfig = Object.create(null);
+            listenerConfig.eventRegistry = evts[key].registry;
+            listenerConfig.rootObjectName = OWN;
+            listenerConfig.controlId = controlId;
+            evts[key] = _formatEventValues(key, evts[key].paramsType, listenerConfig);
+        }
+
+        events[OWN] = _assembleDataToView({
+            controlId: controlId,
+            expandable: false,
+            title: title,
+            editableValues: false
+        });
+        events[OWN].data = evts;
+        events[OWN].options.title = '#' + controlId + ' <span gray>(' + title + ')</span>';
+
+        _formatInheritedEvents(controlId, events);
+
+        return events;
+    };
+
+    return {
+        formatControlEvents: _formatControlEvents
+    };
+}());
+
+// ================================================================================
 // Binding Info
 // ================================================================================
 var controlBindings = (function () {
@@ -657,5 +841,15 @@ module.exports = {
         controlBindings.getControlAggregationsFormattedForDataView(controlBindingData, resultControlBindingData);
 
         return resultControlBindingData;
-    }
+    },
+
+    /**
+     * Returns events for control in a formatted way.
+     * @param {string} controlId
+     * @param {Object} events
+     * @returns {Object}
+     */
+    getControlEventsFormattedForDataView: function (controlId, events) {
+        return controlEvents.formatControlEvents(controlId, events);
+    },
 };

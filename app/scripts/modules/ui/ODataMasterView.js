@@ -1,4 +1,5 @@
 const DataGrid = require('./datagrid/DataGrid.js');
+const UIUtils = require('./datagrid/UIUtils.js');
 const multipartmixed2har = require('../utils/multipartmixed2har.js');
 
 
@@ -161,16 +162,15 @@ function ODataMasterView(domId, options) {
 }
 
 ODataMasterView.prototype._createClearButton = function() {
-    var oElement = document.createElement('clear-button');
-    oElement.title="Clear";
-    oElement.innerHTML = '&#8856;';
+    var oIcon = UIUtils.Icon.create('', 'toolbar-glyph hidden');
+    oIcon.setIconType("largeicon-clear");
 
-    oElement.onclick = function() {
+    oIcon.onclick = function() {
         this.oDataGrid.rootNode().removeChildren();
         this.onClearItems();
     }.bind(this);
 
-    return oElement;
+    return oIcon;
 };
 
 ODataMasterView.prototype._createDataGrid = function() {

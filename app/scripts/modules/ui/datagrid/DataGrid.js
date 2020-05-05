@@ -38,127 +38,6 @@ function ls(strings) {
   return strings;
 }
 
-function registerCustomElement(localName, typeExtension, definition) {
-  self.customElements.define(typeExtension, class extends definition {
-    constructor() {
-      super();
-      // TODO(einbinder) convert to classes and custom element tags
-      this.setAttribute('is', typeExtension);
-    }
-  }, {extends: localName});
-  return () => createElement(localName, typeExtension);
-}
-
-
-class Icon extends HTMLSpanElement {
-  constructor() {
-    super();
-    /** @type {?Icon.Descriptor} */
-    this._descriptor = null;
-    /** @type {?Icon.SpriteSheet} */
-    this._spriteSheet = null;
-    /** @type {string} */
-    this._iconType = '';
-  }
-
-  /**
-   * @param {string=} iconType
-   * @param {string=} className
-   * @return {!Icon}
-   */
-  static create(iconType, className) {
-    if (!Icon._constructor) {
-      Icon._constructor = registerCustomElement('span', 'ui-icon', Icon);
-    }
-
-    const icon = /** @type {!Icon} */ (Icon._constructor());
-    if (className) {
-      icon.className = className;
-    }
-    if (iconType) {
-      icon.setIconType(iconType);
-    }
-    return icon;
-  }
-
-  /**
-   * @param {string} iconType
-   */
-  setIconType(iconType) {
-    if (this._descriptor) {
-      this.style.removeProperty('--spritesheet-position');
-      this.style.removeProperty('width');
-      this.style.removeProperty('height');
-      this._toggleClasses(false);
-      this._iconType = '';
-      this._descriptor = null;
-      this._spriteSheet = null;
-    }
-    const descriptor = Descriptors[iconType] || null;
-    if (descriptor) {
-      this._iconType = iconType;
-      this._descriptor = descriptor;
-      this._spriteSheet = SpriteSheets[this._descriptor.spritesheet];
-      console.assert(
-        this._spriteSheet, `ERROR: icon ${this._iconType} has unknown spritesheet: ${this._descriptor.spritesheet}`);
-
-      this.style.setProperty('--spritesheet-position', this._propertyValue());
-      this.style.setProperty('width', this._spriteSheet.cellWidth + 'px');
-      this.style.setProperty('height', this._spriteSheet.cellHeight + 'px');
-      this._toggleClasses(true);
-    } else if (iconType) {
-      throw new Error(`ERROR: failed to find icon descriptor for type: ${iconType}`);
-    }
-  }
-
-  /**
-   * @param {boolean} value
-   */
-  _toggleClasses(value) {
-    this.classList.toggle('spritesheet-' + this._descriptor.spritesheet, value);
-    this.classList.toggle(this._iconType, value);
-    this.classList.toggle('icon-mask', value && !!this._descriptor.isMask);
-    this.classList.toggle('icon-invert', value && !!this._descriptor.invert);
-  }
-
-  /**
-   * @return {string}
-   */
-  _propertyValue() {
-    if (!this._descriptor.coordinates) {
-      if (!this._descriptor.position || !_positionRegex.test(this._descriptor.position)) {
-        throw new Error(`ERROR: icon '${this._iconType}' has malformed position: '${this._descriptor.position}'`);
-      }
-      const column = this._descriptor.position[0].toLowerCase().charCodeAt(0) - 97;
-      const row = parseInt(this._descriptor.position.substring(1), 10) - 1;
-      this._descriptor.coordinates = {
-        x: -(this._spriteSheet.cellWidth + this._spriteSheet.padding) * column,
-        y: (this._spriteSheet.cellHeight + this._spriteSheet.padding) * (row + 1) - this._spriteSheet.padding
-      };
-    }
-    return `${this._descriptor.coordinates.x}px ${this._descriptor.coordinates.y}px`;
-  }
-}
-
-const _positionRegex = /^[a-z][1-9][0-9]*$/;
-
-/** @enum {!Icon.SpriteSheet} */
-const SpriteSheets = {
-  'smallicons': {cellWidth: 10, cellHeight: 10, padding: 10},
-  'mediumicons': {cellWidth: 16, cellHeight: 16, padding: 0},
-  'largeicons': {cellWidth: 28, cellHeight: 24, padding: 0},
-  'arrowicons': {cellWidth: 19, cellHeight: 19, padding: 0}
-};
-
-/** @enum {!Icon.Descriptor} */
-const Descriptors = {
-  'smallicon-triangle-down': {position: 'e2', spritesheet: 'smallicons', isMask: true},
-  'smallicon-triangle-right': {position: 'a1', spritesheet: 'smallicons', isMask: true},
-  'smallicon-triangle-up': {position: 'b1', spritesheet: 'smallicons', isMask: true}
-};
-
-
-
 
 /**
  * @implements {EventTarget}
@@ -538,7 +417,7 @@ class DataGridImpl extends ObjectWrapper {
     if (column.sortable) {
       cell.addEventListener('click', this._clickInHeaderCell.bind(this), false);
       cell.classList.add('sortable');
-      const icon = Icon.create('', 'sort-order-icon');
+      const icon = UIUtils.Icon.create('', 'sort-order-icon');
       cell.createChild('div', 'sort-order-icon-container').appendChild(icon);
       cell[DataGrid._sortIconSymbol] = icon;
     }

@@ -1,5 +1,7 @@
 'use strict';
 
+require('./datagrid/UIUtils.js');
+
 /**
  * Returns the HTML for the divider.
  * @returns {string}
@@ -101,7 +103,8 @@ function _createEndContainerHeader(splitterInstance) {
  * @private
  */
 function _createCloseButton(splitterInstance) {
-    var closeButtonElement = document.createElement('close-button');
+    var closeButtonElement = createElement('div', 'dt-close-button');
+    closeButtonElement.classList.add("toolbar-item");
     splitterInstance.$this.querySelector('end').appendChild(closeButtonElement);
 
     closeButtonElement.onclick = splitterInstance.hideEndContainer.bind(splitterInstance);

@@ -91,6 +91,15 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         },
 
         /**
+         * Handler for logging event listener fucntion.
+         * @param {Object} event
+         */
+        'do-console-log-event-listener': function (event) {
+            var evtData = event.detail.data;
+            console.log(sap.ui.getCore().byId(evtData.controlId).mEventRegistry[evtData.eventName][evtData.listenerIndex].fFunction);
+        },
+
+        /**
          * Handler for element selection in the ControlTree.
          * @param {Object} event
          */
@@ -99,12 +108,14 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             var controlProperties = ToolsAPI.getControlProperties(controlId);
             var controlBindings = ToolsAPI.getControlBindings(controlId);
             var controlAggregations = ToolsAPI.getControlAggregations(controlId);
+            var controlEvents = ToolsAPI.getControlEvents(controlId);
 
             message.send({
                 action: 'on-control-select',
                 controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
                 controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
-                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations)
+                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations),
+                controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
             });
         },
 

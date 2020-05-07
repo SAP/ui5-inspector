@@ -346,7 +346,15 @@ DataView.prototype._onClickHandler = function () {
             var attributes = event.target.attributes;
             var key = attributes.key.value;
             var parent = attributes.parent.value;
-            var eventData = DVHelper.getObjectProperty(that.getData()[parent].data, key).eventData;
+            var currData = that.getData();
+            var eventData;
+
+            if (currData[parent]) {
+                eventData = DVHelper.getObjectProperty(currData[parent].data, key).eventData;
+            } else {
+                // In case of event listeners
+                eventData = DVHelper.getObjectProperty(currData, parent + key).eventData;
+            }
 
             that.onValueClick({
                 target: key,

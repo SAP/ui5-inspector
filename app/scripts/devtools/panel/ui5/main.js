@@ -99,6 +99,9 @@
     // Dataview for control aggregations
     var controlAggregations = new DataView('control-aggregations');
 
+    // Dataview for control binding information
+    var controlBindingInfoRightDataView = new DataView('control-bindings-right');
+
     // Dataview for control binding information - left part
     var controlBindingInfoLeftDataView = new DataView('control-bindings-left', {
 
@@ -123,9 +126,6 @@
             controlBindingsSplitter.showEndContainer();
         }
     });
-
-    // Dataview for control binding information
-    var controlBindingInfoRightDataView = new DataView('control-bindings-right');
 
     // Dataview for control events
     var controlEvents = new DataView('control-events', {

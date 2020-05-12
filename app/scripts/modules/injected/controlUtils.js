@@ -390,6 +390,22 @@ var controlProperties = (function () {
     };
 }());
 
+/**
+ * Helper function for building listener's path in the data.
+ * @param {Array} pathArr
+ * @returns {string}
+ * @private
+ */
+var _buildStringPathForListener = function (pathArr) {
+    var path = '';
+
+    pathArr.forEach(function (pathQuery) {
+        path += pathQuery + '/data/';
+    });
+
+    return path;
+};
+
 // ================================================================================
 // Control Events Info
 // ================================================================================
@@ -397,49 +413,6 @@ var controlEvents = (function () {
 
     var OWN = 'own';
     var INHERITED = 'inherited';
-
-    /**
-     * Formatter for the inherited events.
-     * @param {string} controlId
-     * @param {Object} events - UI5 control events
-     * @private
-     */
-    var _formatInheritedEvents = function (controlId, events) {
-
-        if (!events[INHERITED]) {
-            return;
-        }
-
-        for (var i = 0; i < events[INHERITED].length; i++) {
-            var parent = events[INHERITED][i];
-            var title = parent.meta.controlName;
-            var evts = parent.events;
-            var inheritedIncremented = INHERITED + i;
-            var listenerConfig;
-
-            parent = _assembleDataToView({
-                controlId: controlId,
-                expandable: false,
-                title: title,
-                editableValues: false
-            });
-
-            for (var key in evts) {
-                listenerConfig = Object.create(null);
-                listenerConfig.eventRegistry = evts[key].registry;
-                listenerConfig.rootObjectName = inheritedIncremented;
-                listenerConfig.controlId = controlId;
-                parent.data[key] = _formatEventValues(key, evts[key].paramsType, listenerConfig);
-            }
-
-            var parentTitle = '<span gray>Inherits from</span>';
-            parentTitle += ' (' + title + ')';
-            parent.options.title = parentTitle;
-            events[inheritedIncremented] = parent;
-        }
-
-        delete events[INHERITED];
-    };
 
     /**
      * Formatter function for a given control event.
@@ -515,19 +488,46 @@ var controlEvents = (function () {
     };
 
     /**
-     * Helper function for building listener's path in the data.
-     * @param {Array} pathArr
-     * @returns {string}
+     * Formatter for the inherited events.
+     * @param {string} controlId
+     * @param {Object} events - UI5 control events
      * @private
      */
-    var _buildStringPathForListener = function (pathArr) {
-        var path = '';
+    var _formatInheritedEvents = function (controlId, events) {
 
-        pathArr.forEach(function (pathQuery) {
-            path += pathQuery + '/data/';
-        });
+        if (!events[INHERITED]) {
+            return;
+        }
 
-        return path;
+        for (var i = 0; i < events[INHERITED].length; i++) {
+            var parent = events[INHERITED][i];
+            var title = parent.meta.controlName;
+            var evts = parent.events;
+            var inheritedIncremented = INHERITED + i;
+            var listenerConfig;
+
+            parent = _assembleDataToView({
+                controlId: controlId,
+                expandable: false,
+                title: title,
+                editableValues: false
+            });
+
+            for (var key in evts) {
+                listenerConfig = Object.create(null);
+                listenerConfig.eventRegistry = evts[key].registry;
+                listenerConfig.rootObjectName = inheritedIncremented;
+                listenerConfig.controlId = controlId;
+                parent.data[key] = _formatEventValues(key, evts[key].paramsType, listenerConfig);
+            }
+
+            var parentTitle = '<span gray>Inherits from</span>';
+            parentTitle += ' (' + title + ')';
+            parent.options.title = parentTitle;
+            events[inheritedIncremented] = parent;
+        }
+
+        delete events[INHERITED];
     };
 
     /**
@@ -666,6 +666,43 @@ var controlBindings = (function () {
 
 }());
 
+/**
+ * Formatter function for each of the control's aggregations.
+ * @param {string} aggregationName
+ * @param {Array} aggregationValue
+ * @param {string} aggregationType
+ * @returns {Object}
+ * @private
+ */
+var _formatAggregationValues = function (aggregationName, aggregationValue, aggregationType) {
+    var isAggrPopulatedArr = Array.isArray(aggregationValue) && aggregationValue.length > 0;
+    var idString = 'content (id)';
+    var aggrTypeString = 'aggregation type';
+    var aggr = _assembleDataToView({
+            title: aggregationName,
+            expandable: true,
+            expanded: typeof aggregationValue === 'string' || isAggrPopulatedArr,
+            editableValues: false,
+            showTypeInfo: true,
+        });
+
+    if (isAggrPopulatedArr) {
+        aggr.data[idString] = _assembleDataToView({
+            expandable: true,
+            expanded: false,
+            editableValues: false,
+            showTypeInfo: true,
+            data: aggregationValue
+        });
+    } else {
+        aggr.data[idString] = aggregationValue;
+    }
+
+    aggr.data[aggrTypeString] = aggregationType;
+
+    return aggr;
+};
+
 // ================================================================================
 // Control Aggregations Info
 // ================================================================================
@@ -709,43 +746,6 @@ var controlAggregations = (function () {
         }
 
         delete aggregations[INHERITED];
-    };
-
-    /**
-     * Formatter function for each of the control's aggregations.
-     * @param {string} aggregationName
-     * @param {Array} aggregationValue
-     * @param {string} aggregationType
-     * @returns {Object}
-     * @private
-     */
-    var _formatAggregationValues = function (aggregationName, aggregationValue, aggregationType) {
-        var isAggrPopulatedArr = Array.isArray(aggregationValue) && aggregationValue.length > 0;
-        var idString = 'content (id)';
-        var aggrTypeString = 'aggregation type';
-        var aggr = _assembleDataToView({
-                title: aggregationName,
-                expandable: true,
-                expanded: typeof aggregationValue === 'string' || isAggrPopulatedArr,
-                editableValues: false,
-                showTypeInfo: true,
-            });
-
-        if (isAggrPopulatedArr) {
-            aggr.data[idString] = _assembleDataToView({
-                expandable: true,
-                expanded: false,
-                editableValues: false,
-                showTypeInfo: true,
-                data: aggregationValue
-            });
-        } else {
-            aggr.data[idString] = aggregationValue;
-        }
-
-        aggr.data[aggrTypeString] = aggregationType;
-
-        return aggr;
     };
 
     /**

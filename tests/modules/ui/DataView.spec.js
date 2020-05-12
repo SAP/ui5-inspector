@@ -316,11 +316,11 @@ describe('DataView', function () {
         });
 
         it('should assign a default function for onPropertyUpdated', function () {
-            expect(sampleView.onPropertyUpdated).to.be.function;
+            expect(sampleView.onPropertyUpdated).to.be.an.instanceof(Function);
         });
 
         it('should assign a default function for onValueClick ', function () {
-            expect(sampleView.onValueClick).to.be.function;
+            expect(sampleView.onValueClick).to.be.an.instanceof(Function);
         });
 
         describe('#setData()', function () {
@@ -622,7 +622,7 @@ describe('DataView', function () {
         });
 
         it('should set onValueClick to a default function', function () {
-            expect(clickableView.onValueClick).to.be.function;
+            expect(clickableView.onValueClick).to.be.an.instanceof(Function);
         });
 
         it('should call onValueClick by _onClickHandler', function () {
@@ -675,11 +675,11 @@ describe('DataView', function () {
         });
 
         it('should set onPropertyUpdated to a default function', function () {
-            expect(sampleView.onPropertyUpdated).to.be.function;
+            expect(sampleView.onPropertyUpdated).to.be.an.instanceof(Function);
         });
 
         it('should set onValueClick to a default function', function () {
-            expect(sampleView.onValueClick).to.be.function;
+            expect(sampleView.onValueClick).to.be.an.instanceof(Function);
         });
 
         describe('_clickHandler with editable data', function () {

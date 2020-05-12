@@ -21,14 +21,14 @@ arrow {
 }
 attribute,
 string {
-  color: #9abada;
+  color: #9ABADA;
 }
 attribute-value,
 boolean {
-  color: #ed9868;
+  color: #ED9868;
 }
 key {
-  color: #22d4c2;
+  color: #22D4C2;
 }
 no-data {
   color: #c0c0c0;
@@ -47,10 +47,10 @@ pre {
 }
 section-title,
 value {
-  color: #cbcbcb;
+  color: #CBCBCB;
 }
 tag {
-  color: #59afd6;
+  color: #59AFD6;
 }
 [hidden] {
   display: none;
@@ -110,7 +110,7 @@ overlay > section {
   display: none;
 }
 overlay h1 {
-  background: #000000;
+  background: #000;
   padding: 2rem 1rem;
   line-height: 1.25;
 }
@@ -131,7 +131,7 @@ tabbar {
 /* Tab Links
    ========================================================================== */
 tabbar > tabs {
-  background: #000000;
+  background: #000;
   border-bottom: 1px solid #626262;
   display: flex;
   height: 23px;
@@ -210,7 +210,7 @@ control-tree filter > start {
 control-tree filter [type="search"] {
   border: solid 1px #a3a3a3;
   border-radius: 2px;
-  background-color: #1b1b1b;
+  background-color: #1B1B1B;
   color: #949494;
   padding-left: 5px;
   padding-right: 5px;
@@ -239,7 +239,7 @@ control-tree tree:not([show-filtered-elements]) [matching] {
   background: rgba(98, 98, 98, 0.9);
 }
 control-tree tree:not([show-filtered-elements]) [selected] {
-  background: #c98730;
+  background: #C98730;
 }
 control-tree tree:not([show-filtered-elements]) [selected] ::selection {
   background: #a3a3a3;
@@ -284,14 +284,14 @@ control-tree li offset {
   padding-right: 12px;
 }
 control-tree li[selected] {
-  background: #c98730;
+  background: #C98730;
   border-radius: 0;
 }
 control-tree li[selected] tag,
 control-tree li[selected] attribute,
 control-tree li[selected] attribute-value,
 control-tree li[selected] version {
-  color: #000000;
+  color: #000;
 }
 control-tree li[selected] arrow[right] {
   background-image: url("/images/arrows/arrow-right-white.png");
@@ -315,7 +315,7 @@ data-view {
   -webkit-transform: translateZ(0);
 }
 data-view clickable-value {
-  color: #ed9868;
+  color: #ED9868;
 }
 data-view anchor,
 data-view clickable-value {
@@ -354,7 +354,7 @@ data-view li > ul {
   padding-top: 2px;
 }
 data-view li > ul section-title {
-  color: #22d4c2;
+  color: #22D4C2;
 }
 data-view li > ul[expanded] {
   display: flex;
@@ -370,7 +370,7 @@ data-view value[contentEditable=true]:focus {
   display: inline-block;
   outline: 1px solid #626262;
   outline-offset: 2px;
-  box-shadow: 0 0 0 2px #ffffff, 0 1px 2px 3px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 2px #fff, 0 1px 2px 3px rgba(0, 0, 0, 0.6);
 }
 data-view [gray] {
   color: #626262;
@@ -415,7 +415,7 @@ splitter > end[withHeader] {
   padding-top: 20px;
 }
 splitter > end > header {
-  background-color: #000000;
+  background-color: #000;
   border-bottom: solid 1px #626262;
   left: 0;
   line-height: 20px;
@@ -493,7 +493,7 @@ splitter[orientation="vertical"] > divider handler {
   cursor: ns-resize;
 }
 [json] key {
-  color: #59afd6;
+  color: #59AFD6;
 }
 [json] string {
   color: #949494;

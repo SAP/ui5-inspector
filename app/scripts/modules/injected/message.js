@@ -17,7 +17,7 @@ function _prepareMessage(object) {
         done.push(current.source);
         doneTargets.push(current.target);
         for (var sKey in current.source) {
-            if (!current.source.hasOwnProperty(sKey)) {
+            if (!Object.prototype.hasOwnProperty.call(current.source, sKey)) {
                 continue;
             }
             var child = current.source[sKey];

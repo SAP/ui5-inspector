@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 var JSONFormatter = require('../ui/JSONFormatter');
 var DVHelper = require('../ui/helpers/DataViewHelper');

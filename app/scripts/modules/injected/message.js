@@ -1,13 +1,20 @@
 'use strict';
 
 /**
+ * Creates a parser that simplifies complex objects by removing non-serializable functions and complex instances.
+ * @constructor
+ */
+function ObjectParser() {
+}
+
+/**
  * Checks whether a given object is a simple/plain object.
  * This is a slightly modified version of jQuery.isPlainObject.
  * @param {Object} object - input object, must not be null
  * @returns {boolean} true if simple object, false else
  * @private
  */
-function _isSimpleObject(object) {
+ObjectParser.prototype._isSimpleObject = function (object) {
     // check if toString output indicates object
     if (typeof object.toString === 'function' && object.toString() !== '[object Object]') {
         return false;
@@ -20,14 +27,7 @@ function _isSimpleObject(object) {
     // check if constructed by a global object function
     var Ctor = proto.hasOwnProperty('constructor') && proto.constructor;
     return typeof Ctor === 'function' && Ctor.toString() === 'function() {}';
-}
-
-/**
- * Creates a parser that simplifies complex objects by removing non-serializable functions and complex instances.
- * @constructor
- */
-function ObjectParser() {
-}
+};
 
 /**
  * Deep copies an object.
@@ -65,7 +65,7 @@ ObjectParser.prototype._parseObject = function (object, predecessors) {
         return object;
     }
     // Ignore complex types
-    if (!Array.isArray(object) && !_isSimpleObject(object)) {
+    if (!Array.isArray(object) && !this._isSimpleObject(object)) {
         return '<OBJECT>';
     }
     // Ignore & mark circular reference

@@ -113,9 +113,9 @@ describe('message.js', function () {
             document.addEventListener('ui5-communication-with-content-script', customEvent);
             message.send(myObject);
 
-            customEvent.args[0][0].detail.object.array[1].should.be.equal(customEvent.args[0][0].detail.object);
-            customEvent.args[0][0].detail.array[0].reference.should.be.equal(customEvent.args[0][0].detail.array);
-            customEvent.args[0][0].detail.anotherRef.should.be.equal(customEvent.args[0][0].detail);
+            customEvent.args[0][0].detail.object.array[1].should.be.equal('<CIRCULAR REFERENCE>');
+            customEvent.args[0][0].detail.array[0].reference.should.be.equal('<CIRCULAR REFERENCE>');
+            customEvent.args[0][0].detail.anotherRef.should.be.equal('<CIRCULAR REFERENCE>');
             customEvent.args[0][0].detail.object.should.not.have.property('function');
         });
     });

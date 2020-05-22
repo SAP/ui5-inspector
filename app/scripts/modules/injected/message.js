@@ -9,30 +9,29 @@ function ObjectParser() {
 
 /**
  * Checks whether a given object is a simple/plain object.
- * This is a slightly modified version of jQuery.isPlainObject.
  * @param {Object} object - input object, must not be null
  * @returns {boolean} true if simple object, false else
  * @private
  */
 ObjectParser.prototype._isSimpleObject = function (object) {
-    // check if toString output indicates object
+    // Check if toString output indicates object
     if (typeof object.toString === 'function' && object.toString() !== '[object Object]') {
         return false;
     }
     var proto = object.prototype;
-    // check if prototype is missing
+    // Check if prototype is missing
     if (!proto) {
         return true;
     }
-    // check if constructed by a global object function
+    // Check if constructed by a global object function
     var Ctor = proto.hasOwnProperty('constructor') && proto.constructor;
     return typeof Ctor === 'function' && Ctor.toString() === 'function() {}';
 };
 
 /**
  * Deep copies an object.
- * @param {Object} object the object, must not be null
- * @param {Array} predecessors list of predecessors to detect circular references
+ * @param {Object} object - the object, must not be null
+ * @param {Array} predecessors - list of predecessors to detect circular references
  * @returns {Array|Object} the deep copied object
  * @private
  */
@@ -45,7 +44,7 @@ ObjectParser.prototype._deepCopy = function (object, predecessors) {
     for (var sKey in object) {
         // Ignore undefined and functions (similar to JSON.stringify)
         if (object[sKey] !== undefined && typeof object[sKey] !== 'function') {
-            // recursive call
+            // Recursive call
             targetObject[sKey] = this._parseObject(object[sKey], currentPredecessors);
         }
     }
@@ -54,13 +53,13 @@ ObjectParser.prototype._deepCopy = function (object, predecessors) {
 
 /**
  * Parses an object recursively.
- * @param {*} object the object to parse, can be a simple type
- * @param {Array} predecessors list of predecessors to detect circular references
- * @returns {string|number|boolean|[]|{}|*} returns the parsed object
+ * @param {*} object - the object to parse, can be a simple type
+ * @param {Array} predecessors - list of predecessors to detect circular references
+ * @returns {*} returns the parsed object
  * @private
  */
 ObjectParser.prototype._parseObject = function (object, predecessors) {
-    // resolve simple type
+    // Resolve simple type
     if (object === null || typeof object === 'number' || typeof object === 'boolean' || typeof object === 'string') {
         return object;
     }
@@ -83,7 +82,7 @@ ObjectParser.prototype._parseObject = function (object, predecessors) {
 
 /**
  * Parses given object into a JSON object removing all functions and remove circular references.
- * @param {Object} object input object
+ * @param {Object} object - input object
  * @returns {Object} JSON object
  */
 ObjectParser.prototype.parse = function (object) {

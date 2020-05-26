@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "UI5 Inspector",
-    "version": "0.9.7",
+    "version": "0.9.9",
     "background": {
         "persistence": false,
         "scripts": [

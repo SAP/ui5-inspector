@@ -169,89 +169,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
          */
         var controlInformation = {
 
-            // Control Events Info
-            // ================================================================================
-
-            /**
-             * Creates an array with the control events that are inherited.
-             * @param {Object} control - UI5 control.
-             * @returns {Array}
-             * @private
-             */
-            _getInheritedEvents: function (control) {
-                var result = [];
-                var inheritedMetadata = control.getMetadata().getParent();
-
-                while (inheritedMetadata instanceof ElementMetadata) {
-                    result.push(this._prepareOwnOrInheritedEvents(control, inheritedMetadata));
-                    inheritedMetadata = inheritedMetadata.getParent();
-                }
-
-                return result;
-            },
-
-            /**
-             * Creates an object with all public control events.
-             * @param {Object} control - UI5 control.
-             * @param {Object} metadata - UI5 control metadata.
-             * @returns {Object}
-             * @private
-             */
-            _prepareOwnOrInheritedEvents: function (control, metadata) {
-                var result = Object.create(null),
-                    controlEventsFromMetadata = metadata.getEvents(),
-                    eventRegistry = control.mEventRegistry,
-                    metaParams, currRegistry, listener, view;
-
-                result.meta = Object.create(null);
-                result.meta.controlName = metadata.getName();
-
-                result.events = Object.create(null);
-                Object.keys(controlEventsFromMetadata).forEach(function (key) {
-                    metaParams = controlEventsFromMetadata[key].appData && controlEventsFromMetadata[key].appData.parameters;
-                    currRegistry = eventRegistry[key];
-                    result.events[key] = Object.create(null);
-                    result.events[key].paramsType = Object.create(null);
-                    
-                    if (metaParams) {
-                        for (var param in metaParams) {
-                            result.events[key].paramsType[param] = metaParams[param].type;
-                        }
-                    }
-
-                    result.events[key].registry = currRegistry && currRegistry.map(function(currListener) {
-                        view = currListener.oListener && currListener.oListener.oView;
-                        listener = Object.create(null);
-                        listener.viewId = view && view.sId;
-                        listener.controllerName = view && view._controllerName;
-                        listener.name = currListener.fFunction.name || "Anonymous";
-                        listener.body = currListener.fFunction;
-                        return listener;
-                    }, this);
-
-                }, this);
-
-                return result;
-            },
-
-            /**
-             * Creates an object with all control events.
-             * @param {string} controlId
-             * @returns {Object}
-             * @private
-             */
-            _getEvents: function (controlId) {
-                var control = sap.ui.getCore().byId(controlId);
-                var events = Object.create(null);
-
-                if (control) {
-                    events.own = this._prepareOwnOrInheritedEvents(control, control.getMetadata());
-                    events.inherited = this._getInheritedEvents(control);
-                }
-
-                return events;
-            },
-
             // Control Properties Info
             // ================================================================================
 
@@ -302,7 +219,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 return result;
             },
 
-
             /**
              * Creates an array with the control properties that are inherited.
              * @param {Object} control - UI5 control.
@@ -337,96 +253,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 }
 
                 return properties;
-            },
-
-            // Control Aggregations Info
-            // ================================================================================
-
-            /**
-             * Creates an array with the control aggregations that are inherited.
-             * @param {Object} control - UI5 control.
-             * @returns {Array}
-             * @private
-             */
-            _getInheritedAggregations: function (control) {
-                var result = [];
-                var inheritedMetadata = control.getMetadata().getParent();
-
-                while (inheritedMetadata instanceof ElementMetadata) {
-                    result.push(this._prepareOwnOrInheritedAggregations(control, inheritedMetadata));
-                    inheritedMetadata = inheritedMetadata.getParent();
-                }
-
-                return result;
-            },
-
-            /**
-             * Creates an object with all public control aggregations.
-             * @param {Object} control - UI5 control.
-             * @param {Object} metadata - UI5 control metadata.
-             * @returns {Object}
-             * @private
-             */
-            _prepareOwnOrInheritedAggregations: function (control, metadata) {
-                var result = Object.create(null),
-                    controlAggregationsFromMetadata = metadata.getAggregations();
-
-                result.meta = Object.create(null);
-                result.meta.controlName = metadata.getName();
-
-                result.aggregations = Object.create(null);
-                Object.keys(controlAggregationsFromMetadata).forEach(function (key) {
-                    result.aggregations[key] = Object.create(null);
-                    result.aggregations[key].value = this._getAggregationContent(control.getAggregation(key));
-                    result.aggregations[key].type = controlAggregationsFromMetadata[key].type;
-                }, this);
-
-                return result;
-            },
-
-            /**
-             * Gets the content of an aggregation.
-             * If the content has an ID, it returns the ID.
-             * It returns string, array or null depending on the aggregation status.
-             * @param {Object} aggregation
-             * @private
-             */
-            _getAggregationContent: function (aggregation) {
-                var content;
-
-                if (aggregation === null) {
-                    content = null;
-                } else if (aggregation.getId) {
-                    content = aggregation.getId();
-                } else if (Array.isArray(aggregation)) {
-                    content = aggregation.map(function(currAggregation) {
-                        return currAggregation.getId()
-                    });
-                } else {
-                    // In some cases like the sap.ui.core.TooltipBase, the aggregation
-                    // itself might be of primitive (String) type
-                    content = aggregation;
-                }
-
-                return content;
-            },
-
-            /**
-             * Creates an object with all control aggregations.
-             * @param {string} controlId
-             * @returns {Object}
-             * @private
-             */
-            _getAggregations: function (controlId) {
-                var control = sap.ui.getCore().byId(controlId);
-                var aggregations = Object.create(null);
-
-                if (control) {
-                    aggregations.own = this._prepareOwnOrInheritedAggregations(control, control.getMetadata());
-                    aggregations.inherited = this._getInheritedAggregations(control);
-                }
-
-                return aggregations;
             },
 
             // Binding Info
@@ -574,7 +400,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             * Creates an object with the aggregations bindings of a UI5 control.
+             * Creates an object with the agregations bindings of a UI5 control.
              * @param {Object} control
              * @returns {Object}
              * @private
@@ -634,7 +460,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
 
         /**
          * Global object that provide common information for all support tools
-         * @type {{getFrameworkInformation: Function, getRenderedControlTree: Function, getControlProperties: Function, getControlAggregations: Function, getControlEvents: Function, getControlBindingInformation: Function}}
+         * @type {{getFrameworkInformation: Function, getRenderedControlTree: Function, getControlProperties: Function, getControlBindingInformation: Function}}
          */
         return {
 
@@ -665,15 +491,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
             /**
-             * Gets all control aggregations.
-             * @param {string} controlId
-             * @returns {Object}
-             */
-            getControlAggregations: function (controlId) {
-                return controlInformation._getAggregations(controlId);
-            },
-
-            /**
              * Gets control binding information.
              * @param {string} controlId
              * @returns {Object}
@@ -693,15 +510,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 result.context = controlInformation._getBindingContextsForControl(control);
 
                 return result;
-            },
-
-            /**
-             * Gets all control events.
-             * @param {string} controlId
-             * @returns {Object}
-             */
-            getControlEvents: function (controlId) {
-                return controlInformation._getEvents(controlId);
             }
         };
 

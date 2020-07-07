@@ -1,5 +1,7 @@
 'use strict';
 
+require('./datagrid/UIUtils.js');
+
 /**
  * Returns the HTML for the divider.
  * @returns {string}
@@ -35,6 +37,7 @@ function _applyInlineStylesForEndContainer(_splitterInstance, skipSizing) {
     var $end = _splitterInstance.$this.querySelector('end');
 
     $end.style.display = _splitterInstance._hideEndContainer ? 'none' : '';
+    _splitterInstance.$this.classList.toggle("endVisible", !_splitterInstance._hideEndContainer);
     if (!skipSizing) {
         $end.style.width = _splitterInstance._endContainerWidth || undefined;
         $end.style.height = _splitterInstance._endContainerHeight || undefined;
@@ -100,7 +103,8 @@ function _createEndContainerHeader(splitterInstance) {
  * @private
  */
 function _createCloseButton(splitterInstance) {
-    var closeButtonElement = document.createElement('close-button');
+    var closeButtonElement = createElement('div', 'dt-close-button');
+    closeButtonElement.classList.add("toolbar-item");
     splitterInstance.$this.querySelector('end').appendChild(closeButtonElement);
 
     closeButtonElement.onclick = splitterInstance.hideEndContainer.bind(splitterInstance);

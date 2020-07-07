@@ -16,6 +16,8 @@
     var ControlTree = require('../../../modules/ui/ControlTree.js');
     var DataView = require('../../../modules/ui/DataView.js');
     var Splitter = require('../../../modules/ui/SplitContainer.js');
+    var ODataDetailView = require('../../../modules/ui/ODataDetailView.js');
+    var ODataMasterView = require('../../../modules/ui/ODataMasterView.js');
 
     // Apply theme
     // ================================================================================
@@ -34,7 +36,8 @@
 
     // Horizontal Splitter for 'Control Inspector' tab
     var controlInspectorHorizontalSplitter = new Splitter('horizontal-splitter', {
-        endContainerWidth: '400px'
+        endContainerWidth: '400px',
+        isEndContainerClosable: true
     });
 
     // Control tree
@@ -96,12 +99,6 @@
         endContainerTitle: 'Model Information'
     });
 
-    // Dataview for control aggregations
-    var controlAggregations = new DataView('control-aggregations');
-
-    // Dataview for control binding information
-    var controlBindingInfoRightDataView = new DataView('control-bindings-right');
-
     // Dataview for control binding information - left part
     var controlBindingInfoLeftDataView = new DataView('control-bindings-left', {
 
@@ -127,26 +124,36 @@
         }
     });
 
-    // Dataview for control events
-    var controlEvents = new DataView('control-events', {
-
-        /**
-         * Method fired when a clickable element is clicked.
-         * @param {Object} event
-         */
-        onValueClick: function (event) {
-            port.postMessage({
-                action: 'do-console-log-event-listener',
-                data: event.data
-            });
-        }
-    });
+    // Dataview for control binding information
+    var controlBindingInfoRightDataView = new DataView('control-bindings-right');
 
     // Bootstrap for 'Control inspector' tab
     // ================================================================================
 
     // Dataview for 'Application information' tab
     var appInfo = new DataView('app-info');
+
+
+    // Bootstrap for 'OData' tab
+    // ================================================================================
+    var odataHorizontalSplitter = new Splitter('odata-horizontal-splitter', {
+        endContainerWidth: '50%',
+        isEndContainerClosable: true,
+        hideEndContainer: true
+    });
+
+    var oDataDetailView = new ODataDetailView("odata-tab-detail");
+    new ODataMasterView("odata-tab-master", {
+        onSelectItem: function(data) {
+            odataHorizontalSplitter.showEndContainer();
+            oDataDetailView.update(data);
+        },
+        onClearItems: function() {
+            oDataDetailView.clear();
+            odataHorizontalSplitter.hideEndContainer();
+        }
+    });
+
 
     // ================================================================================
     // Communication
@@ -221,8 +228,6 @@
         'on-control-select': function (message) {
             controlProperties.setData(message.controlProperties);
             controlBindingInfoLeftDataView.setData(message.controlBindings);
-            controlAggregations.setData(message.controlAggregations);
-            controlEvents.setData(message.controlEvents);
 
             // Set bindings count
             document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';

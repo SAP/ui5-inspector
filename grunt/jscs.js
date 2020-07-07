@@ -9,6 +9,7 @@ module.exports = function (grunt, config) {
     return {
         options: {
             config: '.jscsrc',
+            verbose: true, // Output with rule names
             requireCurlyBraces: ['if']
         },
         scripts: {

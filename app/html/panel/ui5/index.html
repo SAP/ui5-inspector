@@ -3,12 +3,15 @@
     <head lang="en">
         <meta charset="UTF-8">
         <title>UI5 Inspector</title>
+        <script src="../../../vendor/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../../vendor/vkbeautify.js" type="text/javascript" charset="utf-8"></script>
     </head>
     <body>
         <tabbar id="ui5-tabbar">
             <tabs>
                 <tab id="control-tree-tab" selected>Control Inspector</tab>
                 <tab id="app-info-tab">Application Information</tab>
+                <tab id="odata-tab">OData Requests</tab>
             </tabs>
             <contents>
 
@@ -30,8 +33,6 @@
                                     <tab id="tab-bindings">Bindings
                                         <count></count>
                                     </tab>
-                                    <tab id="tab-aggregations">Aggregations</tab>
-                                    <tab id="tab-events">Events</tab>
                                 </tabs>
                                 <contents>
                                     <content for="tab-properties">
@@ -47,12 +48,6 @@
                                             </end>
                                         </splitter>
                                     </content>
-                                    <content for="tab-aggregations">
-                                        <data-view id="control-aggregations"></data-view>
-                                    </content>
-                                    <content for="tab-events">
-                                        <data-view id="control-events"></data-view>
-                                    </content>
                                 </contents>
                             </tabbar>
                             <!-- Control tree tabbar /end-->
@@ -67,6 +62,26 @@
                     <data-view id="app-info"></data-view>
                 </content>
                 <!-- Application information /ends-->
+
+
+                <!-- OData /start-->
+                <content for="odata-tab" class="odataTab">
+                    <splitter id="odata-horizontal-splitter">
+                        <!-- SplitContainer top side /start-->
+                        <start>
+                            <odata-master-view id="odata-tab-master"/>
+                        </start>
+                        <!-- SplitContainer top side /ends-->
+
+                        <!-- SplitContainer bottom side /start-->
+                        <end>
+                            <odata-detail-view id="odata-tab-detail"/>
+                        </end>
+                        <!-- SplitContainer bottom side /ends-->
+                    </splitter>
+                </content>
+                <!-- OData /ends-->
+
             </contents>
         </tabbar>
 

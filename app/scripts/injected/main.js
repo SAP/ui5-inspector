@@ -17,14 +17,14 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
     var mutation = {
 
         /**
-         * Initialize the observer.
+         * Initialize the observer
          */
         init: function () {
             this._observer.observe(document.body, this._options);
         },
 
         /**
-         * Create an observer instance.
+         * Create an observer instance
          */
         _observer: new MutationObserver(function (mutations) {
             var isMutationValid = true;
@@ -65,7 +65,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
     var messageHandler = {
 
         /**
-         * Send message with the needed initial information for the extension.
+         * Send massage with the needed initial information for the extension.
          */
         'get-initial-information': function () {
             var controlTreeModel = ToolsAPI.getRenderedControlTree();
@@ -91,15 +91,6 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         },
 
         /**
-         * Handler for logging event listener fucntion.
-         * @param {Object} event
-         */
-        'do-console-log-event-listener': function (event) {
-            var evtData = event.detail.data;
-            console.log(sap.ui.getCore().byId(evtData.controlId).mEventRegistry[evtData.eventName][evtData.listenerIndex].fFunction);
-        },
-
-        /**
          * Handler for element selection in the ControlTree.
          * @param {Object} event
          */
@@ -107,15 +98,11 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             var controlId = event.detail.target;
             var controlProperties = ToolsAPI.getControlProperties(controlId);
             var controlBindings = ToolsAPI.getControlBindings(controlId);
-            var controlAggregations = ToolsAPI.getControlAggregations(controlId);
-            var controlEvents = ToolsAPI.getControlEvents(controlId);
 
             message.send({
                 action: 'on-control-select',
                 controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
-                controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
-                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations),
-                controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
+                controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings)
             });
         },
 

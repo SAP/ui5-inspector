@@ -302,7 +302,7 @@ ControlTree.prototype._createHTML = function () {
 };
 
 /**
- * Sets initial focus
+ * Sets initial focus.
  * @private
  */
 ControlTree.prototype._initFocus = function () {

@@ -16,8 +16,6 @@
     var ControlTree = require('../../../modules/ui/ControlTree.js');
     var DataView = require('../../../modules/ui/DataView.js');
     var Splitter = require('../../../modules/ui/SplitContainer.js');
-    var ODataDetailView = require('../../../modules/ui/ODataDetailView.js');
-    var ODataMasterView = require('../../../modules/ui/ODataMasterView.js');
 
     // Apply theme
     // ================================================================================
@@ -36,8 +34,7 @@
 
     // Horizontal Splitter for 'Control Inspector' tab
     var controlInspectorHorizontalSplitter = new Splitter('horizontal-splitter', {
-        endContainerWidth: '400px',
-        isEndContainerClosable: true
+        endContainerWidth: '400px'
     });
 
     // Control tree
@@ -132,28 +129,6 @@
 
     // Dataview for 'Application information' tab
     var appInfo = new DataView('app-info');
-
-
-    // Bootstrap for 'OData' tab
-    // ================================================================================
-    var odataHorizontalSplitter = new Splitter('odata-horizontal-splitter', {
-        endContainerWidth: '50%',
-        isEndContainerClosable: true,
-        hideEndContainer: true
-    });
-
-    var oDataDetailView = new ODataDetailView("odata-tab-detail");
-    new ODataMasterView("odata-tab-master", {
-        onSelectItem: function(data) {
-            odataHorizontalSplitter.showEndContainer();
-            oDataDetailView.update(data);
-        },
-        onClearItems: function() {
-            oDataDetailView.clear();
-            odataHorizontalSplitter.hideEndContainer();
-        }
-    });
-
 
     // ================================================================================
     // Communication

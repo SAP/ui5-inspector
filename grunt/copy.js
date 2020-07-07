@@ -17,7 +17,6 @@ module.exports = function (grunt, config) {
                     '*.txt',
                     'html/**/*.html',
                     'images/**/*.*',
-                    'vendor/*.js',
                     'manifest.json'
                 ]
             }]

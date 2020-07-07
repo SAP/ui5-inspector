@@ -33,7 +33,6 @@
         "default_popup": "/html/popup/index.html"
     },
     "permissions": [
-        "tabs",
         "contextMenus",
         "<all_urls>"
     ],

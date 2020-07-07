@@ -27,7 +27,7 @@
     },
     "page_action": {
         "default_icon": {
-            "19": "/images/icon-19.png",git s
+            "19": "/images/icon-19.png",
             "38": "/images/icon-38.png"
         },
         "default_popup": "/html/popup/index.html"

@@ -200,6 +200,7 @@ function ControlTree(id, instantiationOptions) {
  */
 ControlTree.prototype.init = function () {
     this._createHTML();
+    this._initFocus();
     this._createHandlers();
 
     // Fire event to notify that the ControlTree is initialized
@@ -301,6 +302,15 @@ ControlTree.prototype._createHTML = function () {
 };
 
 /**
+ * Sets initial focus.
+ * @private
+ */
+ControlTree.prototype._initFocus = function () {
+    var searchInput = document.querySelector('input[type="search"]');
+    searchInput && searchInput.focus();
+};
+
+/**
  * Create the HTML needed for filtering.
  * @returns {string}
  * @private
@@ -308,7 +318,7 @@ ControlTree.prototype._createHTML = function () {
 ControlTree.prototype._createFilter = function () {
     return '<filter>' +
         '<start>' +
-        '<input type="search" placeholder="Search" search autofocus/>' +
+        '<input type="search" placeholder="Search" search/>' +
         '<label><input type="checkbox" filter />Filter results <results>(0)</results></label>' +
         '</start>' +
         '<end>' +

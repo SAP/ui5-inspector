@@ -1,4 +1,5 @@
 var multipartmixed2har = require('./multipartmixed2har.js');
+const formatXML = require('prettify-xml');
 
 var _index = 0
 const nextIndex = () => _index++
@@ -96,7 +97,7 @@ const logEntry = async (entry) => {
 
         if (entry.response.content.mimeType.includes("application/xml")) {
             const content = await multipartmixed2har.getContent(entry)
-            editorContent[contentIndex] = { type: 'xml', content: vkbeautify.xml(content) }
+            editorContent[contentIndex] = { type: 'xml', content: formatXML(content) }
             //entryHTML += `<p><a href="${entry.request.url}" target="_blank"> Open in new Window</a></p>` TODO
         } else if (entry.response.content.mimeType.includes("multipart/mixed")) {
             const serviceUrl = entry.request.url.split('$batch')[0]
@@ -122,7 +123,7 @@ const logEntry = async (entry) => {
          entryHTML = createRow(options);
            // entryHTML = `<tr class="clickable error" id="${contentIndex}"><td>${entry.request.url}</td><td>${entry.response.status}</td><td>${entry.request.method}</td><td><p>${entry.startedDateTime}: ${entry.time} ms</p></td></tr>`,
             content = await multipartmixed2har.getContent(entry)
-        editorContent[contentIndex] = { type: 'xml', content: vkbeautify.xml(content) }
+        editorContent[contentIndex] = { type: 'xml', content: formatXML(content) }
     } else if (entry._error === "net::ERR_CONNECTION_REFUSED") {
         var options = {
             classes: "error",

@@ -1,6 +1,7 @@
 const DataGrid = require('./datagrid/DataGrid.js');
 const UIUtils = require('./datagrid/UIUtils.js');
 const multipartmixed2har = require('../utils/multipartmixed2har.js');
+const formatXML = require('prettify-xml')
 
 
 const COLUMNS = [{
@@ -241,7 +242,7 @@ ODataMasterView.prototype._logEntry = function(entry) { // TODO add to a helper 
 
         if (entry.response.content.mimeType.includes("application/xml")) {
             multipartmixed2har.getContent(entry).then(function(content) {
-                editorContent[contentIndex] = { type: 'xml', content: vkbeautify.xml(content) }
+                editorContent[contentIndex] = { type: 'xml', content: formatXML(content) }
             })
 
         } else if (bIsBatch) {
@@ -279,7 +280,7 @@ ODataMasterView.prototype._logEntry = function(entry) { // TODO add to a helper 
             },
             oNode = createNode(options);
             multipartmixed2har.getContent(entry).then(function(content) {
-                editorContent[contentIndex] = { type: 'xml', content: vkbeautify.xml(content) }
+                editorContent[contentIndex] = { type: 'xml', content: formatXML(content) }
             });
     } else if (entry._error === "net::ERR_CONNECTION_REFUSED") {
         const contentIndex = nextIndex();

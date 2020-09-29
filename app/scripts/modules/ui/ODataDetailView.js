@@ -1,6 +1,8 @@
 'use strict';
 
 function ODataDetailView(containerId) {
+    const darkModeMql = matchMedia("(prefers-color-scheme: dark)");
+    const darkMode = darkModeMql.matches;
 
    this.oContainer = document.getElementById(containerId);
 
@@ -15,13 +17,9 @@ function ODataDetailView(containerId) {
     this.oContainer.appendChild(this.editorAltDOM);
     this.editorAltDOM.appendChild(this.editorAltMessageDOM);
 
-
     this.editor = ace.edit("editor");
     this.editor.getSession().setUseWrapMode(true);
 
-
-    const darkModeMql = matchMedia("(prefers-color-scheme: dark)");
-    const darkMode = darkModeMql.matches;
     darkModeMql.addListener(function(event) {
         this._setTheme(event.matches);
     }.bind(this));
@@ -29,10 +27,12 @@ function ODataDetailView(containerId) {
 }
 
 ODataDetailView.prototype.update = function(data) {
-    var sResponseBody = data.responseBody,
-        sAltMessage;
+    const sResponseBody = data.responseBody;
+    let sAltMessage;
+
     this.editorDOM.classList.toggle("hidden", !sResponseBody);
     this.editorAltDOM.classList.toggle("hidden", !!sResponseBody);
+
     if (sResponseBody) {
         this.editor.session.setMode("ace/mode/" + sResponseBody.type);
         this.editor.setValue(sResponseBody.content, 0);
@@ -40,7 +40,8 @@ ODataDetailView.prototype.update = function(data) {
         sAltMessage = data.altMessage || "No response body";
         this.editorAltMessageDOM.innerText = sAltMessage;
     }
-    this.editor.clearSelection()
+
+    this.editor.clearSelection();
 };
 
 ODataDetailView.prototype.clear = function() {

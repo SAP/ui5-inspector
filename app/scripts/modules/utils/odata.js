@@ -1,18 +1,18 @@
-var multipartmixed2har = require('./multipartmixed2har.js');
+const multipartmixed2har = require('./multipartmixed2har.js');
 const formatXML = require('prettify-xml');
 
-var _index = 0
-const nextIndex = () => _index++
-const logArea = document.getElementById('list')
+let _index = 0;
+const nextIndex = () => _index++;
+const logArea = document.getElementById('list');
 const editor = ace.edit("editor");
-const editorDOM = document.getElementById('editor')
-const clearButton = document.getElementById('clear')
-editor.getSession().setUseWrapMode(true)
-const editorContent = {}
-const outer = document.getElementById("outer")
-const editorAlt = document.querySelector('.editorAlt')
-const darkModeMql = matchMedia("(prefers-color-scheme: dark)")
-const darkMode = darkModeMql.matches
+const editorDOM = document.getElementById('editor');
+const clearButton = document.getElementById('clear');
+editor.getSession().setUseWrapMode(true);
+const editorContent = {};
+const outer = document.getElementById("outer");
+const editorAlt = document.querySelector('.editorAlt');
+const darkModeMql = matchMedia("(prefers-color-scheme: dark)");
+const darkMode = darkModeMql.matches;
 
 const keepAtBottom = () => outer.scrollTop = outer.scrollHeight;
 const updateEditor = ci => {
@@ -25,24 +25,25 @@ const updateEditor = ci => {
     } else {
         editor.setValue("No response body", 0);
     }
-    editor.clearSelection()
+    editor.clearSelection();
 }
 
 const createRow = (options) => {
-    var idstr = (options.id !== null) ? `id="${options.id}"` : "";
+    const idstr = (options.id !== null) ? `id="${options.id}"` : "";
+
     return `<tr class="${options.classes}" ${idstr}><td class="url">${options.url}</td><td class="status">${options.status}</td><td class="method">${options.method}</td><td class="note">${options.note}</td></tr>`;
 }
 const showEmbeddedRequests = (entries, serviceUrl, prefix) => entries.map(entry => {
     if (entry.children) {
-        return showEmbeddedRequests(entry.children, serviceUrl, entry.changeset)
+        return showEmbeddedRequests(entry.children, serviceUrl, entry.changeset);
     } else {
         const contentIndex = nextIndex(),
             classes = 'clickable secondLevel' +
                     //Mark errors
                     ( entry.response && entry.response.status > 299 && ' error' || '' ),
-            link = entry.request.method === "GET" && `<a href="${serviceUrl}${entry.request.url}" target="_blank"> Open in new Window</a>` || ''
+            link = entry.request.method === "GET" && `<a href="${serviceUrl}${entry.request.url}" target="_blank"> Open in new Window</a>` || '';
         editorContent[contentIndex] = { type: 'json', content: JSON.stringify(entry, null, 2) };
-        var options = {
+        const options = {
             id: contentIndex,
             classes: classes,
             url: `${prefix ? prefix +  '-> ' : ''} ${entry.request.url}`,
@@ -53,11 +54,11 @@ const showEmbeddedRequests = (entries, serviceUrl, prefix) => entries.map(entry 
         return createRow(options);
         //return `<tr class="${classes}" id="${contentIndex}"><td>${prefix ? prefix +  '-> ' : ''} ${entry.request.url}</td><td>${entry.response.status}</td><td>${entry.request.method}</td><td><p>${entry.response.headers.location ? '<br/>&nbsp;&nbsp; -> ' + entry.response.headers.location : ""}</p></td></tr>`
     }
-}).join('\n')
+}).join('\n');
 
 
 const updateClickHandler = () => {
-    let nlist = document.querySelectorAll('#list tr'), elements = [...nlist]
+    const nlist = document.querySelectorAll('#list tr'), elements = [...nlist];
     elements.forEach(el => {
         const id = el.id
         el.addEventListener('click', function () {
@@ -65,13 +66,13 @@ const updateClickHandler = () => {
             if (id !== null) {
                 updateEditor(id)
             }
-        }, true)
+        }, true);
     })
-}
+};
 
 const logEntry = async (entry) => {
-    const odataVersion = entry.response.headers.find(el => el.name.toLowerCase() === 'odata-version' || el.name.toLowerCase() === 'dataserviceversion')
-    var entryHTML = ''
+    const odataVersion = entry.response.headers.find(el => el.name.toLowerCase() === 'odata-version' || el.name.toLowerCase() === 'dataserviceversion');
+    let entryHTML = '';
 
     if (odataVersion && (
         odataVersion.value === '4.0' ||
@@ -96,18 +97,18 @@ const logEntry = async (entry) => {
         //entryHTML = `<tr class="${classes}" id="${contentIndex}"><td>${entry.request.url}</td><td>${entry.response.status}</td><td>${entry.request.method}</td><td><p>${entry.startedDateTime}: ${entry.time} ms</p></td></tr>`;
 
         if (entry.response.content.mimeType.includes("application/xml")) {
-            const content = await multipartmixed2har.getContent(entry)
-            editorContent[contentIndex] = { type: 'xml', content: formatXML(content) }
+            const content = await multipartmixed2har.getContent(entry);
+            editorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
             //entryHTML += `<p><a href="${entry.request.url}" target="_blank"> Open in new Window</a></p>` TODO
         } else if (entry.response.content.mimeType.includes("multipart/mixed")) {
-            const serviceUrl = entry.request.url.split('$batch')[0]
-            const childEntries = await multipartmixed2har.extractMultipartEntry(entry) //await deMultipart(content, entry.request, entry.response)
-            entryHTML += showEmbeddedRequests(childEntries, serviceUrl)
+            const serviceUrl = entry.request.url.split('$batch')[0];
+            const childEntries = await multipartmixed2har.extractMultipartEntry(entry); //await deMultipart(content, entry.request, entry.response)
+            entryHTML += showEmbeddedRequests(childEntries, serviceUrl);
         } else if (entry.response.content.mimeType.includes("application/json")) {
             //remove stuff that is not interesting here
-            delete entry._initiator
-            entry.response._content = JSON.parse(await multipartmixed2har.getContent(entry) || '{}')
-            editorContent[contentIndex] = { type: 'json', content: JSON.stringify(entry, null, 2) }
+            delete entry._initiator;
+            entry.response._content = JSON.parse(await multipartmixed2har.getContent(entry) || '{}');
+            editorContent[contentIndex] = { type: 'json', content: JSON.stringify(entry, null, 2) };
         }
     } else if (entry.response.status > 299 && entry.response.content.mimeType.includes("application/xml")) {
         //Potential OData Server Errors
@@ -120,10 +121,10 @@ const logEntry = async (entry) => {
             method: entry.request.method,
             note: `${entry.startedDateTime}: ${entry.time} ms`
         },
-         entryHTML = createRow(options);
+        entryHTML = createRow(options);
            // entryHTML = `<tr class="clickable error" id="${contentIndex}"><td>${entry.request.url}</td><td>${entry.response.status}</td><td>${entry.request.method}</td><td><p>${entry.startedDateTime}: ${entry.time} ms</p></td></tr>`,
-            content = await multipartmixed2har.getContent(entry)
-        editorContent[contentIndex] = { type: 'xml', content: formatXML(content) }
+            content = await multipartmixed2har.getContent(entry);
+        editorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
     } else if (entry._error === "net::ERR_CONNECTION_REFUSED") {
         var options = {
             classes: "error",
@@ -140,29 +141,28 @@ const logEntry = async (entry) => {
         keepAtBottom();
         updateClickHandler();
     }
-}
+};
 
 clearButton.onclick = () => {
-    logArea.innerHTML = ""
+    logArea.innerHTML = "";
     keepAtBottom();
     updateClickHandler();
-    editor.setValue("", -1)
-}
+    editor.setValue("", -1);
+};
 
 
 const setTheme = (darkMode) => {
     // darkMode = chrome.devtools.panels.themeName === "dark" || darkMode //Hardwired to chrome devtools to dark?
-    editor.setTheme(darkMode ? "ace/theme/vibrant_ink" : "ace/theme/chrome")
-}
-darkModeMql.addListener(event => setTheme(event.matches))
-setTheme(darkMode)
+    editor.setTheme(darkMode ? "ace/theme/vibrant_ink" : "ace/theme/chrome");
+};
+darkModeMql.addListener(event => setTheme(event.matches));
+setTheme(darkMode);
 
 chrome.devtools.network.getHAR(async function (result) {
-
     var entries = result.entries;
     if (!entries.length) {
         console.warn("No requests found by now");
     }
-    entries.forEach(logEntry)
-    chrome.devtools.network.onRequestFinished.addListener(logEntry)
+    entries.forEach(logEntry);
+    chrome.devtools.network.onRequestFinished.addListener(logEntry);
 });

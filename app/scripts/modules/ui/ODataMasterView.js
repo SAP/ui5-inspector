@@ -1,8 +1,7 @@
 const DataGrid = require('./datagrid/DataGrid.js');
 const UIUtils = require('./datagrid/UIUtils.js');
 const multipartmixed2har = require('../utils/multipartmixed2har.js');
-const formatXML = require('prettify-xml')
-
+const formatXML = require('prettify-xml');
 
 const COLUMNS = [{
     id: "name",
@@ -73,8 +72,8 @@ class ODataNode extends DataGrid.SortableDataGridNode {
         return cell;
     }
 
-    _renderPrimaryCell(cell, columnId, text) {
-        let iconElement = createElementWithClass('span', 'icon'),
+    _renderPrimaryCell(cell) {
+        const iconElement = createElementWithClass('span', 'icon'),
             iSymbol = (this.data.isBatch) ? 128194 : 128463,
             sClass = (this.data.isBatch) ? "batchIcon" : "requestIcon";
 
@@ -87,29 +86,30 @@ class ODataNode extends DataGrid.SortableDataGridNode {
 }
 
 
-var _index = 0;
+let _index = 0;
 const nextIndex = () => _index++;
 const editorContent = {};
 const noResponseMessage = {};
 
-
 const createNode = (options) => {
     options.name = options.url.split("/").pop();
+
     return new ODataNode(options);
 };
 
 
 const showEmbeddedRequests = (entries, serviceUrl, prefix) => entries.map(entry => {
     if (entry.children) {
-        return showEmbeddedRequests(entry.children, serviceUrl, entry.changeset)
+        return showEmbeddedRequests(entry.children, serviceUrl, entry.changeset);
     } else {
         const contentIndex = nextIndex(),
             classes = 'clickable secondLevel' +
                 //Mark errors
-                ( entry.response && entry.response.status > 299 && ' error' || '' ),
-            link = entry.request.method === "GET" && `<a href="${serviceUrl}${entry.request.url}" target="_blank"> Open in new Window</a>` || ''
+                (entry.response && entry.response.status > 299 && ' error' || '' ),
+            link = entry.request.method === "GET" && `<a href="${serviceUrl}${entry.request.url}" target="_blank"> Open in new Window</a>` || '';
+
         editorContent[contentIndex] = { type: 'json', content: JSON.stringify(entry, null, 2) };
-        var options = {
+        const options = {
             id: contentIndex,
             classes: classes,
             url: `${prefix ? prefix +  '-> ' : ''} ${entry.request.url}`,
@@ -117,6 +117,7 @@ const showEmbeddedRequests = (entries, serviceUrl, prefix) => entries.map(entry 
             method: entry.request.method,
             note: `${entry.response.headers.location ? '<br/>&nbsp;&nbsp; -> ' + entry.response.headers.location : ""}`
         };
+
         return createNode(options);
     }
 });
@@ -141,18 +142,14 @@ function ODataMasterView(domId, options) {
         this.onClearItems = options.onClearItems || this.onClearItems;
     }
 
-
-    var oClearButton = this._createClearButton();
+    const oClearButton = this._createClearButton();
     this.oContainerDOM.appendChild(oClearButton);
-
 
     this.oDataGrid = this._createDataGrid();
     this.oContainerDOM.appendChild(this.oDataGrid.element);
 
-
     chrome.devtools.network.getHAR(async function (result) {
-
-        var entries = result.entries;
+        const entries = result.entries;
         if (!entries.length) {
             console.warn("No requests found by now");
         }
@@ -163,7 +160,7 @@ function ODataMasterView(domId, options) {
 }
 
 ODataMasterView.prototype._createClearButton = function() {
-    var oIcon = UIUtils.Icon.create('', 'toolbar-glyph hidden');
+    const oIcon = UIUtils.Icon.create('', 'toolbar-glyph hidden');
     oIcon.setIconType("largeicon-clear");
 
     oIcon.onclick = function() {
@@ -175,7 +172,7 @@ ODataMasterView.prototype._createClearButton = function() {
 };
 
 ODataMasterView.prototype._createDataGrid = function() {
-    var oDataGrid = new DataGrid.SortableDataGrid({
+    const oDataGrid = new DataGrid.SortableDataGrid({
         displayName: "test",
         columns: COLUMNS
     });
@@ -183,7 +180,7 @@ ODataMasterView.prototype._createDataGrid = function() {
     oDataGrid.addEventListener(DataGrid.Events.SortingChanged, this.sortHandler, this);
     oDataGrid.addEventListener(DataGrid.Events.SelectedNode, this.selectHandler, this);
 
-    var oResizeObserver = new ResizeObserver(function(oEntries) {
+    const oResizeObserver = new ResizeObserver(function(oEntries) {
         oDataGrid.onResize();
     });
     oResizeObserver.observe(oDataGrid.element);
@@ -201,8 +198,9 @@ ODataMasterView.prototype.sortHandler = function() {
 };
 
 ODataMasterView.prototype.selectHandler = function(oEvent) {
-    var oSelectedNode = oEvent.data,
+    const oSelectedNode = oEvent.data,
         iSelectedId = oSelectedNode && oSelectedNode.data.id;
+
     this.onSelectItem({
         responseBody: editorContent[iSelectedId],
         altMessage: noResponseMessage[iSelectedId]
@@ -211,8 +209,8 @@ ODataMasterView.prototype.selectHandler = function(oEvent) {
 };
 
 ODataMasterView.prototype._logEntry = function(entry) { // TODO add to a helper class
-    const odataVersion = entry.response.headers.find(el => el.name.toLowerCase() === 'odata-version' || el.name.toLowerCase() === 'dataserviceversion')
-    var oNode,
+    const odataVersion = entry.response.headers.find(el => el.name.toLowerCase() === 'odata-version' || el.name.toLowerCase() === 'dataserviceversion');
+    let oNode,
         aNodes = [];
 
     if (odataVersion && (
@@ -239,14 +237,12 @@ ODataMasterView.prototype._logEntry = function(entry) { // TODO add to a helper 
         bIsBatch && (options.classes += " batch");
         oNode = createNode(options);
 
-
         if (entry.response.content.mimeType.includes("application/xml")) {
             multipartmixed2har.getContent(entry).then(function(content) {
-                editorContent[contentIndex] = { type: 'xml', content: formatXML(content) }
-            })
-
+                editorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
+            });
         } else if (bIsBatch) {
-            const serviceUrl = entry.request.url.split('$batch')[0]
+            const serviceUrl = entry.request.url.split('$batch')[0];
             multipartmixed2har.extractMultipartEntry(entry).then(function(childEntries) {
                 aNodes = showEmbeddedRequests(childEntries, serviceUrl);
                 noResponseMessage[contentIndex] = "See the split responses of this batch request";
@@ -259,8 +255,8 @@ ODataMasterView.prototype._logEntry = function(entry) { // TODO add to a helper 
             //remove stuff that is not interesting here
             delete entry._initiator;
             multipartmixed2har.getContent(entry).then(function(content) {
-                entry.response._content = JSON.parse(content || '{}')
-                editorContent[contentIndex] = { type: 'json', content: JSON.stringify(entry, null, 2) }
+                entry.response._content = JSON.parse(content || '{}');
+                editorContent[contentIndex] = { type: 'json', content: JSON.stringify(entry, null, 2) };
             });
         } else if (entry.response.content.mimeType.includes("text/plain")) {
             multipartmixed2har.getContent(entry).then(function(content) {
@@ -280,11 +276,11 @@ ODataMasterView.prototype._logEntry = function(entry) { // TODO add to a helper 
             },
             oNode = createNode(options);
             multipartmixed2har.getContent(entry).then(function(content) {
-                editorContent[contentIndex] = { type: 'xml', content: formatXML(content) }
+                editorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
             });
     } else if (entry._error === "net::ERR_CONNECTION_REFUSED") {
-        const contentIndex = nextIndex();
-        var options = {
+        const contentIndex = nextIndex(),
+            options = {
             classes: "error",
             url: entry.request.url,
             status: entry.response.status,
@@ -299,6 +295,5 @@ ODataMasterView.prototype._logEntry = function(entry) { // TODO add to a helper 
     }
 
 };
-
 
 module.exports = ODataMasterView;

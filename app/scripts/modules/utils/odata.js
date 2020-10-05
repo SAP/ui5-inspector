@@ -52,7 +52,6 @@ const showEmbeddedRequests = (entries, serviceUrl, prefix) => entries.map(entry 
             note: `${entry.response.headers.location ? '<br/>&nbsp;&nbsp; -> ' + entry.response.headers.location : ""}`
         };
         return createRow(options);
-        //return `<tr class="${classes}" id="${contentIndex}"><td>${prefix ? prefix +  '-> ' : ''} ${entry.request.url}</td><td>${entry.response.status}</td><td>${entry.request.method}</td><td><p>${entry.response.headers.location ? '<br/>&nbsp;&nbsp; -> ' + entry.response.headers.location : ""}</p></td></tr>`
     }
 }).join('\n');
 
@@ -94,12 +93,10 @@ const logEntry = async (entry) => {
             note: `${entry.startedDateTime}: ${entry.time} ms`
         };
         entryHTML = createRow(options);
-        //entryHTML = `<tr class="${classes}" id="${contentIndex}"><td>${entry.request.url}</td><td>${entry.response.status}</td><td>${entry.request.method}</td><td><p>${entry.startedDateTime}: ${entry.time} ms</p></td></tr>`;
 
         if (entry.response.content.mimeType.includes("application/xml")) {
             const content = await multipartmixed2har.getContent(entry);
             editorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
-            //entryHTML += `<p><a href="${entry.request.url}" target="_blank"> Open in new Window</a></p>` TODO
         } else if (entry.response.content.mimeType.includes("multipart/mixed")) {
             const serviceUrl = entry.request.url.split('$batch')[0];
             const childEntries = await multipartmixed2har.extractMultipartEntry(entry); //await deMultipart(content, entry.request, entry.response)
@@ -122,7 +119,6 @@ const logEntry = async (entry) => {
             note: `${entry.startedDateTime}: ${entry.time} ms`
         },
         entryHTML = createRow(options);
-           // entryHTML = `<tr class="clickable error" id="${contentIndex}"><td>${entry.request.url}</td><td>${entry.response.status}</td><td>${entry.request.method}</td><td><p>${entry.startedDateTime}: ${entry.time} ms</p></td></tr>`,
             content = await multipartmixed2har.getContent(entry);
         editorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
     } else if (entry._error === "net::ERR_CONNECTION_REFUSED") {
@@ -134,7 +130,6 @@ const logEntry = async (entry) => {
             note: `<p class="error">Check if the server went down or the network was interrupted</p>`
         };
         const entryHTML = createRow(options);
-        //const entryHTML = `<tr class="error"><td>${entry.request.url}</td><td>${entry.response.status}</td><td>${entry.request.method}</td><td><p class="error">Check if the server went down or the network was interrupted</p></td></tr>`;
     }
     if (entryHTML) {
         logArea.innerHTML += `${entryHTML}`

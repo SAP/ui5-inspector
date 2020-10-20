@@ -114,7 +114,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
                 action: 'on-control-select',
                 controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
                 controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
-                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations)
+                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations),
                 controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
             });
         },

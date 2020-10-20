@@ -1,6 +1,5 @@
 'use strict';
 
-
 /**
  * Creates a parser that simplifies complex objects by removing non-serializable functions and complex instances.
  * @constructor

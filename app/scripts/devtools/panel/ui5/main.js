@@ -99,6 +99,9 @@
         endContainerTitle: 'Model Information'
     });
 
+    // Dataview for control binding information
+    var controlBindingInfoRightDataView = new DataView('control-bindings-right');
+
     // Dataview for control binding information - left part
     var controlBindingInfoLeftDataView = new DataView('control-bindings-left', {
 
@@ -124,9 +127,6 @@
         }
     });
 
-    // Dataview for control binding information
-    var controlBindingInfoRightDataView = new DataView('control-bindings-right');
-
     // Bootstrap for 'Control inspector' tab
     // ================================================================================
 
@@ -142,8 +142,8 @@
         hideEndContainer: true
     });
 
-    var oDataDetailView = new ODataDetailView("odata-tab-detail");
-    new ODataMasterView("odata-tab-master", {
+    var oDataDetailView = new ODataDetailView('odata-tab-detail');
+    new ODataMasterView('odata-tab-master', {
         onSelectItem: function(data) {
             odataHorizontalSplitter.showEndContainer();
             oDataDetailView.update(data);

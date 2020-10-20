@@ -29,6 +29,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// jshint ignore: start
+
 require('./DOMExtension.js');
 
 function _inspectPlatform() {

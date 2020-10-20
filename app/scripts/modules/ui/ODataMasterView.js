@@ -1,10 +1,12 @@
+/* globals ResizeObserver */
+
 const DataGrid = require('./datagrid/DataGrid.js');
 const UIUtils = require('./datagrid/UIUtils.js');
 const EntryLog = require('../utils/EntryLog.js');
 
 const COLUMNS = [{
-    id: "name",
-    title: "Name",
+    id: 'name',
+    title: 'Name',
     sortable: true,
     align: undefined,
     nonSelectable: false,
@@ -13,12 +15,12 @@ const COLUMNS = [{
     allowInSortByEvenWhenHidden: false,
     disclosure: true,
     sortingFunction: function (a, b) {
-        return DataGrid.SortableDataGrid.StringComparator("name", a, b);
+        return DataGrid.SortableDataGrid.StringComparator('name', a, b);
     }
 },
     {
-        id: "method",
-        title: "Method",
+        id: 'method',
+        title: 'Method',
         sortable: true,
         align: undefined,
         nonSelectable: false,
@@ -26,12 +28,12 @@ const COLUMNS = [{
         visible: true,
         allowInSortByEvenWhenHidden: false,
         sortingFunction: function (a, b) {
-            return DataGrid.SortableDataGrid.StringComparator("method", a, b);
+            return DataGrid.SortableDataGrid.StringComparator('method', a, b);
         }
     },
     {
-        id: "status",
-        title: "Status",
+        id: 'status',
+        title: 'Status',
         sortable: true,
         align: undefined,
         nonSelectable: false,
@@ -39,12 +41,12 @@ const COLUMNS = [{
         visible: true,
         allowInSortByEvenWhenHidden: false,
         sortingFunction: function (a, b) {
-            return DataGrid.SortableDataGrid.NumericComparator("status", a, b);
+            return DataGrid.SortableDataGrid.NumericComparator('status', a, b);
         }
     },
     {
-        id: "note",
-        title: "Detail",
+        id: 'note',
+        title: 'Detail',
         sortable: true,
         align: undefined,
         nonSelectable: false,
@@ -52,7 +54,7 @@ const COLUMNS = [{
         visible: true,
         allowInSortByEvenWhenHidden: false,
         sortingFunction: function (a, b) {
-            return DataGrid.SortableDataGrid.StringComparator("note", a, b);
+            return DataGrid.SortableDataGrid.StringComparator('note', a, b);
         }
     }];
 
@@ -73,16 +75,7 @@ function ODataMasterView(domId, options) {
 
     this.oDataGrid = this._createDataGrid();
     this.oContainerDOM.appendChild(this.oDataGrid.element);
-
-    chrome.devtools.network.getHAR(async function (result) {
-        const entries = result.entries;
-        if (!entries.length) {
-            console.warn("No requests found by now");
-        }
-        entries.forEach(this.logEntry.bind(this));
-        chrome.devtools.network.onRequestFinished.addListener(this.logEntry.bind(this));
-    }.bind(this));
-
+    this._getHAR();
 }
 
 ODataMasterView.prototype.logEntry = function(oEntry) {
@@ -93,9 +86,22 @@ ODataMasterView.prototype.logEntry = function(oEntry) {
     }
 };
 
+/* jshint ignore:start */
+ODataMasterView.prototype._getHAR = function() {
+    chrome.devtools.network.getHAR(async function (result) {
+        const entries = result.entries;
+        if (!entries.length) {
+            console.warn('No requests found by now');
+        }
+        entries.forEach(this.logEntry.bind(this));
+        chrome.devtools.network.onRequestFinished.addListener(this.logEntry.bind(this));
+    }.bind(this));
+};
+/* jshint ignore:end */
+
 ODataMasterView.prototype._createClearButton = function() {
     const oIcon = UIUtils.Icon.create('', 'toolbar-glyph hidden');
-    oIcon.setIconType("largeicon-clear");
+    oIcon.setIconType('largeicon-clear');
 
     oIcon.onclick = function() {
         this.oDataGrid.rootNode().removeChildren();
@@ -107,7 +113,7 @@ ODataMasterView.prototype._createClearButton = function() {
 
 ODataMasterView.prototype._createDataGrid = function() {
     const oDataGrid = new DataGrid.SortableDataGrid({
-        displayName: "test",
+        displayName: 'test',
         columns: COLUMNS
     });
 

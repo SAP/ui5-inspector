@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// jshint ignore: start
+
 var UIUtils = require('./UIUtils.js');
 require('./DOMExtension.js');
 

@@ -1,14 +1,14 @@
-const unpopularLines = (line) => !(line.includes('application/http') || line === "" || line.includes("Content-Transfer-Encoding"));
+const unpopularLines = (line) => !(line.includes('application/http') || line === '' || line.includes('Content-Transfer-Encoding'));
 
 const createResponse = (resPart) => {
-    if (resPart.includes("boundary=changeset")) {
+    if (resPart.includes('boundary=changeset')) {
         const sBoundary = resPart.match(/boundary=(.*)/)[1],
             res = {
                 changeset: sBoundary,
                 children: resPart.split( '--' + sBoundary)
                     .filter(line => line.trim() !== '--' && !line.includes(sBoundary))
                     .map(createResponse)
-            }
+            };
 
         return res;
     } else {
@@ -25,11 +25,11 @@ const createResponse = (resPart) => {
                 try {
                     res.body = JSON.parse(line);
                 } catch (e) {
-                    res.body = { parseError: 'invalid JSON' }
+                    res.body = { parseError: 'invalid JSON' };
                 }
             } else if (line) {
-                let [name, value] = line.split(/:(.+)/)
-                if (name.toLowerCase() === "sap-messages") {
+                let [name, value] = line.split(/:(.+)/);
+                if (name.toLowerCase() === 'sap-messages') {
                     value = JSON.parse(value);
                 }
                 res.headers[name] = value;
@@ -38,17 +38,17 @@ const createResponse = (resPart) => {
 
         return res;
     }
-}
+};
 
 const createRequest = (reqPart) => {
-    if (reqPart.includes("boundary=changeset")) {
+    if (reqPart.includes('boundary=changeset')) {
         const sBoundary = reqPart.match(/boundary=(.*)/)[1],
             request = {
                 changeset: sBoundary,
                 children: reqPart.split( '--' + sBoundary)
                     .filter(line => line.trim() !== '--' && !line.includes(sBoundary))
                     .map(createRequest)
-            }
+            };
 
         return request;
     } else {
@@ -57,8 +57,8 @@ const createRequest = (reqPart) => {
         };
         reqPart.split('\n').filter(unpopularLines).forEach(line => {
             line = line.trim();
-            if (line.match("(GET|POST|PATCH|PUT|DELETE).*")) {
-                let [method, url, httpVersion] = line.split(" ");
+            if (line.match('(GET|POST|PATCH|PUT|DELETE).*')) {
+                let [method, url, httpVersion] = line.split(' ');
                 request.method = method;
                 request.url = url;
                 request.httpVersion = httpVersion;
@@ -70,7 +70,7 @@ const createRequest = (reqPart) => {
                 }
             } else if (line) {
                 let [name, value] = line.split(/:(.+)/);
-                if (name.toLowerCase() === "sap-messages") {
+                if (name.toLowerCase() === 'sap-messages') {
                     value = JSON.parse(value);
                 }
                 request.headers[name] = value;
@@ -79,7 +79,7 @@ const createRequest = (reqPart) => {
 
         return request;
     }
-}
+};
 
 const transformIfChildren = (entry) => {
     if (entry.request.children) {
@@ -93,13 +93,13 @@ const transformIfChildren = (entry) => {
     }
 
     return entry;
-}
+};
 
 const removeEmplyLinesFilter = (x) => {
-    const xm = x.replace(/\s\n/, "");
+    const xm = x.replace(/\s\n/, '');
 
     return !!xm.length;
-}
+};
 
 const parseBlock = (requestsRaw, responseRaw) => {
     let responses = responseRaw.map(createResponse);
@@ -108,42 +108,50 @@ const parseBlock = (requestsRaw, responseRaw) => {
             response: responses[ind]
         })
     );
-}
+};
 
 // requestsRaw.filter(raw => raw.includes("boundary=changeset")).map(raw => {
 //     let reqBoundary =
 // })
+
+/* jshint ignore:start */
 const deMultipart = async (content, req, res) => {
     return Promise.resolve().then(() => {
         let raw = atob(content),
             reqBoundary = '--' + req.postData.mimeType.split('boundary=')[1],
-            resContentType = res.headers.find(header => header.name.toLowerCase() === "content-type").value,
+            resContentType = res.headers.find(header => header.name.toLowerCase() === 'content-type').value,
             resBoundary = '--' + resContentType.split('boundary=')[1],
-            requestsRaw = req.postData.text.split(reqBoundary).filter(line => line.trim() !== '--' && line !== "").filter(removeEmplyLinesFilter),
-            responseRaw = raw.split(resBoundary).filter(line => line.trim() !== '--' && line !== "").filter(removeEmplyLinesFilter);
+            requestsRaw = req.postData.text.split(reqBoundary).filter(line => line.trim() !== '--' && line !== '').filter(removeEmplyLinesFilter),
+            responseRaw = raw.split(resBoundary).filter(line => line.trim() !== '--' && line !== '').filter(removeEmplyLinesFilter);
 
             return parseBlock(requestsRaw, responseRaw);
     });
-}
+};
+/* jshint ignore:end */
 
+/* jshint ignore:start */
 const getContent = async (entry) =>
     Promise.resolve(new Promise((resolve) => {
         entry.getContent(content => resolve(content));
     }));
 
 exports.getContent = getContent;
+/* jshint ignore:end */
 
 /**
  * extracts the content of multipart/mixed request response pairs and creates them as childEntries
  * childEntries should follow the har spec of entries as far as possilbe
  */
+/* jshint ignore:start */
 exports.extractMultipartEntry = async (entry) =>
     entry.childEntries = await deMultipart(await getContent(entry), entry.request, entry.response);
+/* jshint ignore:end */
 
-
-
+/* jshint ignore:start */
 exports.extractMultipartEntries = async (entries) => {
     await entries.forEach(extractMultipartEntry);
-}
+};
+/* jshint ignore:end */
+
 
 // export {extractMultipartEntries, extractMultipartEntry}

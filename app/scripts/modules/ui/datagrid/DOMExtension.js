@@ -37,7 +37,7 @@
  * @suppress {checkTypes}
  * @suppressGlobalPropertiesCheck
  */
-self.createElement = function(tagName, customElementType) {
+window.createElement = function(tagName, customElementType) {
     return document.createElement(tagName, {is: customElementType});
 };
 
@@ -63,7 +63,7 @@ Document.prototype.createElementWithClass = function(elementName, className, cus
  * @return {!Element}
  * @suppressGlobalPropertiesCheck
  */
-self.createElementWithClass = function(elementName, className, customElementType) {
+window.createElementWithClass = function(elementName, className, customElementType) {
     return document.createElementWithClass(elementName, className, customElementType);
 };
 
@@ -165,7 +165,7 @@ Event.prototype.consume = function(preventDefault) {
  * @param {!Event} event
  * @return {boolean}
  */
-self.isEnterKey = function(event) {
+window.isEnterKey = function(event) {
     // Check if in IME.
     return event.keyCode !== 229 && event.key === 'Enter';
 };

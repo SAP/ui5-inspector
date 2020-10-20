@@ -1,3 +1,5 @@
+/* globals createElement */
+
 'use strict';
 
 require('./datagrid/UIUtils.js');
@@ -37,7 +39,7 @@ function _applyInlineStylesForEndContainer(_splitterInstance, skipSizing) {
     var $end = _splitterInstance.$this.querySelector('end');
 
     $end.style.display = _splitterInstance._hideEndContainer ? 'none' : '';
-    _splitterInstance.$this.classList.toggle("endVisible", !_splitterInstance._hideEndContainer);
+    _splitterInstance.$this.classList.toggle('endVisible', !_splitterInstance._hideEndContainer);
     if (!skipSizing) {
         $end.style.width = _splitterInstance._endContainerWidth || undefined;
         $end.style.height = _splitterInstance._endContainerHeight || undefined;
@@ -104,7 +106,7 @@ function _createEndContainerHeader(splitterInstance) {
  */
 function _createCloseButton(splitterInstance) {
     var closeButtonElement = createElement('div', 'dt-close-button');
-    closeButtonElement.classList.add("toolbar-item");
+    closeButtonElement.classList.add('toolbar-item');
     splitterInstance.$this.querySelector('end').appendChild(closeButtonElement);
 
     closeButtonElement.onclick = splitterInstance.hideEndContainer.bind(splitterInstance);

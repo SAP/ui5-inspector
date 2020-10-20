@@ -1,3 +1,5 @@
+/* globals createElementWithClass */
+
 const DataGrid = require('../ui/datagrid/DataGrid.js');
 
 class ODataNode extends DataGrid.SortableDataGridNode {
@@ -17,7 +19,7 @@ class ODataNode extends DataGrid.SortableDataGridNode {
     _renderPrimaryCell(cell) {
         const iconElement = createElementWithClass('span', 'icon'),
             iSymbol = (this.data.isBatch) ? 128194 : 128463,
-            sClass = (this.data.isBatch) ? "batchIcon" : "requestIcon";
+            sClass = (this.data.isBatch) ? 'batchIcon' : 'requestIcon';
 
         iconElement.classList.add(sClass);
         iconElement.innerHTML = `&#${iSymbol}`;

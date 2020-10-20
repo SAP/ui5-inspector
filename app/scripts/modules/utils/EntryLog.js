@@ -6,7 +6,7 @@ function EntryLog () {
     this.oEditorContent = {};
     this.oNoResponseMessage = {};
     this._index = 0;
-};
+}
 
 EntryLog.prototype.getEntryNode = function(entry) {
     let oNode,
@@ -20,7 +20,7 @@ EntryLog.prototype.getEntryNode = function(entry) {
         odataVersion.value === '2.0'
     )) {
         const contentIndex = this.nextIndex(),
-            bIsBatch = entry.response.content.mimeType.includes("multipart/mixed"),
+            bIsBatch = entry.response.content.mimeType.includes('multipart/mixed'),
             classes = !(
                 //They should not be clickable
                 entry.request.method === 'HEAD' ||
@@ -35,10 +35,10 @@ EntryLog.prototype.getEntryNode = function(entry) {
                 note: `${this.formatDateTime(entry.startedDateTime)} : ${this.formatDuration(entry.time)} ms`,
                 isBatch: bIsBatch
             };
-        bIsBatch && (options.classes += " batch");
+        bIsBatch && (options.classes += ' batch');
         oNode = this.createNode(options);
 
-        if (entry.response.content.mimeType.includes("application/xml")) {
+        if (entry.response.content.mimeType.includes('application/xml')) {
             multipartmixed2har.getContent(entry).then(function(content) {
                 self.oEditorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
             });
@@ -46,30 +46,30 @@ EntryLog.prototype.getEntryNode = function(entry) {
             const serviceUrl = entry.request.url.split('$batch')[0];
             multipartmixed2har.extractMultipartEntry(entry).then(function(childEntries) {
                 aNodes = self.showEmbeddedRequests(childEntries, serviceUrl);
-                self.oNoResponseMessage[contentIndex] = "See the split responses of this batch request";
+                self.oNoResponseMessage[contentIndex] = 'See the split responses of this batch request';
                 aNodes.forEach(function(oChildNode) {
                     oNode.appendChild(oChildNode);
-                })
+                });
             });
 
-        } else if (entry.response.content.mimeType.includes("application/json")) {
+        } else if (entry.response.content.mimeType.includes('application/json')) {
             //remove stuff that is not interesting here
             delete entry._initiator;
             multipartmixed2har.getContent(entry).then(function(content) {
                 entry.response._content = JSON.parse(content || '{}');
                 self.oEditorContent[contentIndex] = { type: 'json', content: JSON.stringify(entry, null, 2) };
             });
-        } else if (entry.response.content.mimeType.includes("text/plain")) {
+        } else if (entry.response.content.mimeType.includes('text/plain')) {
             multipartmixed2har.getContent(entry).then(function(content) {
-                self.oEditorContent[contentIndex] = { type: 'text', content: content }
+                self.oEditorContent[contentIndex] = { type: 'text', content: content };
             });
         }
-    } else if (entry.response.status > 299 && entry.response.content.mimeType.includes("application/xml")) {
+    } else if (entry.response.status > 299 && entry.response.content.mimeType.includes('application/xml')) {
         //Potential OData Server Errors
         const contentIndex = this.nextIndex(),
             options = {
                 id: contentIndex,
-                classes: "clickable error",
+                classes: 'clickable error',
                 url: entry.request.url,
                 status: entry.response.status,
                 method: entry.request.method,
@@ -79,16 +79,16 @@ EntryLog.prototype.getEntryNode = function(entry) {
             multipartmixed2har.getContent(entry).then(function(content) {
                 self.oEditorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
             });
-    } else if (entry._error === "net::ERR_CONNECTION_REFUSED") {
+    } else if (entry._error === 'net::ERR_CONNECTION_REFUSED') {
         const contentIndex = this.nextIndex(),
             options = {
-            classes: "error",
+            classes: 'error',
             url: entry.request.url,
             status: entry.response.status,
             method: entry.request.method
         };
         oNode = this.createNode(options);
-        this.oNoResponseMessage[contentIndex] = "Check if the server went down or the network was interrupted";
+        this.oNoResponseMessage[contentIndex] = 'Check if the server went down or the network was interrupted';
     }
 
     return oNode;
@@ -111,13 +111,13 @@ EntryLog.prototype.showEmbeddedRequests = function (entries, serviceUrl, prefix)
                 url: `${prefix ? prefix +  '-> ' : ''} ${entry.request.url}`,
                 status: entry.response.status,
                 method: entry.request.method,
-                note: `${entry.response.headers.location ? '<br/>&nbsp;&nbsp; -> ' + entry.response.headers.location : ""}`
+                note: `${entry.response.headers.location ? '<br/>&nbsp;&nbsp; -> ' + entry.response.headers.location : ''}`
             };
 
             return this.createNode(options);
         }
     }, this);
-}
+};
 
 EntryLog.prototype.formatDateTime = function (x) {
     return x.match(/.+T(.+)Z/).pop();
@@ -129,10 +129,10 @@ EntryLog.prototype.formatDuration = function (x) {
 
 EntryLog.prototype.nextIndex = function() {
     return this._index++;
-}
+};
 
 EntryLog.prototype.createNode = function (options) {
-    options.name = options.url.split("/").pop();
+    options.name = options.url.split('/').pop();
 
     return new ODataNode(options);
 };

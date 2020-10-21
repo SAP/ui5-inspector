@@ -110,10 +110,6 @@ const parseBlock = (requestsRaw, responseRaw) => {
     );
 };
 
-// requestsRaw.filter(raw => raw.includes("boundary=changeset")).map(raw => {
-//     let reqBoundary =
-// })
-
 /* jshint ignore:start */
 const deMultipart = async (content, req, res) => {
     return Promise.resolve().then(() => {
@@ -152,6 +148,3 @@ exports.extractMultipartEntries = async (entries) => {
     await entries.forEach(extractMultipartEntry);
 };
 /* jshint ignore:end */
-
-
-// export {extractMultipartEntries, extractMultipartEntry}

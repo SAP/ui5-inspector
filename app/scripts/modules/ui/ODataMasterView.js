@@ -2,7 +2,7 @@
 
 const DataGrid = require('./datagrid/DataGrid.js');
 const UIUtils = require('./datagrid/UIUtils.js');
-const EntryLog = require('../utils/EntryLog.js');
+const EntriesLog = require('../utils/EntriesLog.js');
 
 const COLUMNS = [{
     id: 'name',
@@ -61,7 +61,7 @@ const COLUMNS = [{
 function ODataMasterView(domId, options) {
 
     this.oContainerDOM = document.getElementById(domId);
-    this.oEntryLog = new EntryLog();
+    this.oEntriesLog = new EntriesLog();
 
     this.onSelectItem = function(oSelectedData) {};
     this.onClearItems = function(oSelectedData) {};
@@ -78,8 +78,8 @@ function ODataMasterView(domId, options) {
     this._getHAR();
 }
 
-ODataMasterView.prototype.logEntry = function(oEntry) {
-    const oNode = this.oEntryLog.getEntryNode(oEntry);
+ODataMasterView.prototype._logEntry = function(oEntry) {
+    const oNode = this.oEntriesLog.getEntryNode(oEntry);
 
     if (oNode) {
         this.oDataGrid.insertChild(oNode);
@@ -93,8 +93,8 @@ ODataMasterView.prototype._getHAR = function() {
         if (!entries.length) {
             console.warn('No requests found by now');
         }
-        entries.forEach(this.logEntry.bind(this));
-        chrome.devtools.network.onRequestFinished.addListener(this.logEntry.bind(this));
+        entries.forEach(this._logEntry.bind(this));
+        chrome.devtools.network.onRequestFinished.addListener(this._logEntry.bind(this));
     }.bind(this));
 };
 /* jshint ignore:end */
@@ -142,8 +142,8 @@ ODataMasterView.prototype.selectHandler = function(oEvent) {
         iSelectedId = oSelectedNode && oSelectedNode.data.id;
 
     this.onSelectItem({
-        responseBody: this.oEntryLog.getEditorContent(iSelectedId),
-        altMessage: this.oEntryLog.getNoResponseMessage(iSelectedId)
+        responseBody: this.oEntriesLog.getEditorContent(iSelectedId),
+        altMessage: this.oEntriesLog.getNoResponseMessage(iSelectedId)
     });
 
 };

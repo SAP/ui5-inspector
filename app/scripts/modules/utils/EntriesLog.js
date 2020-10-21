@@ -2,13 +2,13 @@ const ODataNode = require('./ODataNode.js');
 const multipartmixed2har = require('./multipartmixed2har.js');
 const formatXML = require('prettify-xml');
 
-function EntryLog () {
+function EntriesLog () {
     this.oEditorContent = {};
     this.oNoResponseMessage = {};
     this._index = 0;
 }
 
-EntryLog.prototype.getEntryNode = function(entry) {
+EntriesLog.prototype.getEntryNode = function(entry) {
     let oNode,
         aNodes = [];
     const odataVersion = entry.response.headers.find(el => el.name.toLowerCase() === 'odata-version' || el.name.toLowerCase() === 'dataserviceversion'),
@@ -19,7 +19,7 @@ EntryLog.prototype.getEntryNode = function(entry) {
         odataVersion.value === '3.0' ||
         odataVersion.value === '2.0'
     )) {
-        const contentIndex = this.nextIndex(),
+        const contentIndex = this._nextIndex(),
             bIsBatch = entry.response.content.mimeType.includes('multipart/mixed'),
             classes = !(
                 //They should not be clickable
@@ -32,11 +32,11 @@ EntryLog.prototype.getEntryNode = function(entry) {
                 url: entry.request.url,
                 status: entry.response.status,
                 method: entry.request.method,
-                note: `${this.formatDateTime(entry.startedDateTime)} : ${this.formatDuration(entry.time)} ms`,
+                note: `${this._formatDateTime(entry.startedDateTime)} : ${this._formatDuration(entry.time)} ms`,
                 isBatch: bIsBatch
             };
         bIsBatch && (options.classes += ' batch');
-        oNode = this.createNode(options);
+        oNode = this._createNode(options);
 
         if (entry.response.content.mimeType.includes('application/xml')) {
             multipartmixed2har.getContent(entry).then(function(content) {
@@ -45,7 +45,7 @@ EntryLog.prototype.getEntryNode = function(entry) {
         } else if (bIsBatch) {
             const serviceUrl = entry.request.url.split('$batch')[0];
             multipartmixed2har.extractMultipartEntry(entry).then(function(childEntries) {
-                aNodes = self.showEmbeddedRequests(childEntries, serviceUrl);
+                aNodes = self._showEmbeddedRequests(childEntries, serviceUrl);
                 self.oNoResponseMessage[contentIndex] = 'See the split responses of this batch request';
                 aNodes.forEach(function(oChildNode) {
                     oNode.appendChild(oChildNode);
@@ -66,7 +66,7 @@ EntryLog.prototype.getEntryNode = function(entry) {
         }
     } else if (entry.response.status > 299 && entry.response.content.mimeType.includes('application/xml')) {
         //Potential OData Server Errors
-        const contentIndex = this.nextIndex(),
+        const contentIndex = this._nextIndex(),
             options = {
                 id: contentIndex,
                 classes: 'clickable error',
@@ -75,31 +75,31 @@ EntryLog.prototype.getEntryNode = function(entry) {
                 method: entry.request.method,
                 note: `${entry.startedDateTime}: ${entry.time} ms`
             },
-            oNode = this.createNode(options);
+            oNode = this._createNode(options);
             multipartmixed2har.getContent(entry).then(function(content) {
                 self.oEditorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
             });
     } else if (entry._error === 'net::ERR_CONNECTION_REFUSED') {
-        const contentIndex = this.nextIndex(),
+        const contentIndex = this._nextIndex(),
             options = {
             classes: 'error',
             url: entry.request.url,
             status: entry.response.status,
             method: entry.request.method
         };
-        oNode = this.createNode(options);
+        oNode = this._createNode(options);
         this.oNoResponseMessage[contentIndex] = 'Check if the server went down or the network was interrupted';
     }
 
     return oNode;
 };
 
-EntryLog.prototype.showEmbeddedRequests = function (entries, serviceUrl, prefix) {
+EntriesLog.prototype._showEmbeddedRequests = function (entries, serviceUrl, prefix) {
     return entries.map(entry => {
         if (entry.children) {
-            return this.showEmbeddedRequests(entry.children, serviceUrl, entry.changeset);
+            return this._showEmbeddedRequests(entry.children, serviceUrl, entry.changeset);
         } else {
-            const contentIndex = this.nextIndex(),
+            const contentIndex = this._nextIndex(),
                 classes = 'clickable secondLevel' +
                     //Mark errors
                     (entry.response && entry.response.status > 299 && ' error' || '' );
@@ -114,36 +114,35 @@ EntryLog.prototype.showEmbeddedRequests = function (entries, serviceUrl, prefix)
                 note: `${entry.response.headers.location ? '<br/>&nbsp;&nbsp; -> ' + entry.response.headers.location : ''}`
             };
 
-            return this.createNode(options);
+            return this._createNode(options);
         }
     }, this);
 };
 
-EntryLog.prototype.formatDateTime = function (x) {
+EntriesLog.prototype.getEditorContent = function (iSelectedId) {
+    return this.oEditorContent[iSelectedId];
+};
+
+EntriesLog.prototype.getNoResponseMessage = function (iSelectedId) {
+    return this.oNoResponseMessage[iSelectedId];
+};
+
+EntriesLog.prototype._formatDateTime = function (x) {
     return x.match(/.+T(.+)Z/).pop();
 };
 
-EntryLog.prototype.formatDuration = function (x) {
+EntriesLog.prototype._formatDuration = function (x) {
     return x.toPrecision(7);
 };
 
-EntryLog.prototype.nextIndex = function() {
+EntriesLog.prototype._nextIndex = function() {
     return this._index++;
 };
 
-EntryLog.prototype.createNode = function (options) {
+EntriesLog.prototype._createNode = function (options) {
     options.name = options.url.split('/').pop();
 
     return new ODataNode(options);
 };
 
-EntryLog.prototype.getEditorContent = function (iSelectedId) {
-    return this.oEditorContent[iSelectedId];
-};
-
-EntryLog.prototype.getNoResponseMessage = function (iSelectedId) {
-    return this.oNoResponseMessage[iSelectedId];
-};
-
-
-module.exports = EntryLog;
+module.exports = EntriesLog;

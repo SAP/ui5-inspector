@@ -83,7 +83,7 @@ Set the Git `core.autocrlf` configuration property to "false" (and make sure to 
 The commit message consists of two or three parts, separated by empty lines:
 
 1.  The commit summary (the first line)
-2.  An optional commit description text (may contain additional empty lines, for external contributors you would express your CLA agreement here)
+2.  An optional commit description text (may contain additional empty lines)
 3.  A data section
 
 -   The summary line must be prefixed by `[FIX]` or `[FEATURE]` and should start with the control/component which was the main subject of the change

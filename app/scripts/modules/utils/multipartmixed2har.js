@@ -1,21 +1,34 @@
+/**
+ * Filters lines we are not interested in.
+ * @param {Object} line
+ */
 const unpopularLines = (line) => !(line.includes('application/http') || line === '' || line.includes('Content-Transfer-Encoding'));
 
+/**
+ * Creates response.
+ * @param {Object} resPart
+ */
 const createResponse = (resPart) => {
     if (resPart.includes('boundary=changeset')) {
-        const sBoundary = resPart.match(/boundary=(.*)/)[1],
-            res = {
+        const sBoundary = resPart.match(/boundary=(.*)/)[1];
+        const res = {
                 changeset: sBoundary,
                 children: resPart.split( '--' + sBoundary)
+                    // jscs:disable
                     .filter(line => line.trim() !== '--' && !line.includes(sBoundary))
                     .map(createResponse)
+                    // jscs:enable
             };
 
         return res;
     } else {
-        let lines = resPart.split('\n'), res = {
+        let lines = resPart.split('\n');
+        let res = {
             headers: {}
         };
+        // jscs:disable
         lines.filter(unpopularLines).forEach(line => {
+        // jscs:enable
             line = line.trim();
             if (line.indexOf('HTTP/1.1') === 0) {
                 let statusLine = line.substr(9);
@@ -25,7 +38,7 @@ const createResponse = (resPart) => {
                 try {
                     res.body = JSON.parse(line);
                 } catch (e) {
-                    res.body = { parseError: 'invalid JSON' };
+                    res.body = {parseError: 'invalid JSON'};
                 }
             } else if (line) {
                 let [name, value] = line.split(/:(.+)/);
@@ -40,14 +53,20 @@ const createResponse = (resPart) => {
     }
 };
 
+/**
+ * Creates request.
+ * @param {Object} reqPart
+ */
 const createRequest = (reqPart) => {
     if (reqPart.includes('boundary=changeset')) {
-        const sBoundary = reqPart.match(/boundary=(.*)/)[1],
-            request = {
+        const sBoundary = reqPart.match(/boundary=(.*)/)[1];
+        const request = {
                 changeset: sBoundary,
                 children: reqPart.split( '--' + sBoundary)
+                    // jscs:disable
                     .filter(line => line.trim() !== '--' && !line.includes(sBoundary))
                     .map(createRequest)
+                    // jscs:enable
             };
 
         return request;
@@ -55,7 +74,9 @@ const createRequest = (reqPart) => {
         const request = {
             headers: {}
         };
+        // jscs:disable
         reqPart.split('\n').filter(unpopularLines).forEach(line => {
+        // jscs:enable
             line = line.trim();
             if (line.match('(GET|POST|PATCH|PUT|DELETE).*')) {
                 let [method, url, httpVersion] = line.split(' ');
@@ -66,7 +87,7 @@ const createRequest = (reqPart) => {
                 try {
                     request.body = JSON.parse(line);
                 } catch (e) {
-                    request.body = { parseError: 'invalid JSON' };
+                    request.body = {parseError: 'invalid JSON'};
                 }
             } else if (line) {
                 let [name, value] = line.split(/:(.+)/);
@@ -81,9 +102,18 @@ const createRequest = (reqPart) => {
     }
 };
 
+/**
+ * Transforms request if it has children.
+ * @param {Object} entry
+ */
 const transformIfChildren = (entry) => {
     if (entry.request.children) {
         entry.changeset = entry.request.changeset;
+        /**
+         * Maps children requests.
+         * @param {Object} request
+         * @param {number} ind
+         */
         entry.children = entry.request.children.map((request, ind) => ({
             request: request,
             response: entry.response.children[ind]
@@ -95,14 +125,29 @@ const transformIfChildren = (entry) => {
     return entry;
 };
 
-const removeEmplyLinesFilter = (x) => {
+/**
+ * Removes empty lines.
+ * @param {Object} x
+ */
+const removeEmptyLinesFilter = (x) => {
     const xm = x.replace(/\s\n/, '');
 
     return !!xm.length;
 };
 
+/**
+ * Parses request/responses blocks.
+ * @param {Object} requestsRaw
+ * @param {Object} responseRaw
+ * @returns {Array}
+ */
 const parseBlock = (requestsRaw, responseRaw) => {
     let responses = responseRaw.map(createResponse);
+    /**
+     * Maps raw requests.
+     * @param {Object} reqPart
+     * @param {number} ind
+     */
     return requestsRaw.map((reqPart, ind) => transformIfChildren({
             request: createRequest(reqPart),
             response: responses[ind]
@@ -111,39 +156,75 @@ const parseBlock = (requestsRaw, responseRaw) => {
 };
 
 /* jshint ignore:start */
+/**
+ * De-multiparts request/responses.
+ * @param {Object} content
+ * @param {Object} req
+ * @param {Object} res
+ */
 const deMultipart = async (content, req, res) => {
+    /**
+     * De-multiparts request/responses.
+     */
     return Promise.resolve().then(() => {
-        let raw = atob(content),
-            reqBoundary = '--' + req.postData.mimeType.split('boundary=')[1],
-            resContentType = res.headers.find(header => header.name.toLowerCase() === 'content-type').value,
-            resBoundary = '--' + resContentType.split('boundary=')[1],
-            requestsRaw = req.postData.text.split(reqBoundary).filter(line => line.trim() !== '--' && line !== '').filter(removeEmplyLinesFilter),
-            responseRaw = raw.split(resBoundary).filter(line => line.trim() !== '--' && line !== '').filter(removeEmplyLinesFilter);
+        /**
+         * Finds request content type.
+         * @param {Object} header
+         */
+        let resContentType = res.headers.find(header => header.name.toLowerCase() === 'content-type').value;
+        let raw = atob(content);
+        let reqBoundary = '--' + req.postData.mimeType.split('boundary=')[1];
+        let resBoundary = '--' + resContentType.split('boundary=')[1];
+        // jscs:disable
+        let requestsRaw = req.postData.text.split(reqBoundary)
+            .filter(line => line.trim() !== '--' && line !== '')
+            .filter(removeEmptyLinesFilter);
+        let responseRaw = raw.split(resBoundary)
+            .filter(line => line.trim() !== '--' && line !== '')
+            .filter(removeEmptyLinesFilter);
+        // jscs:enable
 
-            return parseBlock(requestsRaw, responseRaw);
+        return parseBlock(requestsRaw, responseRaw);
     });
 };
 /* jshint ignore:end */
 
 /* jshint ignore:start */
+/**
+ * Gets content of entry.
+ * @param {Object} entry
+ */
 const getContent = async (entry) =>
+    /**
+     * Resolves Promise.
+     * @param {Function} resolve
+     */
     Promise.resolve(new Promise((resolve) => {
+        /**
+         * Gets content of an entry.
+         * @param {Object} content
+         */
         entry.getContent(content => resolve(content));
     }));
 
 exports.getContent = getContent;
 /* jshint ignore:end */
 
-/**
- * extracts the content of multipart/mixed request response pairs and creates them as childEntries
- * childEntries should follow the har spec of entries as far as possilbe
- */
 /* jshint ignore:start */
+/**
+ * Extracts the content of multipart/mixed request response pairs and creates them as childEntries.
+ * ChildEntries should follow the har spec of entries as far as possible.
+ * @param {Object} entry
+ */
 exports.extractMultipartEntry = async (entry) =>
     entry.childEntries = await deMultipart(await getContent(entry), entry.request, entry.response);
 /* jshint ignore:end */
 
 /* jshint ignore:start */
+/**
+ * Extracts the content of multipart/mixed request response pairs.
+ * @param {Object} entries
+ */
 exports.extractMultipartEntries = async (entries) => {
     await entries.forEach(extractMultipartEntry);
 };

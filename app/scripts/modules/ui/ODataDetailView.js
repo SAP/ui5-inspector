@@ -1,15 +1,17 @@
 'use strict';
 
+/**
+ * @param {string} containerId - id of the DOM container
+ * @constructor
+ */
 function ODataDetailView(containerId) {
     const darkModeMql = matchMedia('(prefers-color-scheme: dark)');
     const darkMode = darkModeMql.matches;
 
-   this.oContainer = document.getElementById(containerId);
-
+    this.oContainer = document.getElementById(containerId);
     this.editorDOM = document.createElement('div');
-    this.editorDOM.id ='editor';
+    this.editorDOM.id = 'editor';
     this.oContainer.appendChild(this.editorDOM);
-
 
     this.editorAltDOM = document.createElement('div');
     this.editorAltDOM.classList.add('editorAlt');
@@ -20,13 +22,17 @@ function ODataDetailView(containerId) {
     this.editor = ace.edit('editor');
     this.editor.getSession().setUseWrapMode(true);
 
-    darkModeMql.addListener(function(event) {
+    darkModeMql.addListener(function (event) {
         this._setTheme(event.matches);
     }.bind(this));
     this._setTheme(darkMode);
 }
 
-ODataDetailView.prototype.update = function(data) {
+/**
+ * Updates data.
+ * @param {Object} data - object structure as JSON
+ */
+ODataDetailView.prototype.update = function (data) {
     const sResponseBody = data.responseBody;
     let sAltMessage;
 
@@ -44,12 +50,18 @@ ODataDetailView.prototype.update = function(data) {
     this.editor.clearSelection();
 };
 
-ODataDetailView.prototype.clear = function() {
+/**
+ * Clears editor.
+ */
+ODataDetailView.prototype.clear = function () {
     this.editor.setValue('', -1);
 };
 
-ODataDetailView.prototype._setTheme = function(darkMode) {
-    // darkMode = chrome.devtools.panels.themeName === "dark" || darkMode //Hardwired to chrome devtools to dark?
+/**
+ * Sets theme.
+ */
+ODataDetailView.prototype._setTheme = function (darkMode) {
+    // DarkMode = chrome.devtools.panels.themeName === "dark" || darkMode //Hardwired to chrome devtools to dark?
     this.editor.setTheme(darkMode ? 'ace/theme/vibrant_ink' : 'ace/theme/chrome');
 };
 

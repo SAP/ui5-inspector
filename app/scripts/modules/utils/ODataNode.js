@@ -17,9 +17,9 @@ class ODataNode extends DataGrid.SortableDataGridNode {
     }
 
     _renderPrimaryCell(cell) {
-        const iconElement = createElementWithClass('span', 'icon'),
-            iSymbol = (this.data.isBatch) ? 128194 : 128463,
-            sClass = (this.data.isBatch) ? 'batchIcon' : 'requestIcon';
+        const iconElement = createElementWithClass('span', 'icon');
+        const iSymbol = (this.data.isBatch) ? 128194 : 128463;
+        const sClass = (this.data.isBatch) ? 'batchIcon' : 'requestIcon';
 
         iconElement.classList.add(sClass);
         iconElement.innerHTML = `&#${iSymbol}`;

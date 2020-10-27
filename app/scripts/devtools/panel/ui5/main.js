@@ -151,7 +151,6 @@
     // Dataview for 'Application information' tab
     var appInfo = new DataView('app-info');
 
-
     // Bootstrap for 'OData' tab
     // ================================================================================
     var odataHorizontalSplitter = new Splitter('odata-horizontal-splitter', {
@@ -160,18 +159,26 @@
         hideEndContainer: true
     });
 
+    // Dataview for OData requests
+    // ================================================================================
     var oDataDetailView = new ODataDetailView('odata-tab-detail');
     new ODataMasterView('odata-tab-master', {
-        onSelectItem: function(data) {
+        /**
+         * Method fired when an OData Entry log is selected.
+         * @param {Object} data
+         */
+        onSelectItem: function (data) {
             odataHorizontalSplitter.showEndContainer();
             oDataDetailView.update(data);
         },
-        onClearItems: function() {
+        /**
+         * Clears all OData Entry log items.
+         */
+        onClearItems: function () {
             oDataDetailView.clear();
             odataHorizontalSplitter.hideEndContainer();
         }
     });
-
 
     // ================================================================================
     // Communication

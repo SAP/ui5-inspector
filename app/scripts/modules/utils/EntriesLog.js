@@ -2,86 +2,97 @@ const ODataNode = require('./ODataNode.js');
 const multipartmixed2har = require('./multipartmixed2har.js');
 const formatXML = require('prettify-xml');
 
+/**
+ * @constructor
+ */
 function EntriesLog () {
     this.oEditorContent = {};
     this.oNoResponseMessage = {};
     this._index = 0;
 }
 
-EntriesLog.prototype.getEntryNode = function(entry) {
-    let oNode,
-        aNodes = [];
-    const odataVersion = entry.response.headers.find(el => el.name.toLowerCase() === 'odata-version' || el.name.toLowerCase() === 'dataserviceversion'),
-        self = this;
+/**
+ * Creates Log entry node.
+ * @param {Object} entry - OData entry
+ * @returns {Object} HTML Node
+ */
+EntriesLog.prototype.getEntryNode = function (entry) {
+    let oNode;
+    let aNodes = [];
+    const that = this;
+
+    /**
+     * Finds current OData version.
+     * @param {Object} el - headers element
+     */
+    const odataVersion = entry.response.headers.find(el => el.name.toLowerCase() === 'odata-version' || el.name.toLowerCase() === 'dataserviceversion');
 
     if (odataVersion && (
         odataVersion.value === '4.0' ||
         odataVersion.value === '3.0' ||
         odataVersion.value === '2.0'
     )) {
-        const contentIndex = this._nextIndex(),
-            bIsBatch = entry.response.content.mimeType.includes('multipart/mixed'),
-            classes = !(
-                //They should not be clickable
+        const contentIndex = this._nextIndex();
+        const bIsBatch = entry.response.content.mimeType.includes('multipart/mixed');
+        const classes = !(
                 entry.request.method === 'HEAD' ||
                 bIsBatch
-            ) && 'clickable' || '',
-            options = {
-                id: contentIndex,
-                classes: classes,
-                url: entry.request.url,
-                status: entry.response.status,
-                method: entry.request.method,
-                note: `${this._formatDateTime(entry.startedDateTime)} : ${this._formatDuration(entry.time)} ms`,
-                isBatch: bIsBatch
-            };
+            ) && 'clickable' || '';
+        const options = {
+            id: contentIndex,
+            classes: classes,
+            url: entry.request.url,
+            status: entry.response.status,
+            method: entry.request.method,
+            note: `${this._formatDateTime(entry.startedDateTime)} : ${this._formatDuration(entry.time)} ms`,
+            isBatch: bIsBatch
+        };
         bIsBatch && (options.classes += ' batch');
         oNode = this._createNode(options);
 
         if (entry.response.content.mimeType.includes('application/xml')) {
-            multipartmixed2har.getContent(entry).then(function(content) {
-                self.oEditorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
+            multipartmixed2har.getContent(entry).then(function (content) {
+                that.oEditorContent[contentIndex] = {type: 'xml', content: formatXML(content)};
             });
         } else if (bIsBatch) {
             const serviceUrl = entry.request.url.split('$batch')[0];
-            multipartmixed2har.extractMultipartEntry(entry).then(function(childEntries) {
-                aNodes = self._showEmbeddedRequests(childEntries, serviceUrl);
-                self.oNoResponseMessage[contentIndex] = 'See the split responses of this batch request';
-                aNodes.forEach(function(oChildNode) {
+            multipartmixed2har.extractMultipartEntry(entry).then(function (childEntries) {
+                aNodes = that._showEmbeddedRequests(childEntries, serviceUrl);
+                that.oNoResponseMessage[contentIndex] = 'See the split responses of this batch request';
+                aNodes.forEach(function (oChildNode) {
                     oNode.appendChild(oChildNode);
                 });
             });
 
         } else if (entry.response.content.mimeType.includes('application/json')) {
-            //remove stuff that is not interesting here
             delete entry._initiator;
-            multipartmixed2har.getContent(entry).then(function(content) {
+            multipartmixed2har.getContent(entry).then(function (content) {
                 entry.response._content = JSON.parse(content || '{}');
-                self.oEditorContent[contentIndex] = { type: 'json', content: JSON.stringify(entry, null, 2) };
+                that.oEditorContent[contentIndex] = {type: 'json', content: JSON.stringify(entry, null, 2)};
             });
         } else if (entry.response.content.mimeType.includes('text/plain')) {
-            multipartmixed2har.getContent(entry).then(function(content) {
-                self.oEditorContent[contentIndex] = { type: 'text', content: content };
+            multipartmixed2har.getContent(entry).then(function (content) {
+                that.oEditorContent[contentIndex] = {type: 'text', content: content};
             });
         }
     } else if (entry.response.status > 299 && entry.response.content.mimeType.includes('application/xml')) {
-        //Potential OData Server Errors
-        const contentIndex = this._nextIndex(),
-            options = {
-                id: contentIndex,
-                classes: 'clickable error',
-                url: entry.request.url,
-                status: entry.response.status,
-                method: entry.request.method,
-                note: `${entry.startedDateTime}: ${entry.time} ms`
-            },
-            oNode = this._createNode(options);
-            multipartmixed2har.getContent(entry).then(function(content) {
-                self.oEditorContent[contentIndex] = { type: 'xml', content: formatXML(content) };
-            });
+        const contentIndex = this._nextIndex();
+        const options = {
+            id: contentIndex,
+            classes: 'clickable error',
+            url: entry.request.url,
+            status: entry.response.status,
+            method: entry.request.method,
+            note: `${entry.startedDateTime}: ${entry.time} ms`
+        };
+        oNode = this._createNode(options);
+
+        multipartmixed2har.getContent(entry).then(function (content) {
+            that.oEditorContent[contentIndex] = {type: 'xml', content: formatXML(content)};
+        });
     } else if (entry._error === 'net::ERR_CONNECTION_REFUSED') {
-        const contentIndex = this._nextIndex(),
-            options = {
+        const contentIndex = this._nextIndex();
+        const options = {
             classes: 'error',
             url: entry.request.url,
             status: entry.response.status,
@@ -94,17 +105,28 @@ EntriesLog.prototype.getEntryNode = function(entry) {
     return oNode;
 };
 
+/**
+ * Shows embedded requests.
+ * @param {Array} entries
+ * @param {string} serviceUrl
+ * @param {string} prefix
+ * @returns {Array} mapped entries
+ * @private
+ */
 EntriesLog.prototype._showEmbeddedRequests = function (entries, serviceUrl, prefix) {
+    /**
+     * Maps entry.
+     * @param {Object} entry
+     */
     return entries.map(entry => {
         if (entry.children) {
             return this._showEmbeddedRequests(entry.children, serviceUrl, entry.changeset);
         } else {
-            const contentIndex = this._nextIndex(),
-                classes = 'clickable secondLevel' +
-                    //Mark errors
-                    (entry.response && entry.response.status > 299 && ' error' || '' );
+            const contentIndex = this._nextIndex();
+            const classes = 'clickable secondLevel' +
+                (entry.response && entry.response.status > 299 && ' error' || '' );
 
-            this.oEditorContent[contentIndex] = { type: 'json', content: JSON.stringify(entry, null, 2) };
+            this.oEditorContent[contentIndex] = {type: 'json', content: JSON.stringify(entry, null, 2)};
             const options = {
                 id: contentIndex,
                 classes: classes,
@@ -119,26 +141,59 @@ EntriesLog.prototype._showEmbeddedRequests = function (entries, serviceUrl, pref
     }, this);
 };
 
+/**
+ * Returns editor content.
+ * @param {number} iSelectedId
+ * @returns {Object} editor content
+ */
 EntriesLog.prototype.getEditorContent = function (iSelectedId) {
     return this.oEditorContent[iSelectedId];
 };
 
+/**
+ * Returns editor content.
+ * @param {number} iSelectedId
+ * @returns {string} No response message
+ */
 EntriesLog.prototype.getNoResponseMessage = function (iSelectedId) {
     return this.oNoResponseMessage[iSelectedId];
 };
 
+/**
+ * Formats Datetime.
+ * @param {Object} x - Datetime
+ * @returns {Object} Datetime
+ * @private
+ */
 EntriesLog.prototype._formatDateTime = function (x) {
     return x.match(/.+T(.+)Z/).pop();
 };
 
+/**
+ * Formats Duration.
+ * @param {Object} x - Datetime
+ * @returns {number} Duration
+ * @private
+ */
 EntriesLog.prototype._formatDuration = function (x) {
     return x.toPrecision(7);
 };
 
-EntriesLog.prototype._nextIndex = function() {
+/**
+ * Return next Entry log index.
+ * @returns {number} Index
+ * @private
+ */
+EntriesLog.prototype._nextIndex = function () {
     return this._index++;
 };
 
+/**
+ * Creates ODataNode.
+ * @param {Object} options - settings
+ * @returns {Object} ODataNode
+ * @private
+ */
 EntriesLog.prototype._createNode = function (options) {
     options.name = options.url.split('/').pop();
 

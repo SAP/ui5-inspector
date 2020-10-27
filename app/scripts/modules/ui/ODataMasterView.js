@@ -14,6 +14,11 @@ const COLUMNS = [{
     visible: true,
     allowInSortByEvenWhenHidden: false,
     disclosure: true,
+    /**
+     * Sorts Items.
+     * @param {Object} a
+     * @param {Object} b
+     */
     sortingFunction: function (a, b) {
         return DataGrid.SortableDataGrid.StringComparator('name', a, b);
     }
@@ -27,6 +32,11 @@ const COLUMNS = [{
         weight: 10,
         visible: true,
         allowInSortByEvenWhenHidden: false,
+        /**
+         * Sorts Items.
+         * @param {Object} a
+         * @param {Object} b
+         */
         sortingFunction: function (a, b) {
             return DataGrid.SortableDataGrid.StringComparator('method', a, b);
         }
@@ -40,6 +50,11 @@ const COLUMNS = [{
         weight: 10,
         visible: true,
         allowInSortByEvenWhenHidden: false,
+        /**
+         * Sorts Items.
+         * @param {Object} a
+         * @param {Object} b
+         */
         sortingFunction: function (a, b) {
             return DataGrid.SortableDataGrid.NumericComparator('status', a, b);
         }
@@ -53,18 +68,36 @@ const COLUMNS = [{
         weight: 20,
         visible: true,
         allowInSortByEvenWhenHidden: false,
+        /**
+         * Sorts Items.
+         * @param {Object} a
+         * @param {Object} b
+         */
         sortingFunction: function (a, b) {
             return DataGrid.SortableDataGrid.StringComparator('note', a, b);
         }
     }];
 
+/**
+ * @param {string} domId - id of the DOM container
+ * @param {Object} options - initial configuration
+ * @constructor
+ */
 function ODataMasterView(domId, options) {
 
     this.oContainerDOM = document.getElementById(domId);
     this.oEntriesLog = new EntriesLog();
 
-    this.onSelectItem = function(oSelectedData) {};
-    this.onClearItems = function(oSelectedData) {};
+    /**
+     * Selects an OData Entry log item.
+     * @param {Object} oSelectedData
+     */
+    this.onSelectItem = function (oSelectedData) {};
+    /**
+     * Clears all OData Entry log items.
+     * @param {Object} oSelectedData
+     */
+    this.onClearItems = function (oSelectedData) {};
     if (options) {
         this.onSelectItem = options.onSelectItem || this.onSelectItem;
         this.onClearItems = options.onClearItems || this.onClearItems;
@@ -78,7 +111,12 @@ function ODataMasterView(domId, options) {
     this._getHAR();
 }
 
-ODataMasterView.prototype._logEntry = function(oEntry) {
+/**
+ * Logs OData entry.
+ * @param {Object} oEntry - Log entry
+ * @private
+ */
+ODataMasterView.prototype._logEntry = function (oEntry) {
     const oNode = this.oEntriesLog.getEntryNode(oEntry);
 
     if (oNode) {
@@ -87,7 +125,15 @@ ODataMasterView.prototype._logEntry = function(oEntry) {
 };
 
 /* jshint ignore:start */
-ODataMasterView.prototype._getHAR = function() {
+/**
+ * Gets HTTP Archive request.
+ * @private
+ */
+ODataMasterView.prototype._getHAR = function () {
+    /**
+     * Processes the HTTP Archive Requests.
+     * @param {Object} result
+     */
     chrome.devtools.network.getHAR(async function (result) {
         const entries = result.entries;
         if (!entries.length) {
@@ -99,11 +145,19 @@ ODataMasterView.prototype._getHAR = function() {
 };
 /* jshint ignore:end */
 
-ODataMasterView.prototype._createClearButton = function() {
+/**
+ * Creates Clear button.
+ * @returns {Object} - Clear button Icon
+ * @private
+ */
+ODataMasterView.prototype._createClearButton = function () {
     const oIcon = UIUtils.Icon.create('', 'toolbar-glyph hidden');
     oIcon.setIconType('largeicon-clear');
 
-    oIcon.onclick = function() {
+    /**
+     * Clear Icon click handler.
+     */
+    oIcon.onclick = function () {
         this.oDataGrid.rootNode().removeChildren();
         this.onClearItems();
     }.bind(this);
@@ -111,7 +165,12 @@ ODataMasterView.prototype._createClearButton = function() {
     return oIcon;
 };
 
-ODataMasterView.prototype._createDataGrid = function() {
+/**
+ * Creates DataGrid.
+ * @returns {Object} - DataGrid
+ * @private
+ */
+ODataMasterView.prototype._createDataGrid = function () {
     const oDataGrid = new DataGrid.SortableDataGrid({
         displayName: 'test',
         columns: COLUMNS
@@ -120,7 +179,10 @@ ODataMasterView.prototype._createDataGrid = function() {
     oDataGrid.addEventListener(DataGrid.Events.SortingChanged, this.sortHandler, this);
     oDataGrid.addEventListener(DataGrid.Events.SelectedNode, this.selectHandler, this);
 
-    const oResizeObserver = new ResizeObserver(function(oEntries) {
+    /**
+     * Resize Handler for DataGrid.
+     */
+    const oResizeObserver = new ResizeObserver(function () {
         oDataGrid.onResize();
     });
     oResizeObserver.observe(oDataGrid.element);
@@ -128,8 +190,15 @@ ODataMasterView.prototype._createDataGrid = function() {
     return oDataGrid;
 };
 
-ODataMasterView.prototype.sortHandler = function() {
+/**
+ * Sorts Columns of the DataGrid.
+ */
+ODataMasterView.prototype.sortHandler = function () {
     const columnId = this.oDataGrid.sortColumnId();
+    /**
+     * Finds Column config by Id.
+     * @param {Object} columnConfig
+     */
     const columnConfig = COLUMNS.find(columnConfig => columnConfig.id === columnId);
     if (!columnConfig || !columnConfig.sortingFunction) {
         return;
@@ -137,9 +206,13 @@ ODataMasterView.prototype.sortHandler = function() {
     this.oDataGrid.sortNodes(columnConfig.sortingFunction, !this.oDataGrid.isSortOrderAscending());
 };
 
-ODataMasterView.prototype.selectHandler = function(oEvent) {
-    const oSelectedNode = oEvent.data,
-        iSelectedId = oSelectedNode && oSelectedNode.data.id;
+/**
+ * Selects clicked log entry.
+ * @param {Object} oEvent
+ */
+ODataMasterView.prototype.selectHandler = function (oEvent) {
+    const oSelectedNode = oEvent.data;
+    const iSelectedId = oSelectedNode && oSelectedNode.data.id;
 
     this.onSelectItem({
         responseBody: this.oEntriesLog.getEditorContent(iSelectedId),

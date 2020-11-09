@@ -36,8 +36,7 @@
 
     // Horizontal Splitter for 'Control Inspector' tab
     var controlInspectorHorizontalSplitter = new Splitter('horizontal-splitter', {
-        endContainerWidth: '400px',
-        isEndContainerClosable: true
+        endContainerWidth: '400px'
     });
 
     // Control tree

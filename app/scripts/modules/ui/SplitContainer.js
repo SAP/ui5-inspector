@@ -52,13 +52,13 @@ function _applyInlineStylesForEndContainer(_splitterInstance, skipSizing) {
  * @private
  */
 function _applyInlineStylesForCloseButton(_splitterInstance) {
-    var $closeButton = _splitterInstance.$this.querySelector('close-button');
+    var $closeButton = _splitterInstance.$this.querySelector('.toolbar-item');
 
     if ($closeButton) {
         if (_splitterInstance._hideEndContainer) {
             $closeButton.style.display = 'none';
         } else {
-            $closeButton.style.display = 'block';
+            $closeButton.style.display = 'flex';
         }
     }
 }

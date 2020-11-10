@@ -16,6 +16,8 @@
     var ControlTree = require('../../../modules/ui/ControlTree.js');
     var DataView = require('../../../modules/ui/DataView.js');
     var Splitter = require('../../../modules/ui/SplitContainer.js');
+    var ODataDetailView = require('../../../modules/ui/ODataDetailView.js');
+    var ODataMasterView = require('../../../modules/ui/ODataMasterView.js');
 
     // Apply theme
     // ================================================================================
@@ -147,6 +149,35 @@
 
     // Dataview for 'Application information' tab
     var appInfo = new DataView('app-info');
+
+    // Bootstrap for 'OData' tab
+    // ================================================================================
+    var odataHorizontalSplitter = new Splitter('odata-horizontal-splitter', {
+        endContainerWidth: '50%',
+        isEndContainerClosable: true,
+        hideEndContainer: true
+    });
+
+    // Dataview for OData requests
+    // ================================================================================
+    var oDataDetailView = new ODataDetailView('odata-tab-detail');
+    new ODataMasterView('odata-tab-master', {
+        /**
+         * Method fired when an OData Entry log is selected.
+         * @param {Object} data
+         */
+        onSelectItem: function (data) {
+            odataHorizontalSplitter.showEndContainer();
+            oDataDetailView.update(data);
+        },
+        /**
+         * Clears all OData Entry log items.
+         */
+        onClearItems: function () {
+            oDataDetailView.clear();
+            odataHorizontalSplitter.hideEndContainer();
+        }
+    });
 
     // ================================================================================
     // Communication

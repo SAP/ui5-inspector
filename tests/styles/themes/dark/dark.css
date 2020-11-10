@@ -424,7 +424,7 @@ splitter > end > header {
   right: 0;
   top: 0;
 }
-splitter > end > close-button {
+splitter > end > .toolbar-item {
   background: url("/images/close.png") no-repeat center;
   content: '';
   cursor: pointer;
@@ -437,7 +437,7 @@ splitter > end > close-button {
   transition: opacity 0.2s;
   width: 15px;
 }
-splitter > end > close-button:hover {
+splitter > end > .toolbar-item:hover {
   opacity: 1;
 }
 splitter > end > content {
@@ -500,4 +500,574 @@ splitter[orientation="vertical"] > divider handler {
 }
 [json] number {
   color: #949494;
+}
+.data-grid {
+  height: 100%;
+}
+span.batchIcon,
+span.requestIcon {
+  margin-left: 1px;
+  margin-right: 4px;
+}
+span.requestIcon {
+  font-size: 1rem;
+  vertical-align: middle;
+}
+odata-master-view,
+odata-detail-view {
+  height: 100%;
+}
+.odataTab {
+  flex-direction: column;
+  background-color: white;
+  /* Text and background color for dark mode */
+}
+.odataTab .data-grid:focus {
+  outline: none;
+}
+.odataTab h3,
+.odataTab h4,
+.odataTab p {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.odataTab .error {
+  color: red;
+}
+.odataTab span.url {
+  margin-right: 0.15rem;
+  margin-left: 0.15rem;
+  font-size: medium;
+  vertical-align: middle;
+}
+.odataTab tr.batch span.url {
+  font-size: small;
+  vertical-align: baseline;
+}
+.odataTab td.url {
+  padding-bottom: 0.3rem;
+  padding-top: 0.3rem;
+}
+.odataTab .secondLevel td.url {
+  padding-left: 1rem;
+}
+.odataTab tr:nth-child(even) {
+  background-color: white;
+}
+.odataTab tr {
+  padding: 0.05rem;
+}
+.odataTab td.status,
+.odataTab td.method {
+  min-width: 30px;
+}
+.odataTab td.note {
+  min-width: 100px;
+}
+.odataTab splitter.endVisible td.note {
+  display: none;
+}
+.odataTab tr.data-grid-data-grid-node:hover {
+  background-color: AliceBlue;
+  cursor: pointer;
+}
+.odataTab tr.selected {
+  background-color: Lightblue;
+}
+.odataTab div.hidden {
+  visibility: hidden;
+}
+.odataTab .editorAlt {
+  display: flex;
+}
+.odataTab .editorAlt div {
+  margin: auto;
+}
+.odataTab splitter {
+  background-color: #f2f2f2;
+}
+.odataTab splitter start {
+  flex-direction: column;
+}
+.odataTab splitter > start clear-button {
+  height: 1.3rem;
+  width: 1.3rem;
+  padding-top: 0.15rem;
+  padding-left: 0.15rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  color: #838181;
+  font-weight: bold;
+  display: block;
+}
+.odataTab splitter > start clear-button:hover {
+  opacity: 1;
+}
+.odataTab .data-grid,
+.odataTab #editor,
+.odataTab .editorAlt {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+}
+.odataTab table {
+  width: 100%;
+}
+@media (prefers-color-scheme: dark) {
+  .odataTab body {
+    color: #ddd;
+    background-color: #222;
+  }
+  .odataTab section {
+    border-color: white;
+  }
+  .odataTab a {
+    color: lightblue;
+  }
+}
+/*
+ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *        notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *        notice, this list of conditions and the following disclaimer in the
+ *        documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.         IN NO EVENT SHALL APPLE INC. OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+.odataTab {
+  cursor: default;
+  font-family: ".SFNSDisplay-Regular", "Helvetica Neue", "Lucida Grande", sans-serif;
+  font-size: 12px;
+  tab-size: 4;
+  user-select: none;
+  color: #222222;
+  background: white;
+}
+.odataTab * {
+  min-width: 0px;
+  min-height: 0px;
+}
+.odataTab * {
+  box-sizing: border-box;
+}
+.odataTab :focus {
+  outline-width: 0px;
+}
+.odataTab input[type="radio"]:focus {
+  outline: -webkit-focus-ring-color auto 5px;
+}
+.odataTab img {
+  -webkit-user-drag: none;
+}
+.odataTab iframe,
+.odataTab a img {
+  border: none;
+}
+.odataTab button,
+.odataTab input,
+.odataTab select {
+  font-family: inherit;
+  font-size: inherit;
+}
+.odataTab input {
+  background-color: white;
+  color: inherit;
+}
+.odataTab input::placeholder {
+  color: rgba(0, 0, 0, 0.54);
+}
+.odataTab span[is="dt-icon-label"] {
+  flex: 0 0 auto;
+}
+.odataTab [is="ui-icon"] {
+  display: inline-block;
+  flex-shrink: 0;
+}
+.odataTab [is="ui-icon"].icon-mask {
+  background-color: #6e6e6e;
+  -webkit-mask-position: var(--spritesheet-position);
+}
+.odataTab .spritesheet-smallicons:not(.icon-mask) {
+  background-image: url("/images/smallIcons.svg");
+}
+.odataTab .spritesheet-smallicons.icon-mask {
+  -webkit-mask-image: url("/images/smallIcons.svg");
+}
+.odataTab .spritesheet-largeicons.icon-mask {
+  -webkit-mask-image: url("/images/largeIcons.svg");
+}
+.odataTab .spritesheet-mediumicons.icon-mask {
+  -webkit-mask-image: url("/images/mediumIcons.svg");
+}
+.odataTab .spritesheet-mediumicons:not(.icon-mask) {
+  background-image: url(/images/mediumIcons.svg);
+}
+.odataTab :host-context(.force-white-icons) [is="ui-icon"].spritesheet-smallicons,
+.odataTab .force-white-icons [is="ui-icon"].spritesheet-smallicons,
+.odataTab [is="ui-icon"].force-white-icons.spritesheet-smallicons,
+.odataTab -theme-preserve {
+  -webkit-mask-image: url("/images/smallIcons.svg");
+  -webkit-mask-position: var(--spritesheet-position);
+  background: #fafafa !important;
+}
+.odataTab ::selection {
+  background-color: #bbdefb;
+}
+.odataTab [data-aria-utils-animation-hack] {
+  animation: 0s ease 0s 1 normal none running ANIMATION-HACK;
+}
+.odataTab .largeicon-clear:hover:not(:active) {
+  background-color: #333;
+}
+.odataTab [is=ui-icon]:not(.icon-mask) {
+  background-position: var(--spritesheet-position);
+}
+.odataTab splitter > end > .toolbar-item {
+  background: none;
+  top: 0.15rem;
+  left: 0.2rem;
+  right: auto;
+  opacity: 0.7;
+}
+.odataTab .close-button {
+  width: 14px;
+  height: 14px;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.odataTab .hover-icon,
+.odataTab .active-icon {
+  display: none;
+}
+.odataTab .close-button:hover .default-icon,
+.odataTab .close-button:active .default-icon {
+  display: none;
+}
+.odataTab .close-button:hover .hover-icon {
+  display: block;
+}
+.odataTab .close-button[data-keyboard-focus="true"]:focus .default-icon,
+.odataTab .close-button:active .default-icon {
+  display: none;
+}
+.odataTab .close-button[data-keyboard-focus="true"]:focus .hover-icon {
+  display: block;
+}
+.odataTab .close-button:active .hover-icon {
+  display: none !important;
+}
+.odataTab .close-button:active .active-icon {
+  display: block;
+}
+.odataTab .toolbar-item {
+  position: relative;
+  display: flex;
+  background-color: transparent;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  height: 26px;
+  width: 26px;
+  border: none;
+  white-space: pre;
+}
+/*
+ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *        notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *        notice, this list of conditions and the following disclaimer in the
+ *        documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.         IN NO EVENT SHALL APPLE INC. OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+.data-grid {
+  position: relative;
+  line-height: 120%;
+  border: 1px solid #cccccc !important;
+}
+.data-grid table {
+  table-layout: fixed;
+  border-spacing: 0px;
+  border-collapse: separate;
+  height: 100%;
+  width: 100%;
+}
+.data-grid .header-container,
+.data-grid .data-container {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  overflow-x: hidden;
+}
+.data-grid .header-container {
+  top: 0px;
+  height: 21px;
+}
+.data-grid .data-container {
+  top: 21px;
+  bottom: 0px;
+  overflow-y: overlay;
+  transform: translateZ(0px);
+}
+.data-grid .aria-live-label {
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.data-grid.inline .header-container,
+.data-grid.inline .data-container {
+  position: static;
+}
+.data-grid.inline .corner {
+  display: none;
+}
+.platform-mac .data-grid .corner,
+.data-grid.data-grid-fits-viewport .corner {
+  display: none;
+}
+.data-grid .corner {
+  width: 14px;
+  padding-right: 0px;
+  padding-left: 0px;
+  border-left: 0px none transparent !important;
+}
+.data-grid .top-filler-td,
+.data-grid .bottom-filler-td {
+  height: auto !important;
+  padding: 0px !important;
+}
+.data-grid table.data {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  border-top: 0px none transparent;
+  table-layout: fixed;
+}
+.data-grid.inline table.data {
+  position: static;
+}
+.data-grid table.data tr {
+  display: none;
+  height: 20px;
+}
+.data-grid table.data tr.revealed {
+  display: table-row;
+}
+.striped-data-grid .revealed.data-grid-data-grid-node:nth-child(2n+1),
+.striped-data-grid-starts-with-odd .revealed.data-grid-data-grid-node:nth-child(2n) {
+  background-color: #f2f7fd;
+}
+.data-grid td,
+.data-grid th {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 18px;
+  height: 18px;
+  border-left: 1px solid #aaaaaa;
+  padding: 1px 4px;
+}
+.data-grid th:first-child,
+.data-grid td:first-child {
+  border-left: none !important;
+}
+.data-grid td {
+  vertical-align: top;
+  user-select: text;
+}
+.data-grid th {
+  text-align: left;
+  background-color: var(--toolbar-bg-color);
+  border-bottom: 1px solid #aaaaaa;
+  font-weight: normal;
+  vertical-align: middle;
+}
+.data-grid td > div,
+.data-grid th > div {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.data-grid td.editing > div {
+  text-overflow: clip;
+}
+.data-grid .center {
+  text-align: center;
+}
+.data-grid .right {
+  text-align: right;
+}
+.data-grid th.sortable {
+  position: relative;
+}
+.data-grid th.sortable:active::after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+.data-grid th .sort-order-icon-container {
+  position: absolute;
+  top: 1px;
+  right: 0px;
+  bottom: 1px;
+  display: flex;
+  align-items: center;
+}
+.data-grid th .sort-order-icon {
+  margin-right: 4px;
+  margin-bottom: -2px;
+  display: none;
+}
+.data-grid th.sort-ascending .sort-order-icon,
+.data-grid th.sort-descending .sort-order-icon {
+  display: block;
+}
+.data-grid th.sortable:hover {
+  background-color: #e6e6e6;
+}
+.data-grid .top-filler-td {
+  border-bottom: 0px none transparent;
+  line-height: 0;
+}
+.data-grid button {
+  line-height: 18px;
+  color: inherit;
+}
+.data-grid td.disclosure::before {
+  user-select: none;
+  -webkit-mask-image: url("/images/treeoutlineTriangles.svg");
+  -webkit-mask-position: 0px 0px;
+  -webkit-mask-size: 32px 24px;
+  float: left;
+  width: 8px;
+  height: 12px;
+  margin-right: 2px;
+  content: "";
+  position: relative;
+  top: 3px;
+  background-color: #6e6e6e;
+}
+.data-grid tr:not(.parent) td.disclosure::before {
+  background-color: transparent;
+}
+.data-grid tr.expanded td.disclosure::before {
+  -webkit-mask-position: -16px 0px;
+}
+.data-grid table.data tr.revealed.selected {
+  background-color: #d4d4d4;
+  color: inherit;
+}
+.data-grid:focus table.data tr.selected {
+  background-color: var(--selection-bg-color);
+  color: var(--selection-fg-color);
+}
+.data-grid:focus tr.selected .devtools-link {
+  color: var(--selection-fg-color);
+}
+.data-grid:focus tr.parent.selected td.disclosure::before {
+  background-color: var(--selection-fg-color);
+  -webkit-mask-position: 0px 0px;
+}
+.data-grid:focus tr.expanded.selected td.disclosure::before {
+  background-color: var(--selection-fg-color);
+  -webkit-mask-position: -16px 0px;
+}
+.data-grid tr.inactive {
+  color: #808080;
+  font-style: italic;
+}
+.data-grid tr.dirty {
+  background-color: #ffd6d6;
+  color: red;
+  font-style: normal;
+}
+.data-grid:focus tr.selected.dirty {
+  background-color: #ff6666;
+}
+.data-grid td.show-more {
+  white-space: normal;
+}
+.data-grid td.show-more::before {
+  display: none;
+}
+.data-grid-resizer {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  width: 5px;
+  z-index: 500;
+}
+:root {
+  height: 100%;
+  overflow: hidden;
+}
+:root {
+  --accent-color: #1a73e8;
+  --accent-fg-color: #1a73e8;
+  --accent-color-hover: #3b86e8;
+  --active-control-bg-color: #5a5a5a;
+  --focus-bg-color: hsl(214, 40%, 92%);
+  --input-validation-error: #db1600;
+  --toolbar-bg-color: #f3f3f3;
+  --toolbar-hover-bg-color: #eaeaea;
+  --selection-fg-color: white;
+  --selection-inactive-fg-color: #5a5a5a;
+  --selection-inactive-bg-color: #dadada;
+  --tab-selected-fg-color: #333;
+  --tab-selected-bg-color: var(--toolbar-bg-color);
+  --drop-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+  --divider-color: #d0d0d0;
+  --focus-ring-inactive-shadow: 0 0 0 1px #e0e0e0;
+  --item-selection-bg-color: #cfe8fc;
+  --item-selection-inactive-bg-color: #e0e0e0;
+}
+:root {
+  --focus-ring-active-shadow: 0 0 0 1px var(--accent-color);
+  --selection-bg-color: var(--accent-color);
+  --divider-border: 1px solid var(--divider-color);
+  --item-hover-color: rgba(56, 121, 217, 0.1);
 }

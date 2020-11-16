@@ -3,6 +3,8 @@
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 [![Build Status](https://travis-ci.org/SAP/ui5-inspector.svg?branch=master)](https://travis-ci.org/SAP/ui5-inspector)
 [![Coverage Status](https://coveralls.io/repos/SAP/ui5-inspector/badge.svg?branch=master&service=github)](https://coveralls.io/github/SAP/ui5-inspector?branch=master)
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP/ui5-inspector)](https://api.reuse.software/info/github.com/SAP/ui5-inspector)
+
 
 (https://app.review.ninja/SAP/ui5-inspector)
 # UI5 Inspector

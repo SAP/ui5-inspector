@@ -74,7 +74,8 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             message.send({
                 action: 'on-receiving-initial-data',
                 applicationInformation: applicationUtils.getApplicationInfo(frameworkInformation),
-                controlTree: controlUtils.getControlTreeModel(controlTreeModel, frameworkInformation.commonInformation)
+                controlTree: controlUtils.getControlTreeModel(controlTreeModel, frameworkInformation.commonInformation),
+                elementRegistry: ToolsAPI.getRegisteredElements()
             });
         },
 

@@ -12,6 +12,7 @@
                 <tab id="control-tree-tab" selected>Control Inspector</tab>
                 <tab id="app-info-tab">Application Information</tab>
                 <tab id="odata-tab">OData Requests</tab>
+                <tab id="elements-registry-tab">Elements Registry</tab>
             </tabs>
             <contents>
 
@@ -86,6 +87,24 @@
                             <odata-detail-view id="odata-tab-detail"/>
                         </end>
                         <!-- SplitContainer end side /ends-->
+                    </splitter>
+                </content>
+                <!-- OData /ends-->
+
+                <!-- Elements registry /start-->
+                <content for="elements-registry-tab" class="elementsRegistry">
+                    <splitter id="elements-registry-horizontal-splitter">
+                        <!-- SplitContainer top side /start-->
+                        <start>
+                            <elements-registry-master-view id="elements-registry-tab-master"/>
+                        </start>
+                        <!-- SplitContainer top side /ends-->
+
+                        <!-- SplitContainer bottom side /start-->
+                        <end>
+                            <elements-registry-detail-view id="elements-registry-tab-detail"/>
+                        </end>
+                        <!-- SplitContainer bottom side /ends-->
                     </splitter>
                 </content>
                 <!-- OData /ends-->

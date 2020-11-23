@@ -644,8 +644,8 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                         parentId: oParent && (oParent.isA("sap.ui.core.Control") || oParent.isA("sap.ui.core.Element")) ? oParent.getId() : '',
                         aggregation: oElements[sKey].sParentAggregationName ? oElements[sKey].sParentAggregationName : ''
                     })
-                })
-                debugger;
+                });
+
                 return aResults;
             }
         }

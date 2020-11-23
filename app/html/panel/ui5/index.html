@@ -100,14 +100,46 @@
                         </start>
                         <!-- SplitContainer top side /ends-->
 
-                        <!-- SplitContainer bottom side /start-->
+                        <!-- SplitContainer right side /start-->
                         <end>
-                            <elements-registry-detail-view id="elements-registry-tab-detail"/>
+                            <!-- Control tree tabbar /start-->
+                            <tabbar id="elements-registry-tabbar">
+                                <tabs>
+                                    <tab id="elements-registry-tab-properties" selected>Properties</tab>
+                                    <tab id="elements-registry-tab-bindings">Bindings
+                                        <count></count>
+                                    </tab>
+                                    <tab id="elements-registry-tab-aggregations">Aggregations</tab>
+                                    <tab id="elements-registry-tab-events">Events</tab>
+                                </tabs>
+                                <contents>
+                                    <content for="elements-registry-tab-properties">
+                                        <data-view id="elements-registry-control-properties"></data-view>
+                                    </content>
+                                    <content for="elements-registry-tab-bindings">
+                                        <splitter id="elements-registry-bindings-splitter" orientation="vertical">
+                                            <start>
+                                                <data-view id="elements-registry-bindings-left"></data-view>
+                                            </start>
+                                            <end>
+                                                <data-view id="elements-registry-bindings-right"></data-view>
+                                            </end>
+                                        </splitter>
+                                    </content>
+                                    <content for="elements-registry-tab-aggregations">
+                                        <data-view id="elements-registry-aggregations"></data-view>
+                                    </content>
+                                    <content for="elements-registry-tab-events">
+                                        <data-view id="elements-registry-events"></data-view>
+                                    </content>
+                                </contents>
+                            </tabbar>
+                            <!-- Control tree tabbar /end-->
                         </end>
-                        <!-- SplitContainer bottom side /ends-->
+                        <!-- SplitContainer right side /ends-->
                     </splitter>
                 </content>
-                <!-- OData /ends-->
+                <!-- Elements registry /ends-->
 
             </contents>
         </tabbar>

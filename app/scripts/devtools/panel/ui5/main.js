@@ -186,15 +186,15 @@
         onInitialRendering: function () {
             var controls = this.getData();
             this.controls = controls;
-            //this.setSelectedElement(controls[0].id);
         },
 
-        onSelectionChanged: function (selectedElementId) {
+        onSelectItem: function (sControlId) {
+            debugger;
             port.postMessage({
-                action: 'do-element-table-select',
-                target: selectedElementId
+                action: 'do-control-select',
+                target: sControlId
             });
-        },
+        }
     });
 
     // ================================================================================
@@ -273,7 +273,7 @@
             controlBindingInfoLeftDataView.setData(message.controlBindings);
             controlAggregations.setData(message.controlAggregations);
             controlEvents.setData(message.controlEvents);
-
+debugger;
             // Set bindings count
             document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
 

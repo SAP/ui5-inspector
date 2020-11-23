@@ -90,6 +90,8 @@ function OElementsRegistryMasterView(domId, options) {
     if (options) {
         this.onSelectItem = options.onSelectItem || this.onSelectItem;
         this.onClearItems = options.onClearItems || this.onClearItems;
+
+        this.onInitialRendering = options.onInitialRendering ? options.onInitialRendering : function () {};
     }
 
     debugger;
@@ -158,14 +160,7 @@ OElementsRegistryMasterView.prototype.sortHandler = function() {
 };
 
 OElementsRegistryMasterView.prototype.selectHandler = function(oEvent) {
-    const oSelectedNode = oEvent.data,
-        iSelectedId = oSelectedNode && oSelectedNode.data.id;
-
-    this.onSelectItem({
-        responseBody: this.oEntryLog.getEditorContent(iSelectedId),
-        altMessage: this.oEntryLog.getNoResponseMessage(iSelectedId)
-    });
-
+    this.onSelectItem(oEvent.data._data.id);
 };
 
 module.exports = OElementsRegistryMasterView;

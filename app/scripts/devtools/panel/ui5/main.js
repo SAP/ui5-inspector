@@ -179,6 +179,8 @@
             odataHorizontalSplitter.hideEndContainer();
         }
     });
+
+
     var oElementsRegistryMasterView = new OElementsRegistryMasterView('elements-registry-tab-master', {
         /**
          * Fired at first rendering of the ControlTree.
@@ -189,10 +191,85 @@
         },
 
         onSelectItem: function (sControlId) {
-            debugger;
             port.postMessage({
-                action: 'do-control-select',
+                action: 'do-control-select-elements-registry',
                 target: sControlId
+            });
+        }
+    });
+
+    // Horizontal Splitter for 'Elements Registry' tab
+    var controlInspectorHorizontalSplitterElementsRegistry = new Splitter('elements-registry-horizontal-splitter', {
+        endContainerWidth: '400px'
+    });
+
+    // Tabbar for Elements Registry additional information (Properties, Binding and etc)
+    var controlTreeTabBar = new TabBar('elements-registry-tabbar');
+
+    // Dataview for control properties
+    var controlPropertiesElementsRegistry = new DataView('elements-registry-control-properties', {
+
+        /**
+         * Send message, that an proprety in the DataView is changed.
+         * @param {Object} changeData
+         */
+        onPropertyUpdated: function (changeData) {
+            port.postMessage({
+                action: 'do-control-property-change',
+                data: changeData
+            });
+        }
+    });
+
+    // Vertical splitter for 'Bindings' tab
+    var controlBindingsSplitterElementsRegistry = new Splitter('elements-registry-control-bindings-splitter', {
+        hideEndContainer: true,
+        isEndContainerClosable: true,
+        endContainerTitle: 'Model Information'
+    });
+
+    // Dataview for control aggregations
+    var controlAggregationsElementsRegistry  = new DataView('elements-registry-control-aggregations');
+
+    // Dataview for control binding information
+    var controlBindingInfoRightDataViewElementsRegistry  = new DataView('elements-registry-control-bindings-right');
+
+    // Dataview for control binding information - left part
+    var controlBindingInfoLeftDataViewElementsRegistry  = new DataView('elements-registry-control-bindings-left', {
+
+        /**
+         * Method fired when a clickable element is clicked.
+         * @param {Object} event
+         */
+        onValueClick: function (event) {
+            var dataFormatedForDataView = {
+                modelInfo: {
+                    options: {
+                        title: 'Model Information',
+                        expandable: false,
+                        expanded: true,
+                        hideTitle: true
+                    },
+                    data: event.data
+                }
+            };
+
+            controlBindingInfoRightDataViewElementsRegistry .setData(dataFormatedForDataView);
+            controlBindingsSplitterElementsRegistry .showEndContainer();
+        }
+    });
+
+    // Dataview for control events
+    var controlEventsElementsRegistry  = new DataView('elements-registry-control-events', {
+
+        /**
+         * Method fired when a clickable element is clicked.
+         * @param {Object} event
+         */
+        onValueClick: function (event) {
+            port.postMessage({
+                action: 'do-console-log-event-listener',
+                data: event.data
             });
         }
     });
@@ -273,12 +350,29 @@
             controlBindingInfoLeftDataView.setData(message.controlBindings);
             controlAggregations.setData(message.controlAggregations);
             controlEvents.setData(message.controlEvents);
-debugger;
+
             // Set bindings count
             document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
 
             // Close possible open binding info and/or methods info
             controlBindingsSplitter.hideEndContainer();
+        },
+
+        /**
+         * Handler for ControlTree element selecting.
+         * @param {Object} message
+         */
+        'on-control-select-elements-registry': function (message) {
+            controlPropertiesElementsRegistry.setData(message.controlProperties);
+            controlBindingInfoLeftDataViewElementsRegistry.setData(message.controlBindings);
+            controlAggregationsElementsRegistry.setData(message.controlAggregations);
+            controlEventsElementsRegistry.setData(message.controlEvents);
+
+            // Set bindings count
+            document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
+
+            // Close possible open binding info and/or methods info
+            controlBindingsSplitterElementsRegistry .hideEndContainer();
         },
 
         /**

@@ -94,8 +94,6 @@ function OElementsRegistryMasterView(domId, options) {
         this.onInitialRendering = options.onInitialRendering ? options.onInitialRendering : function () {};
     }
 
-    debugger;
-
     this.oDataGrid = this._createDataGrid();
     this.oContainerDOM.appendChild(this.oDataGrid.element);
 

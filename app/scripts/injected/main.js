@@ -121,6 +121,26 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         },
 
         /**
+         * Handler for element selection in the Elements Registry.
+         * @param {Object} event
+         */
+        'do-control-select-elements-registry': function (event) {
+            var controlId = event.detail.target;
+            var controlProperties = ToolsAPI.getControlProperties(controlId);
+            var controlBindings = ToolsAPI.getControlBindings(controlId);
+            var controlAggregations = ToolsAPI.getControlAggregations(controlId);
+            var controlEvents = ToolsAPI.getControlEvents(controlId);
+
+            message.send({
+                action: 'on-control-select-elements-registry',
+                controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
+                controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
+                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations),
+                controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
+            });
+        },
+
+        /**
          * Send message with the inspected UI5 control, from the context menu.
          * @param {Object} event
          */

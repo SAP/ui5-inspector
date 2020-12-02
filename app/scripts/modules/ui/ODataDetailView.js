@@ -55,7 +55,7 @@ ODataDetailView.prototype.clear = function () {
  * Sets theme.
  */
 ODataDetailView.prototype._setTheme = function () {
-    var bDarkMode = chrome.devtools.panels.themeName === "dark";
+    var bDarkMode = chrome.devtools.panels.themeName === 'dark';
 
     this.oEditor.setTheme(bDarkMode ? 'ace/theme/vibrant_ink' : 'ace/theme/chrome');
 };

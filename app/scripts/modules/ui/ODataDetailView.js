@@ -5,9 +5,6 @@
  * @constructor
  */
 function ODataDetailView(containerId) {
-    const darkModeMql = matchMedia('(prefers-color-scheme: dark)');
-    const darkMode = darkModeMql.matches;
-
     this.oContainer = document.getElementById(containerId);
     this.oEditorDOM = document.createElement('div');
     this.oEditorDOM.id = 'editor';
@@ -22,13 +19,7 @@ function ODataDetailView(containerId) {
     this.oEditor = ace.edit('editor');
     this.oEditor.getSession().setUseWrapMode(true);
 
-    /**
-     * @param {Object} event
-     */
-    darkModeMql.addListener(event => {
-        this._setTheme(event.matches);
-    });
-    this._setTheme(darkMode);
+    this._setTheme();
 }
 
 /**
@@ -63,9 +54,10 @@ ODataDetailView.prototype.clear = function () {
 /**
  * Sets theme.
  */
-ODataDetailView.prototype._setTheme = function (darkMode) {
-    // DarkMode = chrome.devtools.panels.themeName === "dark" || darkMode //Hardwired to chrome devtools to dark?
-    this.oEditor.setTheme(darkMode ? 'ace/theme/vibrant_ink' : 'ace/theme/chrome');
+ODataDetailView.prototype._setTheme = function () {
+    var bDarkMode = chrome.devtools.panels.themeName === "dark";
+
+    this.oEditor.setTheme(bDarkMode ? 'ace/theme/vibrant_ink' : 'ace/theme/chrome');
 };
 
 module.exports = ODataDetailView;

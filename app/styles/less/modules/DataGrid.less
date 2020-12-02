@@ -37,12 +37,13 @@
 .data-grid table.data { position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; border-top: 0px none transparent; table-layout: fixed; }
 .data-grid.inline table.data { position: static; }
 .data-grid table.data tr { display: none; height: 20px; }
-.data-grid table.data tr.revealed { display: table-row; }
+.data-grid table.data tr.revealed { display: table-row; background-color: @bg-datagrid; &.data-grid-data-grid-node:hover { background-color: @bg-datagrid-tr-hover; cursor: pointer; }}
+.data-grid table.data tr.revealed.odd { background-color: @bg-datagrid-row; }
 .striped-data-grid .revealed.data-grid-data-grid-node:nth-child(2n+1), .striped-data-grid-starts-with-odd .revealed.data-grid-data-grid-node:nth-child(2n) { background-color: rgb(242, 247, 253); }
 .data-grid td, .data-grid th { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; line-height: 18px; height: 18px; border-left: 1px solid rgb(170, 170, 170); padding: 1px 4px; }
 .data-grid th:first-child, .data-grid td:first-child { border-left: none !important; }
 .data-grid td { vertical-align: top; user-select: text; }
-.data-grid th { text-align: left; background-color: var(--toolbar-bg-color); border-bottom: 1px solid rgb(170, 170, 170); font-weight: normal; vertical-align: middle; }
+.data-grid th { text-align: left; background-color: @bg-datagrid-row; border-bottom: 1px solid rgb(170, 170, 170); font-weight: normal; vertical-align: middle; color: @text-color }
 .data-grid td > div, .data-grid th > div { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .data-grid td.editing > div { text-overflow: clip; }
 .data-grid .center { text-align: center; }
@@ -52,14 +53,14 @@
 .data-grid th .sort-order-icon-container { position: absolute; top: 1px; right: 0px; bottom: 1px; display: flex; align-items: center; }
 .data-grid th .sort-order-icon { margin-right: 4px; margin-bottom: -2px; display: none; }
 .data-grid th.sort-ascending .sort-order-icon, .data-grid th.sort-descending .sort-order-icon { display: block; }
-.data-grid th.sortable:hover { background-color: rgb(230, 230, 230); }
+.data-grid th.sortable:hover { background-color: @bg-datagrid-th-sortable; }
 .data-grid .top-filler-td { border-bottom: 0px none transparent; line-height: 0; }
 .data-grid button { line-height: 18px; color: inherit; }
 .data-grid td.disclosure::before { user-select: none; -webkit-mask-image: url("/images/treeoutlineTriangles.svg"); -webkit-mask-position: 0px 0px; -webkit-mask-size: 32px 24px; float: left; width: 8px; height: 12px; margin-right: 2px; content: ""; position: relative; top: 3px; background-color: rgb(110, 110, 110); }
 .data-grid tr:not(.parent) td.disclosure::before { background-color: transparent; }
 .data-grid tr.expanded td.disclosure::before { -webkit-mask-position: -16px 0px; }
-.data-grid table.data tr.revealed.selected { background-color: rgb(212, 212, 212); color: inherit; }
-.data-grid:focus table.data tr.selected { background-color: var(--selection-bg-color); color: var(--selection-fg-color); }
+.data-grid table.data tr.revealed.selected.data-grid-data-grid-node { background-color: @lighter-blue; color: var(--selection-fg-color); }
+.data-grid:focus table.data tr.selected { background-color: @lighter-blue; color: var(--selection-fg-color); }
 .data-grid:focus tr.selected .devtools-link { color: var(--selection-fg-color); }
 .data-grid:focus tr.parent.selected td.disclosure::before { background-color: var(--selection-fg-color); -webkit-mask-position: 0px 0px; }
 .data-grid:focus tr.expanded.selected td.disclosure::before { background-color: var(--selection-fg-color); -webkit-mask-position: -16px 0px; }

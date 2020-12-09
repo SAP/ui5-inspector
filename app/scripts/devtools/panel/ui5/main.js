@@ -1,3 +1,5 @@
+
+// jshint maxstatements:37
 (function () {
     'use strict';
 
@@ -180,7 +182,6 @@
         }
     });
 
-
     var oElementsRegistryMasterView = new OElementsRegistryMasterView('elements-registry-tab-master', {
         /**
          * Fired at first rendering of the ElementsRegistry.
@@ -189,18 +190,26 @@
             var controls = this.getData();
             this.controls = controls;
         },
-
+        /**
+         * Method fired when a Control is selected.
+         * @param {string} sControlId
+         */
         onSelectItem: function (sControlId) {
+            /**
+             * Send message, that the a new element is selected in the ElementsRegistry tab.
+             * @param {string} sControlId
+             */
             port.postMessage({
                 action: 'do-control-select-elements-registry',
                 target: sControlId
             });
         },
-
-        onRefreshButtonClicked: function (changeData) {
+        /**
+         * Refresh ElementRegistry tab.
+         */
+        onRefreshButtonClicked: function () {
             port.postMessage({
-                action: 'do-elements-registry-refresh',
-                data: changeData
+                action: 'do-elements-registry-refresh'
             });
         }
     });
@@ -211,7 +220,7 @@
     });
 
     // Tabbar for Elements Registry additional information (Properties, Binding and etc)
-    var controlTreeTabBar = new TabBar('elements-registry-tabbar');
+    var elementsRegistryTabBar = new TabBar('elements-registry-tabbar');
 
     // Dataview for control properties
     var controlPropertiesElementsRegistry = new DataView('elements-registry-control-properties', {

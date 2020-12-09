@@ -140,6 +140,9 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             });
         },
 
+        /**
+         * Handler for refreshing elements in Elements Registry.
+         */
         'do-elements-registry-refresh': function () {
             message.send({
                 action: 'on-receiving-elements-registry-refresh-data',

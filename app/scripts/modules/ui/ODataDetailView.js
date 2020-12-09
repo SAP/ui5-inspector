@@ -5,27 +5,21 @@
  * @constructor
  */
 function ODataDetailView(containerId) {
-    const darkModeMql = matchMedia('(prefers-color-scheme: dark)');
-    const darkMode = darkModeMql.matches;
-
     this.oContainer = document.getElementById(containerId);
-    this.editorDOM = document.createElement('div');
-    this.editorDOM.id = 'editor';
-    this.oContainer.appendChild(this.editorDOM);
+    this.oEditorDOM = document.createElement('div');
+    this.oEditorDOM.id = 'editor';
+    this.oContainer.appendChild(this.oEditorDOM);
 
-    this.editorAltDOM = document.createElement('div');
-    this.editorAltDOM.classList.add('editorAlt');
-    this.editorAltMessageDOM = document.createElement('div');
-    this.oContainer.appendChild(this.editorAltDOM);
-    this.editorAltDOM.appendChild(this.editorAltMessageDOM);
+    this.oEditorAltDOM = document.createElement('div');
+    this.oEditorAltDOM.classList.add('editorAlt');
+    this.oEditorAltMessageDOM = document.createElement('div');
+    this.oContainer.appendChild(this.oEditorAltDOM);
+    this.oEditorAltDOM.appendChild(this.oEditorAltMessageDOM);
 
-    this.editor = ace.edit('editor');
-    this.editor.getSession().setUseWrapMode(true);
+    this.oEditor = ace.edit('editor');
+    this.oEditor.getSession().setUseWrapMode(true);
 
-    darkModeMql.addListener(function (event) {
-        this._setTheme(event.matches);
-    }.bind(this));
-    this._setTheme(darkMode);
+    this._setTheme();
 }
 
 /**
@@ -36,33 +30,34 @@ ODataDetailView.prototype.update = function (data) {
     const sResponseBody = data.responseBody;
     let sAltMessage;
 
-    this.editorDOM.classList.toggle('hidden', !sResponseBody);
-    this.editorAltDOM.classList.toggle('hidden', !!sResponseBody);
+    this.oEditorDOM.classList.toggle('hidden', !sResponseBody);
+    this.oEditorAltDOM.classList.toggle('hidden', !!sResponseBody);
 
     if (sResponseBody) {
-        this.editor.session.setMode('ace/mode/' + sResponseBody.type);
-        this.editor.setValue(sResponseBody.content, 0);
+        this.oEditor.session.setMode('ace/mode/' + sResponseBody.type);
+        this.oEditor.setValue(sResponseBody.content, 0);
     } else {
         sAltMessage = data.altMessage || 'No response body';
-        this.editorAltMessageDOM.innerText = sAltMessage;
+        this.oEditorAltMessageDOM.innerText = sAltMessage;
     }
 
-    this.editor.clearSelection();
+    this.oEditor.clearSelection();
 };
 
 /**
  * Clears editor.
  */
 ODataDetailView.prototype.clear = function () {
-    this.editor.setValue('', -1);
+    this.oEditor.setValue('', -1);
 };
 
 /**
  * Sets theme.
  */
-ODataDetailView.prototype._setTheme = function (darkMode) {
-    // DarkMode = chrome.devtools.panels.themeName === "dark" || darkMode //Hardwired to chrome devtools to dark?
-    this.editor.setTheme(darkMode ? 'ace/theme/vibrant_ink' : 'ace/theme/chrome');
+ODataDetailView.prototype._setTheme = function () {
+    var bDarkMode = chrome.devtools.panels.themeName === 'dark';
+
+    this.oEditor.setTheme(bDarkMode ? 'ace/theme/vibrant_ink' : 'ace/theme/chrome');
 };
 
 module.exports = ODataDetailView;

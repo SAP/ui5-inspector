@@ -2,10 +2,10 @@
 
 const DataGrid = require('../ui/datagrid/DataGrid.js');
 
+const BATCH_ICON = 128194;
+const REQUEST_ICON = 128463;
+
 class ODataNode extends DataGrid.SortableDataGridNode {
-    constructor(data) {
-        super(data);
-    }
 
     createCell(columnId) {
         const cell = super.createCell(columnId);
@@ -18,7 +18,7 @@ class ODataNode extends DataGrid.SortableDataGridNode {
 
     _renderPrimaryCell(cell) {
         const iconElement = createElementWithClass('span', 'icon');
-        const iSymbol = (this.data.isBatch) ? 128194 : 128463;
+        const iSymbol = (this.data.isBatch) ? BATCH_ICON : REQUEST_ICON;
         const sClass = (this.data.isBatch) ? 'batchIcon' : 'requestIcon';
 
         iconElement.classList.add(sClass);

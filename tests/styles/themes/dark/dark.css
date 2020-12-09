@@ -519,8 +519,8 @@ odata-detail-view {
 }
 .odataTab {
   flex-direction: column;
-  background-color: white;
-  /* Text and background color for dark mode */
+  background-color: #252525;
+  color: #949494;
 }
 .odataTab .data-grid:focus {
   outline: none;
@@ -552,7 +552,7 @@ odata-detail-view {
   padding-left: 1rem;
 }
 .odataTab tr:nth-child(even) {
-  background-color: white;
+  background-color: #252525;
 }
 .odataTab tr {
   padding: 0.05rem;
@@ -567,10 +567,6 @@ odata-detail-view {
 .odataTab splitter.endVisible td.note {
   display: none;
 }
-.odataTab tr.data-grid-data-grid-node:hover {
-  background-color: AliceBlue;
-  cursor: pointer;
-}
 .odataTab tr.selected {
   background-color: Lightblue;
 }
@@ -584,7 +580,7 @@ odata-detail-view {
   margin: auto;
 }
 .odataTab splitter {
-  background-color: #f2f2f2;
+  background-color: #000;
 }
 .odataTab splitter start {
   flex-direction: column;
@@ -618,18 +614,6 @@ odata-detail-view {
 .odataTab table {
   width: 100%;
 }
-@media (prefers-color-scheme: dark) {
-  .odataTab body {
-    color: #ddd;
-    background-color: #222;
-  }
-  .odataTab section {
-    border-color: white;
-  }
-  .odataTab a {
-    color: lightblue;
-  }
-}
 /*
  * Copyright (C) 2008 Apple Inc. All Rights Reserved.
  *
@@ -660,8 +644,6 @@ odata-detail-view {
   font-size: 12px;
   tab-size: 4;
   user-select: none;
-  color: #222222;
-  background: white;
 }
 .odataTab * {
   min-width: 0px;
@@ -731,7 +713,7 @@ odata-detail-view {
   background: #fafafa !important;
 }
 .odataTab ::selection {
-  background-color: #bbdefb;
+  background-color: #252525;
 }
 .odataTab [data-aria-utils-animation-hack] {
   animation: 0s ease 0s 1 normal none running ANIMATION-HACK;
@@ -892,6 +874,14 @@ odata-detail-view {
 }
 .data-grid table.data tr.revealed {
   display: table-row;
+  background-color: #252525;
+}
+.data-grid table.data tr.revealed.data-grid-data-grid-node:hover {
+  background-color: rgba(201, 135, 48, 0.1);
+  cursor: pointer;
+}
+.data-grid table.data tr.revealed.odd {
+  background-color: #000;
 }
 .striped-data-grid .revealed.data-grid-data-grid-node:nth-child(2n+1),
 .striped-data-grid-starts-with-odd .revealed.data-grid-data-grid-node:nth-child(2n) {
@@ -917,10 +907,11 @@ odata-detail-view {
 }
 .data-grid th {
   text-align: left;
-  background-color: var(--toolbar-bg-color);
+  background-color: #000;
   border-bottom: 1px solid #aaaaaa;
   font-weight: normal;
   vertical-align: middle;
+  color: #949494;
 }
 .data-grid td > div,
 .data-grid th > div {
@@ -967,7 +958,7 @@ odata-detail-view {
   display: block;
 }
 .data-grid th.sortable:hover {
-  background-color: #e6e6e6;
+  background-color: #252525;
 }
 .data-grid .top-filler-td {
   border-bottom: 0px none transparent;
@@ -997,12 +988,12 @@ odata-detail-view {
 .data-grid tr.expanded td.disclosure::before {
   -webkit-mask-position: -16px 0px;
 }
-.data-grid table.data tr.revealed.selected {
-  background-color: #d4d4d4;
-  color: inherit;
+.data-grid table.data tr.revealed.selected.data-grid-data-grid-node {
+  background-color: #C98730;
+  color: var(--selection-fg-color);
 }
 .data-grid:focus table.data tr.selected {
-  background-color: var(--selection-bg-color);
+  background-color: #C98730;
   color: var(--selection-fg-color);
 }
 .data-grid:focus tr.selected .devtools-link {

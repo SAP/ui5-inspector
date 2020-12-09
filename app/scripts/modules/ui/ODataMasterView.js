@@ -134,14 +134,14 @@ ODataMasterView.prototype._getHAR = function () {
      * Processes the HTTP Archive Requests.
      * @param {Object} result
      */
-    chrome.devtools.network.getHAR(async function (result) {
+    chrome.devtools.network.getHAR(result => {
         const entries = result.entries;
         if (!entries.length) {
             console.warn('No requests found by now');
         }
-        entries.forEach(this._logEntry.bind(this));
+        entries.forEach(this._logEntry, this);
         chrome.devtools.network.onRequestFinished.addListener(this._logEntry.bind(this));
-    }.bind(this));
+    });
 };
 /* jshint ignore:end */
 

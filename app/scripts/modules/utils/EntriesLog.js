@@ -19,7 +19,6 @@ function EntriesLog () {
 EntriesLog.prototype.getEntryNode = function (entry) {
     let oNode;
     let aNodes = [];
-    const that = this;
 
     /**
      * Finds current OData version.
@@ -51,14 +50,20 @@ EntriesLog.prototype.getEntryNode = function (entry) {
         oNode = this._createNode(options);
 
         if (entry.response.content.mimeType.includes('application/xml')) {
-            multipartmixed2har.getContent(entry).then(function (content) {
-                that.oEditorContent[contentIndex] = {type: 'xml', content: formatXML(content)};
+            /**
+             * @param {Object} content
+             */
+            multipartmixed2har.getContent(entry).then(content => {
+                this.oEditorContent[contentIndex] = {type: 'xml', content: formatXML(content)};
             });
         } else if (bIsBatch) {
             const serviceUrl = entry.request.url.split('$batch')[0];
-            multipartmixed2har.extractMultipartEntry(entry).then(function (childEntries) {
-                aNodes = that._showEmbeddedRequests(childEntries, serviceUrl);
-                that.oNoResponseMessage[contentIndex] = 'See the split responses of this batch request';
+            /**
+             * @param {Array} childEntries
+             */
+            multipartmixed2har.extractMultipartEntry(entry).then(childEntries => {
+                aNodes = this._showEmbeddedRequests(childEntries, serviceUrl);
+                this.oNoResponseMessage[contentIndex] = 'See the split responses of this batch request';
                 aNodes.forEach(function (oChildNode) {
                     oNode.appendChild(oChildNode);
                 });
@@ -66,13 +71,19 @@ EntriesLog.prototype.getEntryNode = function (entry) {
 
         } else if (entry.response.content.mimeType.includes('application/json')) {
             delete entry._initiator;
-            multipartmixed2har.getContent(entry).then(function (content) {
+            /**
+             * @param {Object} content
+             */
+            multipartmixed2har.getContent(entry).then(content => {
                 entry.response._content = JSON.parse(content || '{}');
-                that.oEditorContent[contentIndex] = {type: 'json', content: JSON.stringify(entry, null, 2)};
+                this.oEditorContent[contentIndex] = {type: 'json', content: JSON.stringify(entry, null, 2)};
             });
         } else if (entry.response.content.mimeType.includes('text/plain')) {
-            multipartmixed2har.getContent(entry).then(function (content) {
-                that.oEditorContent[contentIndex] = {type: 'text', content: content};
+            /**
+             * @param {Object} content
+             */
+            multipartmixed2har.getContent(entry).then(content => {
+                this.oEditorContent[contentIndex] = {type: 'text', content: content};
             });
         }
     } else if (entry.response.status > 299 && entry.response.content.mimeType.includes('application/xml')) {
@@ -87,8 +98,11 @@ EntriesLog.prototype.getEntryNode = function (entry) {
         };
         oNode = this._createNode(options);
 
-        multipartmixed2har.getContent(entry).then(function (content) {
-            that.oEditorContent[contentIndex] = {type: 'xml', content: formatXML(content)};
+        /**
+         * @param {Object} content
+         */
+        multipartmixed2har.getContent(entry).then(content => {
+            this.oEditorContent[contentIndex] = {type: 'xml', content: formatXML(content)};
         });
     } else if (entry._error === 'net::ERR_CONNECTION_REFUSED') {
         const contentIndex = this._nextIndex();
@@ -138,7 +152,7 @@ EntriesLog.prototype._showEmbeddedRequests = function (entries, serviceUrl, pref
 
             return this._createNode(options);
         }
-    }, this);
+    });
 };
 
 /**

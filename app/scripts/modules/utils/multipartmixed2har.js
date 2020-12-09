@@ -162,7 +162,7 @@ const parseBlock = (requestsRaw, responseRaw) => {
  * @param {Object} req
  * @param {Object} res
  */
-const deMultipart = async (content, req, res) => {
+const deMultipart = (content, req, res) => {
     /**
      * De-multiparts request/responses.
      */
@@ -194,7 +194,7 @@ const deMultipart = async (content, req, res) => {
  * Gets content of entry.
  * @param {Object} entry
  */
-const getContent = async (entry) =>
+const getContent = entry =>
     /**
      * Resolves Promise.
      * @param {Function} resolve

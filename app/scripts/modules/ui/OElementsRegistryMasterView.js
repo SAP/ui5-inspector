@@ -94,11 +94,34 @@ function OElementsRegistryMasterView(domId, options) {
         this.onInitialRendering = options.onInitialRendering ? options.onInitialRendering : function () {};
     }
 
+    const oRefreshButton = this._createRefreshButton();
+    this.oContainerDOM.appendChild(oRefreshButton);
+
     this.oDataGrid = this._createDataGrid();
     this.oContainerDOM.appendChild(this.oDataGrid.element);
 
     // Register for updates here
 }
+
+/**
+ * Creates Refresh button.
+ * @returns {Object} - Refresh button Icon
+ * @private
+ */
+OElementsRegistryMasterView.prototype._createRefreshButton = function () {
+    const oIcon = UIUtils.Icon.create('', 'toolbar-glyph hidden');
+    oIcon.setIconType('largeicon-refresh');
+
+    /**
+     * Clear Icon click handler.
+     */
+    oIcon.onclick = function () {
+        this.oDataGrid.rootNode().removeChildren();
+        this.onClearItems();
+    }.bind(this);
+
+    return oIcon;
+};
 
 OElementsRegistryMasterView.prototype.getData = function () {
     return this._data;

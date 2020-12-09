@@ -183,7 +183,7 @@
 
     var oElementsRegistryMasterView = new OElementsRegistryMasterView('elements-registry-tab-master', {
         /**
-         * Fired at first rendering of the ControlTree.
+         * Fired at first rendering of the ElementsRegistry.
          */
         onInitialRendering: function () {
             var controls = this.getData();
@@ -194,6 +194,13 @@
             port.postMessage({
                 action: 'do-control-select-elements-registry',
                 target: sControlId
+            });
+        },
+
+        onRefreshButtonClicked: function (changeData) {
+            port.postMessage({
+                action: 'do-elements-registry-refresh',
+                data: changeData
             });
         }
     });
@@ -330,6 +337,14 @@
         'on-receiving-initial-data': function (message) {
             controlTree.setData(message.controlTree);
             appInfo.setData(message.applicationInformation);
+            oElementsRegistryMasterView.setData(message.elementRegistry);
+        },
+
+        /**
+         * Visualize the initial needed data for the extension.
+         * @param {Object} message
+         */
+        'on-receiving-elements-registry-refresh-data': function (message) {
             oElementsRegistryMasterView.setData(message.elementRegistry);
         },
 

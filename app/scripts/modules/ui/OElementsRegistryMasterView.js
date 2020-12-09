@@ -86,12 +86,11 @@ function OElementsRegistryMasterView(domId, options) {
     this.oContainerDOM = document.getElementById(domId);
 
     this.onSelectItem = function(oSelectedData) {};
-    this.onClearItems = function(oSelectedData) {};
     if (options) {
         this.onSelectItem = options.onSelectItem || this.onSelectItem;
-        this.onClearItems = options.onClearItems || this.onClearItems;
 
         this.onInitialRendering = options.onInitialRendering ? options.onInitialRendering : function () {};
+        this.onRefreshButtonClicked = options.onRefreshButtonClicked || function () {};
     }
 
     const oRefreshButton = this._createRefreshButton();
@@ -117,7 +116,8 @@ OElementsRegistryMasterView.prototype._createRefreshButton = function () {
      */
     oIcon.onclick = function () {
         this.oDataGrid.rootNode().removeChildren();
-        this.onClearItems();
+        this._data = null;
+        this.onRefreshButtonClicked();
     }.bind(this);
 
     return oIcon;

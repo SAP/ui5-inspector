@@ -140,6 +140,13 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             });
         },
 
+        'do-elements-registry-refresh': function () {
+            message.send({
+                action: 'on-receiving-elements-registry-refresh-data',
+                elementRegistry: ToolsAPI.getRegisteredElements()
+            });
+        },
+
         /**
          * Send message with the inspected UI5 control, from the context menu.
          * @param {Object} event

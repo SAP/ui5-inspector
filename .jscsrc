@@ -1,5 +1,8 @@
 {
     "maxErrors": 200,
+	"excludeFiles": [
+    "**/datagrid/**"
+	],
     "disallowEmptyBlocks": true,
     "disallowImplicitTypeConversion": [
         "string"

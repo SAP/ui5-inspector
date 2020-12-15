@@ -77,7 +77,7 @@ describe('Splitter', function () {
             var endContainer = splitter.$this.querySelector('end');
 
             endContainer.getAttribute('verticalscrolling').should.equal('true');
-            should.exist(endContainer.querySelector('close-button'));
+            should.exist(endContainer.querySelector('.toolbar-item'));
         });
 
         it('should initialize the HTML for the divider', function () {
@@ -265,19 +265,19 @@ describe('Splitter', function () {
 
         describe('Close button', function () {
             it('should has click event handler', function () {
-                splitter.$this.querySelector('close-button').onclick.should.be.a('function');
+                splitter.$this.querySelector('.toolbar-item').onclick.should.be.a('function');
             });
 
             it('should be visible when the end container is visible', function () {
-                var closeButton = splitter.$this.querySelector('close-button');
+                var closeButton = splitter.$this.querySelector('.toolbar-item');
 
                 splitter.showEndContainer();
 
-                closeButton.style.display.should.be.equal('block');
+                closeButton.style.display.should.be.equal('flex');
             });
 
             it('should not be visible the end container is not vissible', function () {
-                var closeButton = splitter.$this.querySelector('close-button');
+                var closeButton = splitter.$this.querySelector('.toolbar-item');
 
                 splitter.showEndContainer();
                 splitter.hideEndContainer();

@@ -184,13 +184,6 @@
 
     var oElementsRegistryMasterView = new OElementsRegistryMasterView('elements-registry-tab-master', {
         /**
-         * Fired at first rendering of the ElementsRegistry.
-         */
-        onInitialRendering: function () {
-            var controls = this.getData();
-            this.controls = controls;
-        },
-        /**
          * Method fired when a Control is selected.
          * @param {string} sControlId
          */
@@ -245,13 +238,13 @@
     });
 
     // Dataview for control aggregations
-    var controlAggregationsElementsRegistry  = new DataView('elements-registry-control-aggregations');
+    var controlAggregationsElementsRegistry = new DataView('elements-registry-control-aggregations');
 
     // Dataview for control binding information
-    var controlBindingInfoRightDataViewElementsRegistry  = new DataView('elements-registry-control-bindings-right');
+    var controlBindingInfoRightDataViewElementsRegistry = new DataView('elements-registry-control-bindings-right');
 
     // Dataview for control binding information - left part
-    var controlBindingInfoLeftDataViewElementsRegistry  = new DataView('elements-registry-control-bindings-left', {
+    var controlBindingInfoLeftDataViewElementsRegistry = new DataView('elements-registry-control-bindings-left', {
 
         /**
          * Method fired when a clickable element is clicked.
@@ -270,8 +263,8 @@
                 }
             };
 
-            controlBindingInfoRightDataViewElementsRegistry .setData(dataFormatedForDataView);
-            controlBindingsSplitterElementsRegistry .showEndContainer();
+            controlBindingInfoRightDataViewElementsRegistry.setData(dataFormatedForDataView);
+            controlBindingsSplitterElementsRegistry.showEndContainer();
         }
     });
 
@@ -350,7 +343,7 @@
         },
 
         /**
-         * Visualize the initial needed data for the extension.
+         * Refresh Elements Registry data.
          * @param {Object} message
          */
         'on-receiving-elements-registry-refresh-data': function (message) {
@@ -383,7 +376,7 @@
         },
 
         /**
-         * Handler for ControlTree element selecting.
+         * Handler for Elements Registry element selecting.
          * @param {Object} message
          */
         'on-control-select-elements-registry': function (message) {
@@ -396,7 +389,7 @@
             document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
 
             // Close possible open binding info and/or methods info
-            controlBindingsSplitterElementsRegistry .hideEndContainer();
+            controlBindingsSplitterElementsRegistry.hideEndContainer();
         },
 
         /**

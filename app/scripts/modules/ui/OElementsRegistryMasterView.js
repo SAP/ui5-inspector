@@ -123,14 +123,12 @@ function OElementsRegistryMasterView(domId, options) {
     this.oContainerDOM = document.getElementById(domId);
 
     /**
-     * Selects an OData Entry log item.
+     * Selects an element.
      * @param {Object} oSelectedData
      */
     this.onSelectItem = function (oSelectedData) {};
     if (options) {
         this.onSelectItem = options.onSelectItem || this.onSelectItem;
-
-        this.onInitialRendering = options.onInitialRendering ? options.onInitialRendering : function () {};
         this.onRefreshButtonClicked = options.onRefreshButtonClicked || function () {};
     }
 
@@ -139,8 +137,6 @@ function OElementsRegistryMasterView(domId, options) {
 
     this.oDataGrid = this._createDataGrid();
     this.oContainerDOM.appendChild(this.oDataGrid.element);
-
-    // Register for updates here
 }
 
 /**

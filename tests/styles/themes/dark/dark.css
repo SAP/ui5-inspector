@@ -1122,6 +1122,49 @@ elements-registry-master-view .largeicon-clear:hover:not(:active) {
 elements-registry-master-view [is=ui-icon]:not(.icon-mask) {
   background-position: var(--spritesheet-position);
 }
+elements-registry-master-view filter {
+  border-bottom: solid 1px #c0c0c0;
+  display: flex;
+  left: 0;
+  line-height: 1;
+  min-width: 550px;
+  padding: 5px;
+  align-items: center;
+}
+elements-registry-master-view filter > start,
+elements-registry-master-view filter > end {
+  display: flex;
+}
+elements-registry-master-view filter > start {
+  flex: 1 1 0;
+}
+elements-registry-master-view filter [type="search"] {
+  border: solid 1px #a3a3a3;
+  border-radius: 2px;
+  background-color: #1B1B1B;
+  color: #949494;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+elements-registry-master-view filter [type="checkbox"] {
+  margin-right: 2px;
+}
+elements-registry-master-view filter label {
+  display: flex;
+  line-height: 20px;
+  padding: 0 6px;
+  white-space: nowrap;
+  align-items: center;
+}
+elements-registry-master-view:not([show-filtered-elements]) .matching {
+  background: rgba(98, 98, 98, 0.9) !important;
+}
+elements-registry-master-view:not([show-filtered-elements]) .selected {
+  background: #C98730 !important;
+}
+elements-registry-master-view:not([show-filtered-elements]) .selected ::selection {
+  background: #a3a3a3 !important;
+}
 .elementsRegistry splitter {
   background-color: #000;
 }

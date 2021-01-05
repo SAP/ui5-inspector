@@ -26,6 +26,60 @@ elements-registry-master-view {
     [is=ui-icon]:not(.icon-mask) {
         background-position: var(--spritesheet-position);
     }
+
+    filter {
+        border-bottom: solid 1px @border-grey-light;
+        display: flex;
+        left: 0;
+        line-height: 1;
+        min-width: 550px;
+        padding: 5px;
+        align-items: center;
+    }
+
+    filter > start,
+    filter > end {
+        display: flex;
+    }
+
+    filter > start {
+        flex: 1 1 0;
+    }
+
+    filter [type="search"] {
+        border: solid 1px @border-gray-dark;
+        border-radius: 2px;
+        background-color: @bg-search-field;
+        color: @text-color;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    filter [type="checkbox"] {
+        margin-right: 2px;
+    }
+
+    filter label {
+        display: flex;
+        line-height: 20px;
+        padding: 0 6px;
+        white-space: nowrap;
+        align-items: center;
+    }
+
+}
+
+elements-registry-master-view:not([show-filtered-elements]) {
+    .matching {
+        background: @bg-highlight-color !important;
+    }
+
+    .selected {
+        background: @lighter-blue !important;
+        ::selection {
+            background: @gray-dark !important;
+        }
+    }
 }
 
 .elementsRegistry splitter {

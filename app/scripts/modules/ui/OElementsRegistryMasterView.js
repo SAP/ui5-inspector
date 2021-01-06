@@ -132,8 +132,7 @@ function OElementsRegistryMasterView(domId, options) {
         this.onRefreshButtonClicked = options.onRefreshButtonClicked || function () {};
     }
 
-    const oRefreshButton = this._createRefreshButton();
-    this.oContainerDOM.appendChild(oRefreshButton);
+    this.oContainerDOM.appendChild(this._createRefreshButton());
     this.oContainerDOM.innerHTML += this._createFilter();
 
     this.oDataGrid = this._createDataGrid();
@@ -151,15 +150,6 @@ function OElementsRegistryMasterView(domId, options) {
 OElementsRegistryMasterView.prototype._createRefreshButton = function () {
     const oIcon = UIUtils.Icon.create('', 'toolbar-glyph hidden');
     oIcon.setIconType('largeicon-refresh');
-
-    /**
-     * Clear Icon click handler.
-     */
-    oIcon.onclick = function () {
-        this.oDataGrid.rootNode().removeChildren();
-        this._data = null;
-        this.onRefreshButtonClicked();
-    }.bind(this);
 
     return oIcon;
 };
@@ -185,6 +175,7 @@ OElementsRegistryMasterView.prototype._createHandlers = function () {
     this._oFilterContainer.onkeyup = this._onSearchInput.bind(this);
     this._oFilterContainer.onsearch = this._onSearchEvent.bind(this);
     this._oFilterCheckBox.onchange = this._onOptionsChange.bind(this);
+    this._oRefreshButton.onclick = this._onRefresh.bind(this);
 };
 
 /**
@@ -195,6 +186,7 @@ OElementsRegistryMasterView.prototype._setReferences = function () {
     this._oFilterContainer = this.oContainerDOM.querySelector('#elementsRegistrySearch');
     this._oFilterCheckBox = this.oContainerDOM.querySelector('#elementsRegistryCheckbox');
     this._oFilterResults = this.oContainerDOM.querySelector('#elementsRegistryResults');
+    this._oRefreshButton = this.oContainerDOM.querySelector('.largeicon-refresh');
 };
 
 /**
@@ -208,10 +200,27 @@ OElementsRegistryMasterView.prototype._onSearchInput = function (event) {
     if (target.getAttribute('search') !== null) {
         if (target.value.length !== 0) {
             this._searchElements(target.value);
+
+            if (this._oFilterCheckBox.checked) {
+                this._filterResults();
+            }
         } else {
             this._removeAttributesFromSearch('matching');
         }
     }
+};
+
+/**
+ * Event handler for Refresh icon clicked.
+ * @private
+ */
+OElementsRegistryMasterView.prototype._onRefresh = function (event) {
+    this.oDataGrid.rootNode().removeChildren();
+    this._data = [];
+    this.onRefreshButtonClicked();
+
+    this._oFilterCheckBox.checked = false;
+    this.oContainerDOM.removeAttribute('show-filtered-elements');
 };
 
 /**
@@ -234,14 +243,8 @@ OElementsRegistryMasterView.prototype._onSearchEvent = function (event) {
  */
 OElementsRegistryMasterView.prototype._onOptionsChange = function (event) {
     const target = event.target;
-    const sSearchInput = this._oFilterContainer.value.toLocaleLowerCase();
-    let sSelectedNodeId;
-    let sId;
-    let sType;
-    let oNode;
 
     this._oSelectedNode = this.oDataGrid.selectedNode || this._oSelectedNode;
-    sSelectedNodeId =  this._oSelectedNode && this._oSelectedNode._data.id.toLocaleLowerCase();
 
     if (target.getAttribute('filter') !== null) {
         if (target.checked) {
@@ -251,37 +254,54 @@ OElementsRegistryMasterView.prototype._onOptionsChange = function (event) {
         }
     }
 
+    this._filterResults();
+};
+
+/**
+ * Filters results.
+ * @private
+ */
+OElementsRegistryMasterView.prototype._filterResults = function () {
+    const sSearchInput = this._oFilterContainer.value.toLocaleLowerCase();
+    const bChecked = this._oFilterCheckBox.checked;
+    let sSelectedNodeId;
+    let sId;
+    let sType;
+
+    sSelectedNodeId = this._oSelectedNode && this._oSelectedNode._data.id.toLocaleLowerCase();
     this.oDataGrid.rootNode().removeChildren();
 
-    if (sSearchInput !== '' && target.checked) {
+    if (sSearchInput !== '' && bChecked) {
         this.getData().forEach(function (oElement) {
             sId = oElement.id.toLocaleLowerCase();
             sType = oElement.type.toLocaleLowerCase();
 
             if ((sId.indexOf(sSearchInput) !== -1 || sType.indexOf(sSearchInput) !== -1)) {
-                oNode = new DataGrid.SortableDataGridNode(oElement);
-
-                if (oNode) {
-                    this.oDataGrid.insertChild(oNode);
-
-                    if (sSelectedNodeId === sId) {
-                        oNode.select();
-                    }
-                }
+                this._createNode(oElement, sSelectedNodeId);
             }
         }, this);
     } else {
         this.getData().forEach(function (oElement) {
-            oNode = new DataGrid.SortableDataGridNode(oElement);
-
-            if (oNode) {
-                this.oDataGrid.insertChild(oNode);
-
-                if (sSelectedNodeId === oElement.id) {
-                    oNode.select();
-                }
-            }
+            this._createNode(oElement, sSelectedNodeId);
         }, this);
+    }
+};
+
+/**
+ * Creates table Node.
+ * @param {Object} oElement
+ * @param {string} sSelectedNodeId - Already selected NodeId
+ * @private
+ */
+OElementsRegistryMasterView.prototype._createNode = function (oElement, sSelectedNodeId) {
+    const oNode = new DataGrid.SortableDataGridNode(oElement);
+
+    if (oNode) {
+        this.oDataGrid.insertChild(oNode);
+
+        if (sSelectedNodeId === oElement.id.toLocaleLowerCase()) {
+            oNode.select();
+        }
     }
 };
 

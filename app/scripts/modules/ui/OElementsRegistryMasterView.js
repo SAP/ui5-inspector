@@ -179,7 +179,7 @@ OElementsRegistryMasterView.prototype._createHandlers = function () {
 };
 
 /**
- * Save references of the Search filter elements.
+ * Save references of the Search filter elements and refresh button.
  * @private
  */
 OElementsRegistryMasterView.prototype._setReferences = function () {
@@ -214,7 +214,7 @@ OElementsRegistryMasterView.prototype._onSearchInput = function (event) {
  * Event handler for Refresh icon clicked.
  * @private
  */
-OElementsRegistryMasterView.prototype._onRefresh = function (event) {
+OElementsRegistryMasterView.prototype._onRefresh = function () {
     this.oDataGrid.rootNode().removeChildren();
     this._data = [];
     this.onRefreshButtonClicked();

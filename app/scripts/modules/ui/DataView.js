@@ -167,11 +167,26 @@ DataView.prototype._generateHTMLForEndOfObject = function (currentElement) {
  */
 DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
     var html = '';
-    var value = currentView.data[key];
-    var options = currentView.options;
-    var type = currentView.types ? currentView.types[key] : '';
-    var attributes = {};
+    var oPropInfo;
+    var oValue;
+    var bDefault;
+    var options;
+    var type;
+    var attributes;
     var valueHTML;
+
+    if (this._data.isPropertiesData) {
+        oPropInfo = currentView.data[key];
+        oValue = oPropInfo.value;
+        bDefault = oPropInfo.isDefault;
+    } else {
+        oValue = currentView.data[key];
+    }
+
+    options = currentView.options;
+    type = currentView.types ? currentView.types[key] : '';
+    attributes = {};
+    valueHTML;
 
     if (options && options.editableValues) {
         attributes = {
@@ -181,17 +196,21 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
         };
     }
 
-    if (value && typeof value === 'object') {
-        valueHTML = JSONFormatter.formatJSONtoHTML(value);
+    if (oValue && oValue === 'object') {
+        valueHTML = JSONFormatter.formatJSONtoHTML(oValue);
     } else if (typeof type === 'object') {
-        valueHTML = DVHelper.wrapInSelectTag(value, attributes, type);
+        valueHTML = DVHelper.wrapInSelectTag(oValue, attributes, type);
     } else if (type === 'boolean') {
-        valueHTML = DVHelper.wrapInCheckBox(value, attributes);
+        valueHTML = DVHelper.wrapInCheckBox(oValue, attributes);
     } else {
-        valueHTML = DVHelper.valueNeedsQuotes(value, DVHelper.wrapInTag('value', value, attributes));
+        valueHTML = DVHelper.valueNeedsQuotes(oValue, DVHelper.wrapInTag('value', oValue, attributes));
     }
 
     html += DVHelper.wrapInTag('key', key) + ':&nbsp;' + valueHTML;
+
+    if (bDefault) {
+        html += '&nbsp;' + DVHelper.createDefaultSpan();
+    }
 
     return html;
 };
@@ -263,6 +282,10 @@ DataView.prototype._generateHTML = function () {
     // Go trough all the objects on the top level in the data structure and
     // skip the ones that does not have anything to display
     for (var key in viewObjects) {
+        if (key === 'isPropertiesData') {
+            continue;
+        }
+
         var currentObject = viewObjects[key];
 
         if (!DVHelper.getObjectLength(currentObject.data)) {

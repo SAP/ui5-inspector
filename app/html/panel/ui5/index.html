@@ -12,6 +12,7 @@
                 <tab id="control-tree-tab" selected>Control Inspector</tab>
                 <tab id="app-info-tab">Application Information</tab>
                 <tab id="odata-tab">OData Requests</tab>
+                <tab id="elements-registry-tab">Elements Registry</tab>
             </tabs>
             <contents>
 
@@ -89,6 +90,56 @@
                     </splitter>
                 </content>
                 <!-- OData /ends-->
+
+                <!-- Elements registry /start-->
+                <content for="elements-registry-tab" class="elementsRegistry">
+                    <splitter id="elements-registry-horizontal-splitter">
+                        <!-- SplitContainer top side /start-->
+                        <start>
+                            <elements-registry-master-view id="elements-registry-tab-master"/>
+                        </start>
+                        <!-- SplitContainer top side /ends-->
+
+                        <!-- SplitContainer right side /start-->
+                        <end>
+                            <!-- Control tree tabbar /start-->
+                            <tabbar id="elements-registry-tabbar">
+                                <tabs>
+                                    <tab id="elements-registry-tab-properties" selected>Properties</tab>
+                                    <tab id="elements-registry-tab-bindings">Bindings
+                                        <count></count>
+                                    </tab>
+                                    <tab id="elements-registry-tab-aggregations">Aggregations</tab>
+                                    <tab id="elements-registry-tab-events">Events</tab>
+                                </tabs>
+                                <contents>
+                                    <content for="elements-registry-tab-properties">
+                                        <data-view id="elements-registry-control-properties"></data-view>
+                                    </content>
+                                    <content for="elements-registry-tab-bindings">
+                                        <splitter id="elements-registry-control-bindings-splitter" orientation="vertical">
+                                            <start>
+                                                <data-view id="elements-registry-control-bindings-left"></data-view>
+                                            </start>
+                                            <end>
+                                                <data-view id="elements-registry-control-bindings-right"></data-view>
+                                            </end>
+                                        </splitter>
+                                    </content>
+                                    <content for="elements-registry-tab-aggregations">
+                                        <data-view id="elements-registry-control-aggregations"></data-view>
+                                    </content>
+                                    <content for="elements-registry-tab-events">
+                                        <data-view id="elements-registry-control-events"></data-view>
+                                    </content>
+                                </contents>
+                            </tabbar>
+                            <!-- Control tree tabbar /end-->
+                        </end>
+                        <!-- SplitContainer right side /ends-->
+                    </splitter>
+                </content>
+                <!-- Elements registry /ends-->
 
             </contents>
         </tabbar>

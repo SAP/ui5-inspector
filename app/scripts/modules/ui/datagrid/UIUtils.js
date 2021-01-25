@@ -392,7 +392,8 @@ const Descriptors = {
     'smallicon-cross': {position: 'b4', spritesheet: 'smallicons'},
     'mediumicon-red-cross-active': {position: 'd2', spritesheet: 'mediumicons'},
     'mediumicon-red-cross-hover': {position: 'a1', spritesheet: 'mediumicons'},
-    'largeicon-clear': {position: 'a6', spritesheet: 'largeicons', isMask: true}
+    'largeicon-clear': {position: 'a6', spritesheet: 'largeicons', isMask: true},
+    'largeicon-refresh': {position: 'd2', spritesheet: 'largeicons', isMask: true}
 };
 
 

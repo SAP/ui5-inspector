@@ -1302,6 +1302,7 @@ const Events = {
   OpenedNode: Symbol('OpenedNode'),
   SortingChanged: Symbol('SortingChanged'),
   PaddingChanged: Symbol('PaddingChanged'),
+  ViewportCalculated: Symbol('ViewportCalculated')
 };
 
 /** @enum {string} */

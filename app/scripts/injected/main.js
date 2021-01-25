@@ -74,7 +74,8 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             message.send({
                 action: 'on-receiving-initial-data',
                 applicationInformation: applicationUtils.getApplicationInfo(frameworkInformation),
-                controlTree: controlUtils.getControlTreeModel(controlTreeModel, frameworkInformation.commonInformation)
+                controlTree: controlUtils.getControlTreeModel(controlTreeModel, frameworkInformation.commonInformation),
+                elementRegistry: ToolsAPI.getRegisteredElements()
             });
         },
 
@@ -116,6 +117,36 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
                 controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
                 controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations),
                 controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
+            });
+        },
+
+        /**
+         * Handler for element selection in the Elements Registry.
+         * @param {Object} event
+         */
+        'do-control-select-elements-registry': function (event) {
+            var controlId = event.detail.target;
+            var controlProperties = ToolsAPI.getControlProperties(controlId);
+            var controlBindings = ToolsAPI.getControlBindings(controlId);
+            var controlAggregations = ToolsAPI.getControlAggregations(controlId);
+            var controlEvents = ToolsAPI.getControlEvents(controlId);
+
+            message.send({
+                action: 'on-control-select-elements-registry',
+                controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
+                controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
+                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations),
+                controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
+            });
+        },
+
+        /**
+         * Handler for refreshing elements in Elements Registry.
+         */
+        'do-elements-registry-refresh': function () {
+            message.send({
+                action: 'on-receiving-elements-registry-refresh-data',
+                elementRegistry: ToolsAPI.getRegisteredElements()
             });
         },
 

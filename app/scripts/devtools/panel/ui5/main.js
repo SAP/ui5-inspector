@@ -1,3 +1,5 @@
+
+// jshint maxstatements:37
 (function () {
     'use strict';
 
@@ -18,6 +20,7 @@
     var Splitter = require('../../../modules/ui/SplitContainer.js');
     var ODataDetailView = require('../../../modules/ui/ODataDetailView.js');
     var ODataMasterView = require('../../../modules/ui/ODataMasterView.js');
+    var OElementsRegistryMasterView = require('../../../modules/ui/OElementsRegistryMasterView.js');
 
     // Apply theme
     // ================================================================================
@@ -179,6 +182,107 @@
         }
     });
 
+    var oElementsRegistryMasterView = new OElementsRegistryMasterView('elements-registry-tab-master', {
+        /**
+         * Method fired when a Control is selected.
+         * @param {string} sControlId
+         */
+        onSelectItem: function (sControlId) {
+            /**
+             * Send message, that the a new element is selected in the ElementsRegistry tab.
+             * @param {string} sControlId
+             */
+            port.postMessage({
+                action: 'do-control-select-elements-registry',
+                target: sControlId
+            });
+        },
+        /**
+         * Refresh ElementRegistry tab.
+         */
+        onRefreshButtonClicked: function () {
+            port.postMessage({
+                action: 'do-elements-registry-refresh'
+            });
+        }
+    });
+
+    // Horizontal Splitter for 'Elements Registry' tab
+    var controlInspectorHorizontalSplitterElementsRegistry = new Splitter('elements-registry-horizontal-splitter', {
+        endContainerWidth: '400px'
+    });
+
+    // Tabbar for Elements Registry additional information (Properties, Binding and etc)
+    var elementsRegistryTabBar = new TabBar('elements-registry-tabbar');
+
+    // Dataview for control properties
+    var controlPropertiesElementsRegistry = new DataView('elements-registry-control-properties', {
+
+        /**
+         * Send message, that an proprety in the DataView is changed.
+         * @param {Object} changeData
+         */
+        onPropertyUpdated: function (changeData) {
+            port.postMessage({
+                action: 'do-control-property-change',
+                data: changeData
+            });
+        }
+    });
+
+    // Vertical splitter for 'Bindings' tab
+    var controlBindingsSplitterElementsRegistry = new Splitter('elements-registry-control-bindings-splitter', {
+        hideEndContainer: true,
+        isEndContainerClosable: true,
+        endContainerTitle: 'Model Information'
+    });
+
+    // Dataview for control aggregations
+    var controlAggregationsElementsRegistry = new DataView('elements-registry-control-aggregations');
+
+    // Dataview for control binding information
+    var controlBindingInfoRightDataViewElementsRegistry = new DataView('elements-registry-control-bindings-right');
+
+    // Dataview for control binding information - left part
+    var controlBindingInfoLeftDataViewElementsRegistry = new DataView('elements-registry-control-bindings-left', {
+
+        /**
+         * Method fired when a clickable element is clicked.
+         * @param {Object} event
+         */
+        onValueClick: function (event) {
+            var dataFormatedForDataView = {
+                modelInfo: {
+                    options: {
+                        title: 'Model Information',
+                        expandable: false,
+                        expanded: true,
+                        hideTitle: true
+                    },
+                    data: event.data
+                }
+            };
+
+            controlBindingInfoRightDataViewElementsRegistry.setData(dataFormatedForDataView);
+            controlBindingsSplitterElementsRegistry.showEndContainer();
+        }
+    });
+
+    // Dataview for control events
+    var controlEventsElementsRegistry  = new DataView('elements-registry-control-events', {
+
+        /**
+         * Method fired when a clickable element is clicked.
+         * @param {Object} event
+         */
+        onValueClick: function (event) {
+            port.postMessage({
+                action: 'do-console-log-event-listener',
+                data: event.data
+            });
+        }
+    });
+
     // ================================================================================
     // Communication
     // ================================================================================
@@ -235,6 +339,15 @@
         'on-receiving-initial-data': function (message) {
             controlTree.setData(message.controlTree);
             appInfo.setData(message.applicationInformation);
+            oElementsRegistryMasterView.setData(message.elementRegistry);
+        },
+
+        /**
+         * Refresh Elements Registry data.
+         * @param {Object} message
+         */
+        'on-receiving-elements-registry-refresh-data': function (message) {
+            oElementsRegistryMasterView.setData(message.elementRegistry);
         },
 
         /**
@@ -260,6 +373,23 @@
 
             // Close possible open binding info and/or methods info
             controlBindingsSplitter.hideEndContainer();
+        },
+
+        /**
+         * Handler for Elements Registry element selecting.
+         * @param {Object} message
+         */
+        'on-control-select-elements-registry': function (message) {
+            controlPropertiesElementsRegistry.setData(message.controlProperties);
+            controlBindingInfoLeftDataViewElementsRegistry.setData(message.controlBindings);
+            controlAggregationsElementsRegistry.setData(message.controlAggregations);
+            controlEventsElementsRegistry.setData(message.controlEvents);
+
+            // Set bindings count
+            document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
+
+            // Close possible open binding info and/or methods info
+            controlBindingsSplitterElementsRegistry.hideEndContainer();
         },
 
         /**

@@ -175,7 +175,7 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
     var attributes;
     var valueHTML;
 
-    if (this._data.isPropertiesData) {
+    if (this._data && this._data.isPropertiesData) {
         oPropInfo = currentView.data[key];
         oValue = oPropInfo.value;
         bDefault = oPropInfo.isDefault;

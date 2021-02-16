@@ -14,7 +14,8 @@
                 "/scripts/content/detectUI5.js"
             ],
             "matches": [
-                "<all_urls>"
+                "http://*/*",
+                "https://*/*"
             ]
         }
     ],
@@ -34,7 +35,8 @@
     },
     "permissions": [
         "contextMenus",
-        "<all_urls>"
+        "http://*/*",
+        "https://*/*"
     ],
     "web_accessible_resources": [
         "/scripts/injected/*.js",

@@ -3,7 +3,7 @@
     "name": "UI5 Inspector",
     "version": "0.9.9",
     "background": {
-        "persistence": false,
+        "persistent": false,
         "scripts": [
             "/scripts/background/main.js"
         ]

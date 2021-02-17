@@ -168,7 +168,7 @@ DataView.prototype._generateHTMLForEndOfObject = function (currentElement) {
 DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
     var html = '';
     var oPropInfo;
-    var oValue;
+    var vValue;
     var bDefault;
     var options;
     var type;
@@ -177,10 +177,10 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
 
     if (this._data && this._data.isPropertiesData) {
         oPropInfo = currentView.data[key];
-        oValue = oPropInfo.value;
+        vValue = oPropInfo.value;
         bDefault = oPropInfo.isDefault;
     } else {
-        oValue = currentView.data[key];
+        vValue = currentView.data[key];
     }
 
     options = currentView.options;
@@ -196,14 +196,14 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
         };
     }
 
-    if (oValue && oValue === 'object') {
-        valueHTML = JSONFormatter.formatJSONtoHTML(oValue);
+    if (vValue && vValue === 'object') {
+        valueHTML = JSONFormatter.formatJSONtoHTML(vValue);
     } else if (typeof type === 'object') {
-        valueHTML = DVHelper.wrapInSelectTag(oValue, attributes, type);
+        valueHTML = DVHelper.wrapInSelectTag(vValue, attributes, type);
     } else if (type === 'boolean') {
-        valueHTML = DVHelper.wrapInCheckBox(oValue, attributes);
+        valueHTML = DVHelper.wrapInCheckBox(vValue, attributes);
     } else {
-        valueHTML = DVHelper.valueNeedsQuotes(oValue, DVHelper.wrapInTag('value', oValue, attributes));
+        valueHTML = DVHelper.valueNeedsQuotes(vValue, DVHelper.wrapInTag('value', vValue, attributes));
     }
 
     html += DVHelper.wrapInTag('key', key) + ':&nbsp;' + valueHTML;

@@ -273,6 +273,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                     result.properties[key] = Object.create(null);
                     result.properties[key].value = control.getProperty(key);
                     result.properties[key].type = controlPropertiesFromMetadata[key].getType().getName ? controlPropertiesFromMetadata[key].getType().getName() : '';
+                    result.properties[key].isDefault = control.getMetadata().getProperty(key).getDefaultValue() === control.getProperty(key);
                 });
 
                 return result;
@@ -297,6 +298,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                     result.properties[key] = Object.create(null);
                     result.properties[key].value = inheritedMetadataProperties[key].get(control);
                     result.properties[key].type = inheritedMetadataProperties[key].getType().getName ? inheritedMetadataProperties[key].getType().getName() : '';
+                    result.properties[key].isDefault = control.getMetadata().getProperty(key).getDefaultValue() === control.getProperty(key);
                 });
 
                 return result;
@@ -334,6 +336,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 if (control) {
                     properties.own = this._getOwnProperties(control);
                     properties.inherited = this._getInheritedProperties(control);
+                    properties.isPropertiesData = true;
                 }
 
                 return properties;

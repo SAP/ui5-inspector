@@ -224,7 +224,7 @@
          */
         onPropertyUpdated: function (changeData) {
             port.postMessage({
-                action: 'do-control-property-change',
+                action: 'do-control-property-change-elements-registry',
                 data: changeData
             });
         }

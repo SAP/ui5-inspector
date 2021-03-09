@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
     "name": "UI5 Inspector",
-    "version": "0.9.9",
+    "version": "0.9.10",
     "background": {
-        "persistence": false,
+        "persistent": false,
         "scripts": [
             "/scripts/background/main.js"
         ]
@@ -14,7 +14,8 @@
                 "/scripts/content/detectUI5.js"
             ],
             "matches": [
-                "<all_urls>"
+                "http://*/*",
+                "https://*/*"
             ]
         }
     ],
@@ -34,7 +35,8 @@
     },
     "permissions": [
         "contextMenus",
-        "<all_urls>"
+        "http://*/*",
+        "https://*/*"
     ],
     "web_accessible_resources": [
         "/scripts/injected/*.js",

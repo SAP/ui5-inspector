@@ -78,7 +78,7 @@ const COLUMNS = [{
     },
     {
         id: 'isRendered',
-        title: 'isRendered',
+        title: 'rendered',
         sortable: true,
         align: undefined,
         nonSelectable: false,
@@ -96,7 +96,7 @@ const COLUMNS = [{
     },
     {
         id: 'isControl',
-        title: 'isControl',
+        title: 'control',
         sortable: true,
         align: undefined,
         nonSelectable: false,

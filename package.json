@@ -11,6 +11,10 @@
     "mocha": "^7.1.2"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/github": "^7.2.3",
+    "@semantic-release/release-notes-generator": "^9.0.3",
     "browserify": "^16.5.1",
     "browserify-istanbul": "^3.0.1",
     "chai": "~4.2.0",
@@ -42,6 +46,7 @@
     "load-grunt-config": "~3.0.1",
     "load-grunt-tasks": "~5.1.0",
     "prettify-xml": "^1.2.0",
+    "semantic-release": "^17.4.4",
     "sinon": "~9.0.2",
     "time-grunt": "~2.0.0"
   },

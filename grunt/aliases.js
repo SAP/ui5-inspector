@@ -35,11 +35,6 @@ module.exports = {
         'karma:CI'
     ],
 
-    // Runs all tests and upload lcov.info to coveralls
-    travis: [
-        'test'
-    ],
-
     // Builds the project and monitor changes in files
     default: [
         'dist',

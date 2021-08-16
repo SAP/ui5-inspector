@@ -5,26 +5,32 @@
 [![Coverage Status](https://coveralls.io/repos/SAP/ui5-inspector/badge.svg?branch=master&service=github)](https://coveralls.io/github/SAP/ui5-inspector?branch=master)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/ui5-inspector)](https://api.reuse.software/info/github.com/SAP/ui5-inspector)
 
+# About UI5 Inspector
 
-(https://app.review.ninja/SAP/ui5-inspector)
-# UI5 Inspector
-
-The UI5 Inspector is a standard Chrome extension for debugging and getting to know UI5 applications.
+UI5 Inspector is a standard Chrome extension for debugging and getting to know UI5 applications.
 
 It's free and open source: UI5 Inspector is licensed under the Apache License, Version 2.0.
 See LICENSE.txt for more information.
 
-## Download
+## Direct download and use
 
-The extension can be downloaded from [Google WebStore](https://chrome.google.com/webstore/detail/ui5-inspector/bebecogbafbighhaildooiibipcnbngo)
+The latest released version is 0.9.10 and can be downloaded and installed as follows:
 
-## Run it locally
+1. Download zip file from [GitHub as zip](https://github.com/SAP/ui5-inspector/releases/download/v0.9.10/package-0.9.10.zip)
+2. Unpack to a directory
+3. In Chrome open as url: `chrome://extensions/`
+4. Check “Developer mode” and then click "Load unpacked extension..."
+5. From the newly opened window select the folder to which the zip file was unpacked
+6. Restart Chrome
+7. Open a OpenUI5/SAPUI5 based web application like: [https://openui5.hana.ondemand.com/explored.html](https://openui5.hana.ondemand.com/explored.html)
+
+## Local development and use
 
 You can get the source code locally and contribute the the project.
 
-1. Clone the project locally: ```git clone git@github.com:SAP/ui5-inspector.git```
-2. Install dependencies with the following commands: ```npm install```
-3. In Chrome open as url: ```chrome://extensions/```
+1. Clone the project locally: `git clone git@github.com:SAP/ui5-inspector.git`
+2. Install dependencies with the following commands: `npm install`
+3. In Chrome open as url: `chrome://extensions/`
 4. Check “Developer mode” and then click "Load unpacked extension..."
 5. From the newly opened window select the **dist** folder from the locally cloned project
 6. Restart Chrome

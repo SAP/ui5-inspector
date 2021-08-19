@@ -17,15 +17,15 @@ module.exports = function (grunt, config) {
         },
         js: {
             files: ['<%= app %>/scripts/**/*.js'],
-            tasks: ['newer:jshint:scripts', 'newer:jscs:scripts', 'browserify']
+            tasks: ['newer:jshint:scripts', 'newer:eslint:scripts', 'browserify']
         },
         tests: {
             files: ['<%= tests %>/**/*.js'],
-            tasks: ['newer:jshint:karma', 'newer:jscs:karma']
+            tasks: ['newer:jshint:karma', 'newer:eslint:karma']
         },
         gruntfiles: {
             files: ['Gruntfile.js', '<%= grunt %>/*.js'],
-            tasks: ['newer:jshint:gruntfiles', 'newer:jscs:gruntfiles']
+            tasks: ['newer:jshint:gruntfiles', 'newer:eslint:gruntfiles']
         },
         styles: {
             files: ['<%= app %>/styles/less/**/*.less'],

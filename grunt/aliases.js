@@ -9,7 +9,7 @@ module.exports = {
     // Make sure code styles are up to par and there are no obvious mistakes.
     lint: [
         'jshint',
-        'jscs'
+        'eslint'
     ],
 
     // Preprocess .js and .less files.

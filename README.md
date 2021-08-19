@@ -7,7 +7,7 @@
 
 # About UI5 Inspector
 
-UI5 Inspector is a standard Chrome extension for debugging and getting to know UI5 applications.
+UI5 Inspector is a standard Chrome or Edge extension for debugging and getting to know UI5 applications.
 
 It's free and open source: UI5 Inspector is licensed under the Apache License, Version 2.0.
 See LICENSE.txt for more information.
@@ -18,10 +18,10 @@ The latest released version is 0.9.10 and can be downloaded and installed as fol
 
 1. Download zip file from [GitHub as zip](https://github.com/SAP/ui5-inspector/releases/download/v0.9.10/package-0.9.10.zip)
 2. Unpack to a directory
-3. In Chrome open as url: `chrome://extensions/`
-4. Check “Developer mode” and then click "Load unpacked extension..."
+3. In Chrome open as url: `chrome://extensions/`. Alternatively, you can access `edge://extensions/` when in Edge. The extensions page is also reachable via the browser's menu.
+4. Check “Developer mode” setting and then choose "Load unpacked extension..."
 5. From the newly opened window select the folder to which the zip file was unpacked
-6. Restart Chrome
+6. Restart Chrome or Edge
 7. Open a OpenUI5/SAPUI5 based web application like: [https://openui5.hana.ondemand.com/explored.html](https://openui5.hana.ondemand.com/explored.html)
 
 ## Local development and use

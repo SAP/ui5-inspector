@@ -144,7 +144,7 @@ These are some of the most important rules to give you an initial impression:
 -   Apply a clean coding style adapted to the surrounding code, even though we are aware the existing code is not fully clean
 -   Use variable and CSS class naming conventions like in the other files you are seeing
 -   No global variables
--   Run the JSHint and JSCS code check and make it succeed
+-   Run the JSHint and ESLint code check and make it succeed
 -   Comment your code where it gets non-trivial
 -   Keep an eye on performance and memory consumption, properly destroy objects when not used anymore
 -   Try to write slim and "modern" HTML and CSS, avoid using images and affecting any content in the inspected page/app

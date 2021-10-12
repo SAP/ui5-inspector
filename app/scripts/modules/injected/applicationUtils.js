@@ -10,14 +10,9 @@ var utils = require('../utils/utils.js');
 function _getCommonInformation(commonInformation) {
     var frameworkName = commonInformation.frameworkName;
     var buildTime = utils.formatter.convertUI5TimeStampToHumanReadableFormat(commonInformation.buildTime);
-    var lastChange = utils.formatter.convertUI5TimeStampToHumanReadableFormat(commonInformation.lastChange);
     var result = {};
 
-    if (lastChange) {
-        result[frameworkName] = commonInformation.version + ' (built at ' + buildTime + ' last change ' + lastChange + ')';
-    } else {
-        result[frameworkName] = commonInformation.version + ' (built at ' + buildTime + ')';
-    }
+    result[frameworkName] = commonInformation.version + ' (built at ' + buildTime + ')';
 
     result['User Agent'] = commonInformation.userAgent;
     result.Application = commonInformation.applicationHREF;

@@ -52,9 +52,9 @@ function _convertUI5TimeStampToHumanReadableFormat(timeStamp) {
     formattedTime += ' ';
 
     // Hour
-    formattedTime += timeStamp.substr(9, 2) + ':';
+    formattedTime += timeStamp.substr(8, 2) + ':';
     // Minutes
-    formattedTime += timeStamp.substr(11, 2) + 'h';
+    formattedTime += timeStamp.substr(10, 2) + 'h';
 
     return formattedTime;
 }

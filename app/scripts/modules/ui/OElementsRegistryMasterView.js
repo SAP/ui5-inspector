@@ -392,13 +392,19 @@ OElementsRegistryMasterView.prototype.getData = function () {
  */
 OElementsRegistryMasterView.prototype.setData = function (data) {
     const oldData = this.getData();
+    let aData = data.aRegisteredElements;
     let oNode;
 
-    if (JSON.stringify(oldData) === JSON.stringify(data)) {
+    if (!data.isSupported) {
+        this.oContainerDOM.innerHTML = '<h1>Current version of OpenUI5/SAPUI5 doesn\'t support element registry</h1>';
         return;
     }
 
-    this._data = data;
+    if (JSON.stringify(oldData) === JSON.stringify(aData)) {
+        return;
+    }
+
+    this._data = aData;
 
     this._data.forEach(function (oElement) {
         oNode = new DataGrid.SortableDataGridNode(oElement);

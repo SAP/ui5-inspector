@@ -183,6 +183,16 @@ function _valueNeedsQuotes(value, valueWrappedInHTML) {
 }
 
 /**
+ * Creates span for default value.
+ * @returns {string}
+ * @private
+ */
+function _createDefaultSpan() {
+
+    return '<span gray>(default value)</span>';
+}
+
+/**
  * @param {Array|Object} element
  * @returns {string}
  * @private
@@ -396,5 +406,6 @@ module.exports = {
     wrapInTag: _wrapInTag,
     wrapInSelectTag: _wrapInSelectTag,
     wrapInCheckBox: _wrapInCheckBox,
-    valueNeedsQuotes: _valueNeedsQuotes
+    valueNeedsQuotes: _valueNeedsQuotes,
+    createDefaultSpan: _createDefaultSpan
 };

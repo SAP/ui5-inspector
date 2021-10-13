@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
     "name": "UI5 Inspector",
-    "version": "0.9.7",
+    "version": "0.9.10",
     "background": {
-        "persistence": false,
+        "persistent": false,
         "scripts": [
             "/scripts/background/main.js"
         ]
@@ -14,7 +14,8 @@
                 "/scripts/content/detectUI5.js"
             ],
             "matches": [
-                "<all_urls>"
+                "http://*/*",
+                "https://*/*"
             ]
         }
     ],
@@ -33,12 +34,20 @@
         "default_popup": "/html/popup/index.html"
     },
     "permissions": [
-        "tabs",
         "contextMenus",
-        "<all_urls>"
+        "http://*/*",
+        "https://*/*"
     ],
     "web_accessible_resources": [
         "/scripts/injected/*.js",
-        "/vendor/ToolsAPI.js"
+        "/vendor/ToolsAPI.js",
+        "/vendor/ace.js",
+        "/vendor/ext-searchbox.js",
+        "/vendor/mode-json.js",
+        "/vendor/mode-xml.js",
+        "/vendor/theme-chrome.js",
+        "/vendor/theme-vibrant_ink.js",
+        "/vendor/vkbeautify.js",
+        "/modules/utils/multipartmixed2har.js"
     ]
 }

@@ -261,6 +261,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     result.properties[key] = Object.create(null);
                     result.properties[key].value = control.getProperty(key);
                     result.properties[key].type = controlPropertiesFromMetadata[key].getType().getName ? controlPropertiesFromMetadata[key].getType().getName() : "";
+                    result.properties[key].isDefault = control.getMetadata().getProperty(key).getDefaultValue() === control.getProperty(key);
                 });
 
                 return result;
@@ -285,6 +286,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     result.properties[key] = Object.create(null);
                     result.properties[key].value = inheritedMetadataProperties[key].get(control);
                     result.properties[key].type = inheritedMetadataProperties[key].getType().getName ? inheritedMetadataProperties[key].getType().getName() : "";
+                    result.properties[key].isDefault = control.getMetadata().getProperty(key).getDefaultValue() === control.getProperty(key);
                 });
 
                 return result;
@@ -322,6 +324,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                 if (control) {
                     properties.own = this._getOwnProperties(control);
                     properties.inherited = this._getInheritedProperties(control);
+                    properties.isPropertiesData = true;
                 }
 
                 return properties;
@@ -616,6 +619,28 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
 
         };
 
+        var elementRegistry = {
+            getRegisteredElements: function () {
+                var aResults = [],
+                    oElements = sap.ui.core.Element.registry.all();
+
+                Object.keys(oElements).forEach(function (sKey) {
+                    var oParent = oElements[sKey].getParent();
+
+                    aResults.push({
+                        id: oElements[sKey].getId(),
+                        type: oElements[sKey].getMetadata().getName(),
+                        isControl: oElements[sKey].isA("sap.ui.core.Control"),
+                        isRendered: oElements[sKey].isActive(),
+                        parentId: oParent && (oParent.isA("sap.ui.core.Control") || oParent.isA("sap.ui.core.Element")) ? oParent.getId() : '',
+                        aggregation: oElements[sKey].sParentAggregationName ? oElements[sKey].sParentAggregationName : ''
+                    })
+                });
+
+                return aResults;
+            }
+        }
+
         // ================================================================================
         // Public API
         // ================================================================================
@@ -690,7 +715,9 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
              */
             getControlEvents: function (controlId) {
                 return controlInformation._getEvents(controlId);
-            }
+            },
+
+            getRegisteredElements: elementRegistry.getRegisteredElements
         };
 
     });

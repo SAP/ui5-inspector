@@ -9,7 +9,7 @@ module.exports = {
     // Make sure code styles are up to par and there are no obvious mistakes.
     lint: [
         'jshint',
-        'jscs'
+        'eslint'
     ],
 
     // Preprocess .js and .less files.
@@ -33,11 +33,6 @@ module.exports = {
         'lint',
         'less',
         'karma:CI'
-    ],
-
-    // Runs all tests and upload lcov.info to coveralls
-    travis: [
-        'test'
     ],
 
     // Builds the project and monitor changes in files

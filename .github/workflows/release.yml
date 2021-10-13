@@ -1,0 +1,27 @@
+# This is a basic workflow to automate the creation of the build artifact
+name: Release
+# Controls when the workflow will run
+on:
+  schedule:
+  - cron: "0 9 15 * *"
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install NPM dependencies
+        run: npm ci
+      - name: Run tests
+        run: grunt test
+      # Uploads the artifact to the action assests
+      - uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: dist/
+      # Release using semantic-relaease if there are new smenatic commits
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

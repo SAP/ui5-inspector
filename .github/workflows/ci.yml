@@ -1,0 +1,18 @@
+# This is a basic workflow to automate the creation of the build artifact
+name: CI
+# Controls when the workflow will run
+on:
+  pull_request:
+    branches: [ master ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install NPM dependencies
+        run: npm ci
+      - name: Run tests
+        run: grunt test

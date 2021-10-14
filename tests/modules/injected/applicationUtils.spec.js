@@ -6,8 +6,7 @@ var basicMock = {
     commonInformation: {
         frameworkName: 'OpenUI5',
         version: '1.28.16',
-        buildTime: '20150817-1459',
-        lastChange: '',
+        buildTime: '201508171459',
         userAgent: 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36',
         applicationHREF: 'https://openui5.hana.ondemand.com/explored.html',
         documentTitle: 'OpenUI5 Explored',
@@ -68,8 +67,7 @@ var fullMock = {
     commonInformation: {
         frameworkName: 'OpenUI5',
         version: '1.28.16',
-        buildTime: '20150817-1459',
-        lastChange: '20150817-1459',
+        buildTime: '201508171459',
         userAgent: 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36',
         applicationHREF: 'https://openui5.hana.ondemand.com/explored.html',
         documentTitle: 'OpenUI5 Explored',
@@ -150,7 +148,7 @@ describe('applicationUtils', function () {
                 var commonInformationWithLastBuildProperty = applicationUtils.getApplicationInfo(fullMock).common.data;
 
                 commonInformation.OpenUI5.should.be.equal('1.28.16 (built at 2015/08/17 14:59h)');
-                commonInformationWithLastBuildProperty.OpenUI5.should.be.equal('1.28.16 (built at 2015/08/17 14:59h last change 2015/08/17 14:59h)');
+                commonInformationWithLastBuildProperty.OpenUI5.should.be.equal('1.28.16 (built at 2015/08/17 14:59h)');
                 commonInformation['User Agent'].should.be.equal(basicMock.commonInformation.userAgent);
                 commonInformation.Application.should.be.equal(basicMock.commonInformation.applicationHREF);
             });
@@ -205,7 +203,7 @@ describe('applicationUtils', function () {
         it('should create an object with the common information for the framework', function () {
             var commonInformation = applicationUtils.getInformationForPopUp(fullMock);
 
-            commonInformation.OpenUI5.should.be.equal('1.28.16 (built at 2015/08/17 14:59h last change 2015/08/17 14:59h)');
+            commonInformation.OpenUI5.should.be.equal('1.28.16 (built at 2015/08/17 14:59h)');
         });
     });
 });

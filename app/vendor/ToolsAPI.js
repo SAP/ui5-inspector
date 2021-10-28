@@ -632,7 +632,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     Object.keys(oElements).forEach(function (sKey) {
                         var oParent = oElements[sKey].getParent();
 
-                        aResults.push({
+                        aRegisteredElements.push({
                             id: oElements[sKey].getId(),
                             type: oElements[sKey].getMetadata().getName(),
                             isControl: oElements[sKey].isA("sap.ui.core.Control"),

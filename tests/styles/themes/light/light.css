@@ -73,6 +73,7 @@ html {
 }
 body {
   color: #222;
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   font-family: Consolas, Lucida Console, monospace;

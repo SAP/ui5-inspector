@@ -73,6 +73,7 @@ html {
 }
 body {
   color: #949494;
+  background-color: #252525;
   display: flex;
   flex-direction: column;
   font-family: Consolas, Lucida Console, monospace;
@@ -98,7 +99,7 @@ label {
   -webkit-user-select: none;
 }
 overlay {
-  background: #fff;
+  background: #252525;
   height: 100%;
   position: fixed;
   left: 0;

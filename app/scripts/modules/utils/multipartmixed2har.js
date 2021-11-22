@@ -15,7 +15,7 @@ const createResponse = (resPart) => {
                 changeset: sBoundary,
                 children: resPart.split( '--' + sBoundary)
                     // jscs:disable
-                    .filter(line => line.trim() !== '--' && !line.includes(sBoundary))
+                    .filter(line => !line.startsWith('--') && !line.includes(sBoundary))
                     .map(createResponse)
                     // jscs:enable
             };
@@ -64,7 +64,7 @@ const createRequest = (reqPart) => {
                 changeset: sBoundary,
                 children: reqPart.split( '--' + sBoundary)
                     // jscs:disable
-                    .filter(line => line.trim() !== '--' && !line.includes(sBoundary))
+                    .filter(line => !line.startsWith('--') && !line.includes(sBoundary))
                     .map(createRequest)
                     // jscs:enable
             };
@@ -177,10 +177,10 @@ const deMultipart = (content, req, res) => {
         let resBoundary = '--' + resContentType.split('boundary=')[1];
         // jscs:disable
         let requestsRaw = req.postData.text.split(reqBoundary)
-            .filter(line => line.trim() !== '--' && line !== '')
+            .filter(line => !line.startsWith('--') && line !== '')
             .filter(removeEmptyLinesFilter);
         let responseRaw = raw.split(resBoundary)
-            .filter(line => line.trim() !== '--' && line !== '')
+            .filter(line => !line.startsWith('--') && line !== '')
             .filter(removeEmptyLinesFilter);
         // jscs:enable
 

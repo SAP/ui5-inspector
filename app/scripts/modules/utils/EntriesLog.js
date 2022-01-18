@@ -65,7 +65,7 @@ EntriesLog.prototype.getEntryNode = function (entry) {
                 aNodes = this._showEmbeddedRequests(childEntries, serviceUrl);
                 this.oNoResponseMessage[contentIndex] = 'See the split responses of this batch request';
                 aNodes.forEach(function (oChildNode) {
-                    oNode.appendChild(oChildNode);
+                    Array.isArray(oChildNode) ? oNode.appendChild(oChildNode[0]) : oNode.appendChild(oChildNode);
                 });
             });
 
@@ -137,7 +137,7 @@ EntriesLog.prototype._showEmbeddedRequests = function (entries, serviceUrl, pref
             return this._showEmbeddedRequests(entry.children, serviceUrl, entry.changeset);
         } else {
             const contentIndex = this._nextIndex();
-            const classes = 'clickable secondLevel' +
+            const classes = 'clickable secondLevel' +  (!entry.response || entry.response.status === 499) && 'warning' ||
                 (entry.response && entry.response.status > 299 && ' error' || '' );
 
             this.oEditorContent[contentIndex] = {type: 'json', content: JSON.stringify(entry, null, 2)};

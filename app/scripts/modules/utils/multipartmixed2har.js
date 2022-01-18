@@ -9,7 +9,7 @@ const unpopularLines = (line) => !(line.includes('application/http') || line ===
  * @param {Object} resPart
  */
 const createResponse = (resPart) => {
-    if (resPart.includes('boundary=changeset')) {
+    if (resPart.includes('boundary=')) {
         const sBoundary = resPart.match(/boundary=(.*)/)[1];
         const res = {
                 changeset: sBoundary,
@@ -43,7 +43,12 @@ const createResponse = (resPart) => {
             } else if (line) {
                 let [name, value] = line.split(/:(.+)/);
                 if (name.toLowerCase() === 'sap-messages') {
-                    value = JSON.parse(value);
+                    value = value.trim(' ');
+
+                    // Expecting object or array, otherwise use as string
+                    if (value.startsWith('{') || value.startsWith('[')) {
+                        value = JSON.parse(value);
+                    }
                 }
                 res.headers[name] = value;
             }
@@ -92,7 +97,12 @@ const createRequest = (reqPart) => {
             } else if (line) {
                 let [name, value] = line.split(/:(.+)/);
                 if (name.toLowerCase() === 'sap-messages') {
-                    value = JSON.parse(value);
+                    value = value.trim(' ');
+
+                    // Expecting object or array, otherwise use as string
+                    if (value.startsWith('{') || value.startsWith('[')) {
+                        value = JSON.parse(value);
+                    }
                 }
                 request.headers[name] = value;
             }
@@ -116,7 +126,11 @@ const transformIfChildren = (entry) => {
          */
         entry.children = entry.request.children.map((request, ind) => ({
             request: request,
-            response: entry.response.children[ind]
+            response: entry.response.children?.[ind] || {
+                status: 499,
+                statusText: "Unexpected use case of the OData Chrome Extension",
+                headers: {}
+            }
         }));
         delete entry.response;
         delete entry.request;

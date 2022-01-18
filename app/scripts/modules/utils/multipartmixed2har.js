@@ -126,9 +126,9 @@ const transformIfChildren = (entry) => {
          */
         entry.children = entry.request.children.map((request, ind) => ({
             request: request,
-            response: entry.response.children?.[ind] || {
+            response: (entry.response.children && entry.response.children.ind) || {
                 status: 499,
-                statusText: "Unexpected use case of the OData Chrome Extension",
+                statusText: 'Unexpected use case of the OData Chrome Extension',
                 headers: {}
             }
         }));

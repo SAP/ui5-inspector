@@ -73,6 +73,7 @@ html {
 }
 body {
   color: #222;
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   font-family: Consolas, Lucida Console, monospace;
@@ -1064,17 +1065,20 @@ odata-detail-view {
 }
 elements-registry-master-view {
   display: flex;
-  flex-direction: column;
   overflow: hidden;
   position: relative;
-  flex: 1 1 0;
-  flex-wrap: nowrap;
   width: 100%;
   cursor: default;
   font-family: ".SFNSDisplay-Regular", "Helvetica Neue", "Lucida Grande", sans-serif;
   font-size: 12px;
   tab-size: 4;
   user-select: none;
+}
+elements-registry-master-view #elementsRegistryContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  flex-wrap: nowrap;
 }
 elements-registry-master-view span[is="dt-icon-label"] {
   flex: 0 0 auto;

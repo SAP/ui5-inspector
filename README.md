@@ -26,7 +26,7 @@ The latest released version is 0.9.10 and can be downloaded and installed as fol
 
 ## Local development and use
 
-You can get the source code locally and contribute the the project.
+You can get the source code locally and contribute to the project.
 
 1. Clone the project locally: `git clone git@github.com:SAP/ui5-inspector.git`
 2. Install dependencies with the following commands: `npm install`

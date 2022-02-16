@@ -1,7 +1,7 @@
 'use strict';
 
 // Create a port with background page for continuous message communication
-var port = chrome.extension.connect({name: 'devtools-initialize-tabId-' + chrome.devtools.inspectedWindow.tabId});
+var port = chrome.runtime.connect({name: 'devtools-initialize-tabId-' + chrome.devtools.inspectedWindow.tabId});
 
 /**
  * Find the ID of the nearest UI5 control from the current selected element in Chrome elements panel.

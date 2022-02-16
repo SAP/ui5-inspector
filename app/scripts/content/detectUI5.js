@@ -3,7 +3,7 @@
 
     // Inject a script file in the current page
     var script = document.createElement('script');
-    script.src = chrome.extension.getURL('/scripts/injected/detectUI5.js');
+    script.src = chrome.runtime.getURL('/scripts/injected/detectUI5.js');
     document.head.appendChild(script);
 
     /**
@@ -14,7 +14,7 @@
     };
 
     // Create a port with background page for continuous message communication
-    var port = chrome.extension.connect({name: 'do-ui5-detection'});
+    var port = chrome.runtime.connect({name: 'do-ui5-detection'});
 
     // Listen for messages from the background page
     port.onMessage.addListener(function (message) {

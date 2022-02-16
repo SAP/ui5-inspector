@@ -15,11 +15,26 @@ var pageAction = {
         var version = options.version;
         var tabId = options.tabId;
 
-        chrome.pageAction.show(tabId);
-        chrome.pageAction.setTitle({
+        chrome.action.setTitle({
             tabId: tabId,
             title: 'This page is using ' + framework + ' v' + version
         });
+    },
+
+    /**
+     * Disable page action.
+     *
+     */
+    disable: function () {
+        chrome.action.disable();
+    },
+
+    /**
+     * Enable page action.
+     *
+     */
+    enable: function () {
+        chrome.action.enable();
     }
 };
 

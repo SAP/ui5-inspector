@@ -28,7 +28,7 @@
 
     // Create a port with background page for continuous message communication
     // ================================================================================
-    var port = chrome.extension.connect({name: 'devtools-tabId-' + chrome.devtools.inspectedWindow.tabId});
+    var port = chrome.runtime.connect({name: 'devtools-tabId-' + chrome.devtools.inspectedWindow.tabId});
 
     // Bootstrap for 'Control inspector' tab
     // ================================================================================

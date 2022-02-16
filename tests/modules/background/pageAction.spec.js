@@ -26,13 +26,13 @@ describe('pageAction', function () {
         var pageActionSetTitle;
 
         beforeEach(function () {
-            pageActionShow = sinon.spy(window.chrome.pageAction, 'show');
-            pageActionSetTitle = sinon.spy(window.chrome.pageAction, 'setTitle');
+            pageActionShow = sinon.spy(window.chrome.action, 'show');
+            pageActionSetTitle = sinon.spy(window.chrome.action, 'setTitle');
         });
 
         afterEach(function () {
-            window.chrome.pageAction.show.restore();
-            window.chrome.pageAction.setTitle.restore();
+            window.chrome.action.show.restore();
+            window.chrome.action.setTitle.restore();
         });
 
         it('should call chrome.pageAction.show', function () {

@@ -37,6 +37,10 @@
         "contextMenus",
         "activeTab"
     ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
     "web_accessible_resources": [{
         "matches": [
             "http://*/*",

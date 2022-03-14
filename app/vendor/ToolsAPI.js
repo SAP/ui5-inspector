@@ -622,7 +622,8 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
         var elementRegistry = {
             getRegisteredElements: function () {
                 var oVersionInfo = sap.ui.getVersionInfo(),
-                    isSupported = parseFloat(oVersionInfo.version) >= 1.67,
+                    iVersion = parseInt(oVersionInfo.version.substring(2)),
+                    isSupported = iVersion >= 67,
                     aRegisteredElements = [],
                     oElements;
 

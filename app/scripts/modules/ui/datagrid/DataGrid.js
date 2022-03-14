@@ -2413,7 +2413,6 @@ class ViewportDataGrid extends DataGridImpl {
       scrollTop = maxScrollTop;
     }
     this._updateIsFromUser = false;
-    scrollTop = Math.min(maxScrollTop, scrollTop);
 
     const viewportState = this._calculateVisibleNodes(clientHeight, scrollTop);
     const visibleNodes = viewportState.visibleNodes;

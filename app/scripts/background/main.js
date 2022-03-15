@@ -156,8 +156,6 @@
         _setPort(port, tabId);
     });
 
-    // Wrap in an onInstalled callback in order to avoid unnecessary work
-    // every time the background script is run
     chrome.runtime.onInstalled.addListener(() => {
         // Page actions are disabled by default and enabled on select tabs
         chrome.action.disable();

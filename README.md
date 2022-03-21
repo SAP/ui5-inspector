@@ -14,9 +14,9 @@ See LICENSE.txt for more information.
 
 ## Direct download and use
 
-The latest released version is 0.9.10 and can be downloaded and installed as follows:
+The latest released version is 1.0.0 and can be downloaded and installed as follows:
 
-1. Download zip file from [GitHub as zip](https://github.com/SAP/ui5-inspector/releases/download/v0.9.10/package-0.9.10.zip)
+1. Download zip file from [GitHub as zip](https://github.com/SAP/ui5-inspector/releases)
 2. Unpack to a directory
 3. In Chrome open as url: `chrome://extensions/`. Alternatively, you can access `edge://extensions/` when in Edge. The extensions page is also reachable via the browser's menu.
 4. Check “Developer mode” setting and then choose "Load unpacked extension..."

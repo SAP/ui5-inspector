@@ -1,5 +1,5 @@
 
-// jshint maxstatements:37
+// jshint maxstatements:38
 (function () {
     'use strict';
 
@@ -28,7 +28,7 @@
 
     // Create a port with background page for continuous message communication
     // ================================================================================
-    var port = chrome.extension.connect({name: 'devtools-tabId-' + chrome.devtools.inspectedWindow.tabId});
+    var port = chrome.runtime.connect({name: 'devtools-tabId-' + chrome.devtools.inspectedWindow.tabId});
 
     // Bootstrap for 'Control inspector' tab
     // ================================================================================
@@ -307,9 +307,7 @@
             var overlayNoUI5Section = overlay.querySelector('[no-ui5-version]');
             var overlayUnsupportedVersionSection = overlay.querySelector('[unsupported-version]');
 
-            if (message.isVersionSupported) {
-                overlay.setAttribute('hidden', true);
-            } else {
+            if (!message.isVersionSupported) {
                 overlay.removeAttribute('hidden');
                 overlayNoUI5Section.style.display = 'none';
                 overlayUnsupportedVersionSection.style.display = 'block';
@@ -435,8 +433,17 @@
         });
     });
 
+    // connections auto disconnect after ~5 minutes
+    // so we show a message to reload the page and the panel
+    port.onDisconnect.addListener(function () {
+        var timeout = document.getElementById('timeout');
+        timeout.removeAttribute('hidden');
+    });
+
     // Restart everything when the URL is changed
     chrome.devtools.network.onNavigated.addListener(function () {
         port.postMessage({action: 'do-ui5-detection'});
+        var timeout = document.getElementById('timeout');
+        timeout.setAttribute('hidden', true);
     });
 }());

@@ -4,7 +4,7 @@ var utils = require('../modules/utils/utils.js');
 
 chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
     // Create a port with background page for continuous message communication
-    var port = chrome.extension.connect({name: 'popup-tabId-' + tabs[0].id});
+    var port = chrome.runtime.connect({name: 'popup-tabId-' + tabs[0].id});
 
     // Name space for message handler functions.
     var messageHandler = {

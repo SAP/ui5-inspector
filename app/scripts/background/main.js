@@ -41,8 +41,17 @@
                     framework: framework.name,
                     tabId: messageSender.sender.tab.id
                 });
-            }
 
+                pageAction.enable();
+            }
+        },
+
+        /**
+         * Handler for UI5 none detection on the current inspected page.
+         * @param {Object} message
+         */
+        'on-ui5-not-detected': function (message) {
+            pageAction.disable();
         },
 
         /**
@@ -50,7 +59,12 @@
          * @param {Object} message
          */
         'do-script-injection': function (message) {
-            chrome.tabs.executeScript(message.tabId, {file: message.file});
+            chrome.scripting.executeScript({
+                target: {
+                    tabId: message.tabId
+                },
+                files: [message.file]
+            });
         },
 
         /**
@@ -140,5 +154,10 @@
         }
 
         _setPort(port, tabId);
+    });
+
+    chrome.runtime.onInstalled.addListener(() => {
+        // Page actions are disabled by default and enabled on select tabs
+        chrome.action.disable();
     });
 }());

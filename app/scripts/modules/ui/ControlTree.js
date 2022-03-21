@@ -165,7 +165,9 @@ function ControlTree(id, instantiationOptions) {
     if (areInstantiationOptionsAnObject) {
         options = instantiationOptions;
     } else {
-        options = {};
+        options = {
+            data: {}
+        };
     }
 
     // Save DOM reference

@@ -104,11 +104,16 @@ function _applyTheme(theme) {
     head.appendChild(link);
 }
 
+function _isObjectEmpty(obj) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
 module.exports = {
     formatter: {
         convertUI5TimeStampToHumanReadableFormat: _convertUI5TimeStampToHumanReadableFormat
     },
     resolveMessage: _resolveMessage,
     setOSClassName: _setOSClassNameToBody,
-    applyTheme: _applyTheme
+    applyTheme: _applyTheme,
+    isObjectEmpty: _isObjectEmpty
 };

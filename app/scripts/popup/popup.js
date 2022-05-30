@@ -4,8 +4,9 @@ var utils = require('../modules/utils/utils.js');
 
 chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
     // Create a port with background page for continuous message communication
-    var port = chrome.runtime.connect({name: 'popup-tabId-' + tabs[0].id});
+    var port;
 
+    let connected = false;
     // Name space for message handler functions.
     var messageHandler = {
 
@@ -14,6 +15,10 @@ chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
          * @param {Object} message
          */
         'on-port-connection': function (message) {
+            if (connected) {
+                return;
+            }
+            connected = true;
             port.postMessage({
                 action: 'do-script-injection',
                 tabId: tabs[0].id,
@@ -52,14 +57,24 @@ chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
         }
     };
 
-    // Listen for messages from the background page
-    port.onMessage.addListener(function (message, messageSender, sendResponse) {
-        // Resolve incoming messages
-        utils.resolveMessage({
-            message: message,
-            messageSender: messageSender,
-            sendResponse: sendResponse,
-            actions: messageHandler
+    function setListeners() {
+        // Listen for messages from the background page
+        port.onMessage.addListener(function (message, messageSender, sendResponse) {
+            // Resolve incoming messages
+            utils.resolveMessage({
+                message: message,
+                messageSender: messageSender,
+                sendResponse: sendResponse,
+                actions: messageHandler
+            });
         });
-    });
+    }
+
+    function keepAlive() {
+        port = chrome.runtime.connect({name: 'popup-tabId-' + tabs[0].id});
+        port.onDisconnect.addListener(keepAlive);
+        setListeners();
+    }
+
+    keepAlive();
 });

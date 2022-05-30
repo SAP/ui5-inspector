@@ -3,7 +3,7 @@
 
     var utils = require('../modules/utils/utils.js');
     var highLighter = require('../modules/content/highLighter.js');
-    var port = chrome.runtime.connect({name: 'content'});
+    var port;
 
     // ================================================================================
     // Inject needed scripts into the inspected page
@@ -70,18 +70,30 @@
         }
     };
 
-    port.onMessage.addListener(function (message, messageSender, sendResponse) {
-        // Resolve incoming messages
-        utils.resolveMessage({
-            message: message,
-            messageSender: messageSender,
-            sendResponse: sendResponse,
-            actions: messageHandler
-        });
+    function setListeners() {
+        // Listen for messages from the background page
+        port.onMessage.addListener(function (message, messageSender, sendResponse) {
+            // Resolve incoming messages
+            utils.resolveMessage({
+                message: message,
+                messageSender: messageSender,
+                sendResponse: sendResponse,
+                actions: messageHandler
+            });
 
-        // Send events to injected script
-        sendCustomMessageToInjectedScript(message);
-    });
+            // Send events to injected script
+            sendCustomMessageToInjectedScript(message);
+        });
+    }
+
+    function keepAlive() {
+        port = chrome.runtime.connect({ name: 'content' });
+        port.onDisconnect.addListener(keepAlive);
+        setListeners();
+    }
+
+    keepAlive();
+
 
     /**
      * Listener for messages from the injected script.

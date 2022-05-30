@@ -1,5 +1,5 @@
 
-// jshint maxstatements:38
+// jshint maxstatements:40
 (function () {
     'use strict';
 
@@ -28,7 +28,7 @@
 
     // Create a port with background page for continuous message communication
     // ================================================================================
-    var port = chrome.runtime.connect({name: 'devtools-tabId-' + chrome.devtools.inspectedWindow.tabId});
+    var port;
 
     // Bootstrap for 'Control inspector' tab
     // ================================================================================
@@ -287,6 +287,7 @@
     // Communication
     // ================================================================================
 
+    let connected = false;
     // Name space for message handler functions.
     var messageHandler = {
 
@@ -295,6 +296,10 @@
          * @param {Object} message
          */
         'on-port-connection': function (message) {
+            if (connected) {
+                return;
+            }
+            connected = true;
             port.postMessage({action: 'do-ui5-detection'});
         },
 
@@ -422,28 +427,29 @@
         }
     };
 
-    // Listen for messages from the background page
-    port.onMessage.addListener(function (message, messageSender, sendResponse) {
-        // Resolve incoming messages
-        utils.resolveMessage({
-            message: message,
-            messageSender: messageSender,
-            sendResponse: sendResponse,
-            actions: messageHandler
+    function setListeners() {
+        // Listen for messages from the background page
+        port.onMessage.addListener(function (message, messageSender, sendResponse) {
+            // Resolve incoming messages
+            utils.resolveMessage({
+                message: message,
+                messageSender: messageSender,
+                sendResponse: sendResponse,
+                actions: messageHandler
+            });
         });
-    });
+    }
 
-    // connections auto disconnect after ~5 minutes
-    // so we show a message to reload the page and the panel
-    port.onDisconnect.addListener(function () {
-        var timeout = document.getElementById('timeout');
-        timeout.removeAttribute('hidden');
-    });
+    function keepAlive() {
+        port = chrome.runtime.connect({ name: 'devtools-tabId-' + chrome.devtools.inspectedWindow.tabId });
+        port.onDisconnect.addListener(keepAlive);
+        setListeners();
+    }
+
+    keepAlive();
 
     // Restart everything when the URL is changed
     chrome.devtools.network.onNavigated.addListener(function () {
         port.postMessage({action: 'do-ui5-detection'});
-        var timeout = document.getElementById('timeout');
-        timeout.setAttribute('hidden', true);
     });
 }());

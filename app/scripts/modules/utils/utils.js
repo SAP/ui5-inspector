@@ -108,6 +108,31 @@ function _isObjectEmpty(obj) {
     return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
+function _getPort () {
+    return {
+        postMessage: function (message) {
+            chrome.runtime.sendMessage(message);
+        },
+        onMessage: function (callback) {
+            chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+                callback(request, sender, sendResponse);
+            });
+        }
+    };
+}
+
+/**
+ * Send message to all ports listening.
+ * @param {Object} message
+ */
+function _sendToAll(message) {
+    chrome.windows.getCurrent(w => {
+        chrome.tabs.query({ active: true, windowId: w.id }, tabs => {
+            chrome.tabs.sendMessage(tabs[0].id, message);
+        });
+    });
+}
+
 module.exports = {
     formatter: {
         convertUI5TimeStampToHumanReadableFormat: _convertUI5TimeStampToHumanReadableFormat
@@ -115,5 +140,7 @@ module.exports = {
     resolveMessage: _resolveMessage,
     setOSClassName: _setOSClassNameToBody,
     applyTheme: _applyTheme,
-    isObjectEmpty: _isObjectEmpty
+    isObjectEmpty: _isObjectEmpty,
+    getPort: _getPort,
+    sendToAll: _sendToAll
 };

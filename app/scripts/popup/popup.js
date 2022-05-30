@@ -4,22 +4,10 @@ var utils = require('../modules/utils/utils.js');
 
 chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
     // Create a port with background page for continuous message communication
-    var port = chrome.runtime.connect({name: 'popup-tabId-' + tabs[0].id});
+    var port = utils.getPort();
 
     // Name space for message handler functions.
     var messageHandler = {
-
-        /**
-         * Send object to background page.
-         * @param {Object} message
-         */
-        'on-port-connection': function (message) {
-            port.postMessage({
-                action: 'do-script-injection',
-                tabId: tabs[0].id,
-                file: '/scripts/content/main.js'
-            });
-        },
 
         /**
          * Ask for the framework information, as soon as the main script is injected.
@@ -53,7 +41,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
     };
 
     // Listen for messages from the background page
-    port.onMessage.addListener(function (message, messageSender, sendResponse) {
+    port.onMessage(function (message, messageSender, sendResponse) {
         // Resolve incoming messages
         utils.resolveMessage({
             message: message,
@@ -61,5 +49,11 @@ chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
             sendResponse: sendResponse,
             actions: messageHandler
         });
+    });
+
+    port.postMessage({
+        action: 'do-script-injection',
+        tabId: tabs[0].id,
+        file: '/scripts/content/main.js'
     });
 });

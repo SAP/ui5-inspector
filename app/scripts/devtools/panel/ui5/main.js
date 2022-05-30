@@ -1,5 +1,5 @@
 
-// jshint maxstatements:38
+// jshint maxstatements:40
 (function () {
     'use strict';
 
@@ -28,7 +28,15 @@
 
     // Create a port with background page for continuous message communication
     // ================================================================================
-    var port = chrome.runtime.connect({name: 'devtools-tabId-' + chrome.devtools.inspectedWindow.tabId});
+    var port = Object.assign(utils.getPort(), {
+        onMessage: function (callback) {
+            chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+                if (sender.tab && sender.tab.id === chrome.devtools.inspectedWindow.tabId) {
+                    callback(request, sender, sendResponse);
+                }
+            });
+        }
+    });
 
     // Bootstrap for 'Control inspector' tab
     // ================================================================================
@@ -269,7 +277,7 @@
     });
 
     // Dataview for control events
-    var controlEventsElementsRegistry  = new DataView('elements-registry-control-events', {
+    var controlEventsElementsRegistry = new DataView('elements-registry-control-events', {
 
         /**
          * Method fired when a clickable element is clicked.
@@ -291,14 +299,6 @@
     var messageHandler = {
 
         /**
-         * Send object to background page.
-         * @param {Object} message
-         */
-        'on-port-connection': function (message) {
-            port.postMessage({action: 'do-ui5-detection'});
-        },
-
-        /**
          * Handler for UI5 detection on the current inspected page.
          * @param {Object} message
          */
@@ -306,6 +306,9 @@
             var overlay = document.getElementById('supportability');
             var overlayNoUI5Section = overlay.querySelector('[no-ui5-version]');
             var overlayUnsupportedVersionSection = overlay.querySelector('[unsupported-version]');
+
+            overlay.setAttribute('hidden', true);
+            overlayUnsupportedVersionSection.style.display = 'none';
 
             if (!message.isVersionSupported) {
                 overlay.removeAttribute('hidden');
@@ -423,7 +426,7 @@
     };
 
     // Listen for messages from the background page
-    port.onMessage.addListener(function (message, messageSender, sendResponse) {
+    port.onMessage(function (message, messageSender, sendResponse) {
         // Resolve incoming messages
         utils.resolveMessage({
             message: message,
@@ -433,17 +436,10 @@
         });
     });
 
-    // connections auto disconnect after ~5 minutes
-    // so we show a message to reload the page and the panel
-    port.onDisconnect.addListener(function () {
-        var timeout = document.getElementById('timeout');
-        timeout.removeAttribute('hidden');
-    });
+    port.postMessage({ action: 'do-ui5-detection' });
 
     // Restart everything when the URL is changed
     chrome.devtools.network.onNavigated.addListener(function () {
-        port.postMessage({action: 'do-ui5-detection'});
-        var timeout = document.getElementById('timeout');
-        timeout.setAttribute('hidden', true);
+        port.postMessage({ action: 'do-ui5-detection' });
     });
 }());

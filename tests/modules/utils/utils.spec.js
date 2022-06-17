@@ -130,4 +130,15 @@ describe('utils', function () {
             expect(document.getElementById('ui5inspector-theme').href).to.have.string('/styles/themes/light/light.css');
         });
     });
+
+    describe('#getPort()', function () {
+
+        it('should return port object', function () {
+
+            var port = utils.getPort('dark');
+
+            port.onMessage.should.be.a('function');
+            port.postMessage.should.be.a('function');
+        });
+    });
 });

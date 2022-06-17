@@ -1,7 +1,9 @@
 'use strict';
 
+var utils = require('../../modules/utils/utils.js');
+
 // Create a port with background page for continuous message communication
-var port = chrome.runtime.connect({name: 'devtools-initialize-tabId-' + chrome.devtools.inspectedWindow.tabId});
+var port = utils.getPort();
 
 /**
  * Find the ID of the nearest UI5 control from the current selected element in Chrome elements panel.

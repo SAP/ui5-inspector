@@ -14,7 +14,7 @@ See LICENSE.txt for more information.
 
 ## Direct download and use
 
-The latest released version is 1.0.0 and can be downloaded and installed as follows:
+The latest released version is 1.0.1 and can be downloaded and installed as follows:
 
 1. Download zip file from [GitHub as zip](https://github.com/SAP/ui5-inspector/releases)
 2. Unpack to a directory

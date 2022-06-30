@@ -93,8 +93,7 @@ function _generateValueOptions(value, type) {
     var types;
     var i;
 
-    if (Object.keys(type).length)
-    {
+    if (Object.keys(type).length) {
         types = Object.keys(type);
 
         for (i = 0; i < types.length; i++) {
@@ -396,7 +395,7 @@ module.exports = {
     formatValueForDataView: _formatValueForDataView,
     getCorrectedValue: _getCorrectedValue,
     getObjectLength: _getObjectLength,
-    getObjectProperty:_getObjectProperty,
+    getObjectProperty: _getObjectProperty,
     getULAttributesFromOptions: _getULAttributesFromOptions,
     getNoDataHTML: _getNoDataHTML,
     openUL: _openUL,

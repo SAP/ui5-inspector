@@ -23,6 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* eslint-disable consistent-this */
 // jshint ignore: start
 
 var UIUtils = require('./UIUtils.js');
@@ -143,7 +144,6 @@ class ObjectWrapper {
 }
 
 
-
 /**
  * @unrestricted
  * @template NODE_TYPE
@@ -158,7 +158,7 @@ class DataGridImpl extends ObjectWrapper {
     this.element = createElementWithClass('div', 'data-grid');
     this.element.tabIndex = 0;
     this.element.addEventListener('keydown', this._keyDown.bind(this), false);
-    //this.element.addEventListener('contextmenu', this._contextMenu.bind(this), true);
+    // this.element.addEventListener('contextmenu', this._contextMenu.bind(this), true);
     this.element.addEventListener('focusin', event => {
       this.updateGridAccessibleName(/* text */ undefined, /* readGridName */ true);
       event.consume(true);
@@ -759,7 +759,7 @@ class DataGridImpl extends ObjectWrapper {
    * @param {string} name
    */
   setName(name) {
-    //this._columnWeightsSetting = self.Common.settings.createSetting('dataGrid-' + name + '-columnWeights', {});
+    // this._columnWeightsSetting = self.Common.settings.createSetting('dataGrid-' + name + '-columnWeights', {});
     this._loadColumnWeights();
   }
 
@@ -1026,6 +1026,7 @@ class DataGridImpl extends ObjectWrapper {
 
     let nextSelectedNode;
     // Skip subtree being deleted when looking for the next selectable node.
+    // eslint-disable-next-line no-empty
     for (ancestor = root; ancestor && !ancestor.nextSibling; ancestor = ancestor.parent) {
     }
     if (ancestor) {
@@ -2216,7 +2217,6 @@ class CreationDataGridNode extends DataGridNode {
 }
 
 
-
 /**
  * @unrestricted
  * @extends {DataGridImpl<!NODE_TYPE>}
@@ -2496,9 +2496,9 @@ class ViewportDataGrid extends DataGridImpl {
 /**
  * @override @suppress {checkPrototypalTypes} @enum {symbol}
  */
-/*export const Events = {
+/* export const Events = {
   ViewportCalculated: Symbol('ViewportCalculated')
-};*/
+}; */
 
 /**
  * @unrestricted
@@ -2694,7 +2694,7 @@ class ViewportDataGridNode extends DataGridNode {
       this.existingElement().classList.remove('expanded');
     }
     if (this.selected) {
-      //this.dataGrid.updateGridAccessibleName(/* text */ ls`collapsed`);
+      // this.dataGrid.updateGridAccessibleName(/* text */ ls`collapsed`);
     }
     this.dataGrid.scheduleUpdateStructure();
   }
@@ -2748,8 +2748,6 @@ class ViewportDataGridNode extends DataGridNode {
     super.recalculateSiblings(index);
   }
 }
-
-
 
 
 /**

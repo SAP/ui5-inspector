@@ -70,6 +70,7 @@ function _applyInlineStylesForCloseButton(_splitterInstance) {
  * @private
  */
 function _applyInlineStyles(_splitterInstance, _skipSizing) {
+    // eslint-disable-next-line consistent-this
     var that = _splitterInstance;
     var $end = that.$this.querySelector('end');
     var skipSizing = _skipSizing || false;

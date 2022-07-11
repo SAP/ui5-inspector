@@ -51,7 +51,7 @@
     "load-grunt-config": "~3.0.1",
     "load-grunt-tasks": "~5.1.0",
     "prettify-xml": "^1.2.0",
-    "semantic-release": "^17.4.4",
+    "semantic-release": "^19.0.3",
     "sinon": "~9.0.2",
     "time-grunt": "~2.0.0"
   },

@@ -269,9 +269,9 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          * @param {Object} event
          */
         'do-context-menu-copy-html': function (event) {
-            var elementID = event.detail.target,
-                navigatorClipBoard = navigator && navigator.clipboard,
-                selectedElement;
+            var elementID = event.detail.target;
+            var navigatorClipBoard = navigator && navigator.clipboard;
+            var selectedElement;
 
             if (typeof elementID !== 'string') {
                 console.warn('Please use a valid string parameter');

@@ -603,12 +603,12 @@ ControlTree.prototype._onTreeElementMouseHover = function (event) {
  */
 ControlTree.prototype._createHandlers = function () {
     this._treeContainer.onclick = this._onArrowClick.bind(this);
-    this._treeContainer.addEventListener("contextmenu", function () {
+    this._treeContainer.addEventListener('contextmenu', function () {
         chrome.contextMenus.update('context-menu-copy-html', {
             enabled: false
         });
 
-        window.addEventListener("blur", _onWindowFocusLost);
+        window.addEventListener('blur', _onWindowFocusLost);
     });
     this._filterContainer.onkeyup = this._onSearchInput.bind(this);
     this._filterContainer.onsearch = this._onSearchEvent.bind(this);

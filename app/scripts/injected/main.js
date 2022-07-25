@@ -68,6 +68,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
      */
     function _writeInClipboardFromDevTools(text) {
         return new Promise((resolve, reject) => {
+            /* jshint ignore:start */
             var _asyncCopyFn = (async () => {
                 try {
                     var value = await navigator.clipboard.writeText(text);
@@ -75,15 +76,16 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
                 } catch (e) {
                     reject(e);
                 }
-                window.removeEventListener("focus", _asyncCopyFn);
+                window.removeEventListener('focus', _asyncCopyFn);
             });
 
-            window.addEventListener("focus", _asyncCopyFn);
+            window.addEventListener('focus', _asyncCopyFn);
+            /* jshint ignore:end */
 
-            var event = new Event("focus");
+            var event = new Event('focus');
             window.dispatchEvent(event);
         });
-    };
+    }
 
     /**
      * Sets control's property.

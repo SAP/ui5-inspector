@@ -20,7 +20,7 @@
 
             // Get framework version
             try {
-                responseToContentScriptBody.framework.version = sap.ui.getVersionInfo().version;
+                responseToContentScriptBody.framework.version = sap.ui.getCore().getConfiguration().getVersion().toString();
             } catch (e) {
                 responseToContentScriptBody.framework.version = '';
             }

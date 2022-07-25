@@ -1,5 +1,5 @@
 'use strict';
-
+var oContextMenusCreated = {};
 /**
  * Context menu.
  * @param {Object} options
@@ -26,13 +26,16 @@ function ContextMenu(options) {
 ContextMenu.prototype.create = function () {
     var that = this;
 
-    chrome.contextMenus.create({
-        title: that._title,
-        id: that._id,
-        contexts: that._contexts
-    });
+    if (!oContextMenusCreated[that._id]) {
+        chrome.contextMenus.create({
+            title: that._title,
+            id: that._id,
+            contexts: that._contexts
+        });
 
-    chrome.contextMenus.onClicked.addListener(that._onClickHandler.bind(that));
+        chrome.contextMenus.onClicked.addListener(that._onClickHandler.bind(that));
+        oContextMenusCreated[that._id] = true;
+    }
 };
 
 /**
@@ -40,6 +43,7 @@ ContextMenu.prototype.create = function () {
  */
 ContextMenu.prototype.removeAll = function () {
     chrome.contextMenus.removeAll();
+    oContextMenusCreated = {};
 };
 
 /**

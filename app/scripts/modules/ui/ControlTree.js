@@ -149,6 +149,18 @@ function _findNearestDOMParent(element, parentNodeName) {
 }
 
 /**
+ * Enables the Copy HTML contextMenu when focus of the ControlTree's window is lost
+ * @private
+ */
+function _onWindowFocusLost () {
+    chrome.contextMenus.update('context-menu-copy-html', {
+        enabled: true
+    });
+
+    window.removeEventListener(_onWindowFocusLost);
+}
+
+/**
  * ControlTree constructor.
  * @param {string} id - The id of the DOM container
  * @param {ControlTree} instantiationOptions
@@ -591,6 +603,13 @@ ControlTree.prototype._onTreeElementMouseHover = function (event) {
  */
 ControlTree.prototype._createHandlers = function () {
     this._treeContainer.onclick = this._onArrowClick.bind(this);
+    this._treeContainer.addEventListener('contextmenu', function () {
+        chrome.contextMenus.update('context-menu-copy-html', {
+            enabled: false
+        });
+
+        window.addEventListener('blur', _onWindowFocusLost);
+    });
     this._filterContainer.onkeyup = this._onSearchInput.bind(this);
     this._filterContainer.onsearch = this._onSearchEvent.bind(this);
     this._filterContainer.onchange = this._onOptionsChange.bind(this);

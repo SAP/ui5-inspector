@@ -11,14 +11,32 @@
         contexts: ['all']
     });
 
+    var contextMenuCopyHtml = new ContextMenu({
+        title: 'Copy HTML',
+        id: 'context-menu-copy-html',
+        contexts: ['all']
+    });
+
     /**
-     * This method will be fired when an instanced is clicked. The idea is to be overwritten from the instance.
+     * This method will be fired when an instance is clicked. The idea is to be overwritten from the instance.
      * @param {Object} info - Information sent when a context menu item is clicked. Check chrome.contextMenus.onClicked.
      * @param {Object} tab - The details of the tab where the click took place.
      */
     contextMenu.onClicked = function (info, tab) {
         utils.sendToAll({
-            action: 'on-contextMenu-control-select',
+            action: 'do-context-menu-control-select',
+            target: contextMenu._rightClickTarget
+        }, tab.id);
+    };
+
+    /**
+     * This method will be fired when an instance is clicked. The idea is to be overwritten from the instance.
+     * @param {Object} info - Information sent when a context menu item is clicked. Check chrome.contextMenus.onClicked.
+     * @param {Object} tab - The details of the tab where the click took place.
+     */
+     contextMenuCopyHtml.onClicked = function (info, tab) {
+        utils.sendToAll({
+            action: 'do-context-menu-copy-html',
             target: contextMenu._rightClickTarget
         }, tab.id);
     };
@@ -84,6 +102,7 @@
          */
         'on-ui5-devtool-show': function (message) {
             contextMenu.create();
+            contextMenuCopyHtml.create();
         },
 
         /**
@@ -92,6 +111,7 @@
          */
         'on-ui5-devtool-hide': function (message) {
             contextMenu.removeAll();
+            contextMenuCopyHtml.removeAll();
         }
     };
 

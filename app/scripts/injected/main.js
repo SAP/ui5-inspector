@@ -62,6 +62,32 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
     mutation.init();
 
     /**
+     * Writes HTML content of a Control in the user's clipboard
+     * @param {String} text
+     * @private
+     */
+    function _writeInClipboardFromDevTools(text) {
+        return new Promise((resolve, reject) => {
+            /* jshint ignore:start */
+            var _asyncCopyFn = (async () => {
+                try {
+                    var value = await navigator.clipboard.writeText(text);
+                    resolve(value);
+                } catch (e) {
+                    reject(e);
+                }
+                window.removeEventListener('focus', _asyncCopyFn);
+            });
+
+            window.addEventListener('focus', _asyncCopyFn);
+            /* jshint ignore:end */
+
+            var event = new Event('focus');
+            window.dispatchEvent(event);
+        });
+    }
+
+    /**
      * Sets control's property.
      * @param {Object} oControl
      * @param {Object} oData - property's data
@@ -225,6 +251,40 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
                     target: sControlId
                 }
             });
+        },
+
+        /**
+         * Selects Control with context menu click.
+         * @param {Object} event
+         */
+        'do-context-menu-control-select': function (event) {
+            message.send({
+                action: 'on-contextMenu-control-select',
+                target: event.detail.target
+            });
+        },
+
+        /**
+         * Copies HTML of Control with context menu click.
+         * @param {Object} event
+         */
+        'do-context-menu-copy-html': function (event) {
+            var elementID = event.detail.target;
+            var navigatorClipBoard = navigator && navigator.clipboard;
+            var selectedElement;
+
+            if (typeof elementID !== 'string') {
+                console.warn('Please use a valid string parameter');
+                return;
+            }
+
+            if (!navigatorClipBoard) {
+                console.warn('This functionality is not enabled');
+                return;
+            }
+
+            selectedElement = document.getElementById(elementID);
+            _writeInClipboardFromDevTools(selectedElement.outerHTML);
         }
     };
 

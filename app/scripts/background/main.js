@@ -18,7 +18,7 @@
     });
 
     /**
-     * This method will be fired when an instanced is clicked. The idea is to be overwritten from the instance.
+     * This method will be fired when an instance is clicked. The idea is to be overwritten from the instance.
      * @param {Object} info - Information sent when a context menu item is clicked. Check chrome.contextMenus.onClicked.
      * @param {Object} tab - The details of the tab where the click took place.
      */
@@ -30,7 +30,7 @@
     };
 
     /**
-     * This method will be fired when an instanced is clicked. The idea is to be overwritten from the instance.
+     * This method will be fired when an instance is clicked. The idea is to be overwritten from the instance.
      * @param {Object} info - Information sent when a context menu item is clicked. Check chrome.contextMenus.onClicked.
      * @param {Object} tab - The details of the tab where the click took place.
      */

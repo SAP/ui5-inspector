@@ -1,5 +1,7 @@
 /* globals ResizeObserver */
 
+'use strict';
+
 const DataGrid = require('./datagrid/DataGrid.js');
 const UIUtils = require('./datagrid/UIUtils.js');
 

@@ -33,8 +33,6 @@ splitter {
         overflow: hidden;
         position: relative;
         transform: translateZ(0);
-        word-break: break-all;
-        min-width: 100px;
     }
 
     /* right */
@@ -110,7 +108,7 @@ splitter {
         top: 0;
     }
 
-    &[orientation="vertical"] {
+    &.verticalOrientation {
         flex-direction: column;
 
         & > start {

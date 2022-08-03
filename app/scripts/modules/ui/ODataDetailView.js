@@ -1,3 +1,5 @@
+/* globals ResizeObserver */
+
 'use strict';
 
 /**
@@ -20,6 +22,11 @@ function ODataDetailView(containerId) {
     this.oEditor.getSession().setUseWrapMode(true);
 
     this._setTheme();
+
+    const oResizeObserver = new ResizeObserver(function () {
+        this.oEditor.resize();
+    }.bind(this));
+    oResizeObserver.observe(this.oEditorDOM);
 }
 
 /**

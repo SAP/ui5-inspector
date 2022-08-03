@@ -7,11 +7,11 @@ describe('Splitter', function () {
 
     beforeEach(function () {
         fixtures.innerHTML = '' +
-            '<div style="display:flex; height: 200px; border: solid 1px;">' +
-            '<splitter id="vertical-splitter" orientation="vertical"><start>start</start><end>end</end></splitter>' +
+            '<div style="display:flex; height: 200px; width: 600px; border: solid 1px;">' +
+            '<splitter id="vertical-splitter"><start>start</start><end>end</end></splitter>' +
             '</div>' +
-            '<div style="display:flex; height: 200px; border: solid 1px;">' +
-            '<splitter id="horizontal-splitter" orientation="horizontal"><start>start</start><end>end</end></splitter>' +
+            '<div style="display:flex; height: 200px; width: 1000px; border: solid 1px;">' +
+            '<splitter id="horizontal-splitter"><start>start</start><end>end</end></splitter>' +
             '</div>';
     });
 
@@ -20,13 +20,13 @@ describe('Splitter', function () {
     });
 
     describe('constructor', function () {
-        it('should create horizontal splitter with fixed width for the start container', function () {
+        it('should create splitter with fixed width for the start container', function () {
             var splitter = new Splitter('horizontal-splitter', {
                 startContainerWidth: '400px'
             });
 
             splitter.$this.querySelector('start').style.width.should.equal('400px');
-        });
+        }); 
 
         it('should create horizontal splitter with fixed width for the end container', function () {
             var splitter = new Splitter('horizontal-splitter', {
@@ -90,7 +90,39 @@ describe('Splitter', function () {
 
     });
 
-    describe('#hideEndContainer()', function () {
+    describe('responsiveness', function () {
+        it('should switch from horizontal to vertical on width change', function () {
+            var splitter = new Splitter('horizontal-splitter');
+
+            // check preconditions
+            splitter.$this.classList.contains('verticalOrientation').should.equal(false);
+
+            // Act: resize the container
+            splitter.$this.parentElement.style.width = '600px';
+
+            // call the resize listener synchronously
+            splitter._onResize();
+
+            splitter.$this.classList.contains('verticalOrientation').should.equal(true);
+        });
+
+        it('should switch from vertical to horizontal on width change', function () {
+            var splitter = new Splitter('vertical-splitter');
+
+            // check preconditions
+            splitter.$this.classList.contains('verticalOrientation').should.equal(true);
+
+            // Act: resize the container
+            splitter.$this.parentElement.style.width = '1000px';
+
+            // call the resize listener synchronously
+            splitter._onResize();
+
+            splitter.$this.classList.contains('verticalOrientation').should.equal(false);
+        });
+    });
+
+     describe('#hideEndContainer()', function () {
         it('should hide end container', function () {
             var splitter = new Splitter('vertical-splitter');
 

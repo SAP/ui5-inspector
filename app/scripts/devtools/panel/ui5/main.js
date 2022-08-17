@@ -46,7 +46,7 @@
     var UI5TabBar = new TabBar('ui5-tabbar');
 
     // Horizontal Splitter for 'Control Inspector' tab
-    var controlInspectorHorizontalSplitter = new Splitter('horizontal-splitter', {
+    var controlInspectorHorizontalSplitter = new Splitter('control-inspector-splitter', {
         endContainerWidth: '400px'
     });
 
@@ -163,7 +163,7 @@
 
     // Bootstrap for 'OData' tab
     // ================================================================================
-    var odataHorizontalSplitter = new Splitter('odata-horizontal-splitter', {
+    var odataHorizontalSplitter = new Splitter('odata-splitter', {
         endContainerWidth: '50%',
         isEndContainerClosable: true,
         hideEndContainer: true
@@ -216,7 +216,7 @@
     });
 
     // Horizontal Splitter for 'Elements Registry' tab
-    var controlInspectorHorizontalSplitterElementsRegistry = new Splitter('elements-registry-horizontal-splitter', {
+    var controlInspectorHorizontalSplitterElementsRegistry = new Splitter('elements-registry-splitter', {
         endContainerWidth: '400px'
     });
 

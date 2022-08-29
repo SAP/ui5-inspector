@@ -18,7 +18,7 @@
 
                 <!-- UI5 Tab /start-->
                 <content for="control-tree-tab">
-                    <splitter id="horizontal-splitter">
+                    <splitter id="control-inspector-splitter">
                         <!-- SplitContainer left side /start-->
                         <start>
                             <control-tree id="control-tree"></control-tree>
@@ -42,7 +42,7 @@
                                         <data-view id="control-properties"></data-view>
                                     </content>
                                     <content for="tab-bindings">
-                                        <splitter id="control-bindings-splitter" orientation="vertical">
+                                        <splitter id="control-bindings-splitter">
                                             <start>
                                                 <data-view id="control-bindings-left"></data-view>
                                             </start>
@@ -75,7 +75,7 @@
 
                 <!-- OData /start-->
                 <content for="odata-tab" class="odataTab">
-                    <splitter id="odata-horizontal-splitter">
+                    <splitter id="odata-splitter">
                         <!-- SplitContainer begin side /start-->
                         <start>
                             <odata-master-view id="odata-tab-master"/>
@@ -93,7 +93,7 @@
 
                 <!-- Elements registry /start-->
                 <content for="elements-registry-tab" class="elementsRegistry">
-                    <splitter id="elements-registry-horizontal-splitter">
+                    <splitter id="elements-registry-splitter">
                         <!-- SplitContainer top side /start-->
                         <start>
                             <elements-registry-master-view id="elements-registry-tab-master"/>
@@ -117,7 +117,7 @@
                                         <data-view id="elements-registry-control-properties"></data-view>
                                     </content>
                                     <content for="elements-registry-tab-bindings">
-                                        <splitter id="elements-registry-control-bindings-splitter" orientation="vertical">
+                                        <splitter id="elements-registry-control-bindings-splitter">
                                             <start>
                                                 <data-view id="elements-registry-control-bindings-left"></data-view>
                                             </start>

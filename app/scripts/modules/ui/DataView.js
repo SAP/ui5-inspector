@@ -55,6 +55,8 @@ function DataView(target, options) {
     if (options) {
 
         this.onPropertyUpdated = options.onPropertyUpdated || this.onPropertyUpdated;
+        this.onControlInvalidated = options.onControlInvalidated || this.onControlInvalidated;
+        this.onControlFocused = options.onControlFocused || this.onControlFocused;
 
         this.onValueClick = options.onValueClick || this.onValueClick;
 
@@ -279,6 +281,12 @@ DataView.prototype._generateHTML = function () {
         return;
     }
 
+    html += DVHelper.openUL();
+    html += DVHelper.openLI();
+    html += DVHelper.addToolsButtons(viewObjects.own.options);
+    html += DVHelper.closeLI();
+    html += DVHelper.closeUL();
+
     // Go trough all the objects on the top level in the data structure and
     // skip the ones that does not have anything to display
     for (var key in viewObjects) {
@@ -325,6 +333,7 @@ DataView.prototype._addSectionTitle = function (config, htmlPart) {
     html += htmlPart;
     html += DVHelper.closeLI();
     html += DVHelper.closeUL();
+
 
     return html;
 };
@@ -392,6 +401,14 @@ DataView.prototype._onClickHandler = function () {
         if (targetElement.nodeName === 'INPUT') {
             that._onCheckBoxHandler(targetElement);
         }
+
+        if (targetElement.nodeName === 'BUTTON') {
+            switch (targetElement.id) {
+                case 'control-invalidate' : that._onInvalidateElement(targetElement); break;
+                case 'control-focus' : that._onFocusElement(targetElement); break;
+            }
+        }
+
     };
 };
 
@@ -421,6 +438,27 @@ DataView.prototype._onEnterHandler = function () {
             e.target.blur();
         }
     };
+};
+
+DataView.prototype._onInvalidateElement = function (target) {
+    var that = this;
+        var propertyData = {};
+
+        propertyData.controlId = target.getAttribute('data-control-id');
+
+        that.onControlInvalidated(propertyData);
+
+};
+
+DataView.prototype._onFocusElement = function (target) {
+    var that = this;
+        var propertyData = {};
+
+        propertyData.controlId = target.getAttribute('data-control-id');
+
+        that.onControlFocused(propertyData);
+
+
 };
 
 /**

@@ -58,6 +58,16 @@ function _closeLI() {
 }
 
 /**
+ * Create "invalidate" and "focus" buttons.
+ * @returns {string}
+ * @private
+ */
+function addToolsButtons(options) {
+    return '<button id="control-invalidate" data-control-id="' + options.controlId + '">Invalidate</button>' +
+    '<button id="control-focus" data-control-id="' + options.controlId + '">Focus</button>';
+}
+
+/**
  * @param {Object|Array} element
  * @returns {number}
  * @private
@@ -387,6 +397,7 @@ function _getObjectProperty(sourceObject, path) {
 
 module.exports = {
     addArrow: _addArrow,
+    addToolsButtons: addToolsButtons,
     addKeyTypeInfoBegin: _addKeyTypeInfoBegin,
     addKeyTypeInfoEnd: _addKeyTypeInfoEnd,
     closeLI: _closeLI,

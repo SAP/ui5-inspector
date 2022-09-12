@@ -230,6 +230,38 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             });
         },
 
+        'do-control-invalidate': function (event) {
+            var oData = event.detail.data;
+            var sControlId = oData.controlId;
+            var oControl = sap.ui.getCore().byId(sControlId);
+
+            if (!oControl) {
+                return;
+            }
+
+            oControl.invalidate();
+
+            // Update the DevTools with the actual property value of the control
+            this['do-control-select']({
+                detail: {
+                    target: sControlId
+                }
+            });
+        },
+
+        'do-control-focus': function (event) {
+            var oData = event.detail.data;
+            var sControlId = oData.controlId;
+            var oControl = sap.ui.getCore().byId(sControlId);
+
+            if (!oControl) {
+                return;
+            }
+
+            oControl.focus();
+
+        },
+
         /**
          * Change control property, based on editing in the DataView.
          * @param {Object} event

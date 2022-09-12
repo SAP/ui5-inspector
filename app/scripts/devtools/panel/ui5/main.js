@@ -1,5 +1,5 @@
 
-// jshint maxstatements:37
+// jshint maxstatements:40
 (function () {
     'use strict';
 
@@ -28,7 +28,15 @@
 
     // Create a port with background page for continuous message communication
     // ================================================================================
-    var port = chrome.extension.connect({name: 'devtools-tabId-' + chrome.devtools.inspectedWindow.tabId});
+    var port = Object.assign(utils.getPort(), {
+        onMessage: function (callback) {
+            chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+                if (sender.tab && sender.tab.id === chrome.devtools.inspectedWindow.tabId) {
+                    callback(request, sender, sendResponse);
+                }
+            });
+        }
+    });
 
     // Bootstrap for 'Control inspector' tab
     // ================================================================================
@@ -38,7 +46,7 @@
     var UI5TabBar = new TabBar('ui5-tabbar');
 
     // Horizontal Splitter for 'Control Inspector' tab
-    var controlInspectorHorizontalSplitter = new Splitter('horizontal-splitter', {
+    var controlInspectorHorizontalSplitter = new Splitter('control-inspector-splitter', {
         endContainerWidth: '400px'
     });
 
@@ -169,7 +177,7 @@
 
     // Bootstrap for 'OData' tab
     // ================================================================================
-    var odataHorizontalSplitter = new Splitter('odata-horizontal-splitter', {
+    var odataHorizontalSplitter = new Splitter('odata-splitter', {
         endContainerWidth: '50%',
         isEndContainerClosable: true,
         hideEndContainer: true
@@ -222,7 +230,7 @@
     });
 
     // Horizontal Splitter for 'Elements Registry' tab
-    var controlInspectorHorizontalSplitterElementsRegistry = new Splitter('elements-registry-horizontal-splitter', {
+    var controlInspectorHorizontalSplitterElementsRegistry = new Splitter('elements-registry-splitter', {
         endContainerWidth: '400px'
     });
 
@@ -283,7 +291,7 @@
     });
 
     // Dataview for control events
-    var controlEventsElementsRegistry  = new DataView('elements-registry-control-events', {
+    var controlEventsElementsRegistry = new DataView('elements-registry-control-events', {
 
         /**
          * Method fired when a clickable element is clicked.
@@ -305,14 +313,6 @@
     var messageHandler = {
 
         /**
-         * Send object to background page.
-         * @param {Object} message
-         */
-        'on-port-connection': function (message) {
-            port.postMessage({action: 'do-ui5-detection'});
-        },
-
-        /**
          * Handler for UI5 detection on the current inspected page.
          * @param {Object} message
          */
@@ -321,9 +321,10 @@
             var overlayNoUI5Section = overlay.querySelector('[no-ui5-version]');
             var overlayUnsupportedVersionSection = overlay.querySelector('[unsupported-version]');
 
-            if (message.isVersionSupported) {
-                overlay.setAttribute('hidden', true);
-            } else {
+            overlay.setAttribute('hidden', true);
+            overlayUnsupportedVersionSection.style.display = 'none';
+
+            if (!message.isVersionSupported) {
                 overlay.removeAttribute('hidden');
                 overlayNoUI5Section.style.display = 'none';
                 overlayUnsupportedVersionSection.style.display = 'block';
@@ -439,7 +440,7 @@
     };
 
     // Listen for messages from the background page
-    port.onMessage.addListener(function (message, messageSender, sendResponse) {
+    port.onMessage(function (message, messageSender, sendResponse) {
         // Resolve incoming messages
         utils.resolveMessage({
             message: message,
@@ -449,8 +450,10 @@
         });
     });
 
+    port.postMessage({ action: 'do-ui5-detection' });
+
     // Restart everything when the URL is changed
     chrome.devtools.network.onNavigated.addListener(function () {
-        port.postMessage({action: 'do-ui5-detection'});
+        port.postMessage({ action: 'do-ui5-detection' });
     });
 }());

@@ -1,5 +1,7 @@
 /* globals ResizeObserver */
 
+'use strict';
+
 const DataGrid = require('./datagrid/DataGrid.js');
 const UIUtils = require('./datagrid/UIUtils.js');
 
@@ -121,6 +123,7 @@ const COLUMNS = [{
 function OElementsRegistryMasterView(domId, options) {
 
     this.oContainerDOM = document.getElementById(domId);
+    this.sNotSupportedMessage = '<h1>Current version of OpenUI5/SAPUI5 doesn\'t support element registry</h1>';
 
     /**
      * Selects an element.
@@ -132,15 +135,63 @@ function OElementsRegistryMasterView(domId, options) {
         this.onRefreshButtonClicked = options.onRefreshButtonClicked || function () {};
     }
 
-    this.oContainerDOM.appendChild(this._createRefreshButton());
-    this.oContainerDOM.innerHTML += this._createFilter();
+        this.oContainerDOM.appendChild(this._createContent());
+        this.oContainerDOM.appendChild(this._createMessage());
+
+        this._setReferences();
+        this._createHandlers();
+}
+
+/**
+ *
+ * @returns {HTMLElement} - Container holding the content
+ */
+OElementsRegistryMasterView.prototype._createContent = function () {
+    const oContainer = document.createElement('div');
+    oContainer.setAttribute('id', 'elementsRegistryContent');
+
+    oContainer.appendChild(this._createRefreshButton());
+    oContainer.innerHTML += this._createFilter();
 
     this.oDataGrid = this._createDataGrid();
-    this.oContainerDOM.appendChild(this.oDataGrid.element);
+    oContainer.appendChild(this.oDataGrid.element);
 
-    this._setReferences();
-    this._createHandlers();
-}
+    return oContainer;
+};
+
+/**
+ *
+ * @returns {HTMLElement} - Container/placeholder for the ('not supported') message
+ */
+OElementsRegistryMasterView.prototype._createMessage = function () {
+    const oContainer = document.createElement('div');
+    oContainer.setAttribute('id', 'elementsRegistryMessage');
+    oContainer.style.display = 'none';
+
+    return oContainer;
+};
+
+/**
+ * Hides the content and displays a message
+ * @param {String} sMessage html of the message to be displayed
+ */
+OElementsRegistryMasterView.prototype._showMessage = function (sMessage) {
+    if (this._oMessageContainer && this._oContentContainer) {
+        this._oMessageContainer.innerHTML = sMessage;
+        this._oContentContainer.style.display = 'none';
+        this._oMessageContainer.style.display = 'block';
+    }
+};
+
+/**
+ * Show the content and hides the message
+ */
+OElementsRegistryMasterView.prototype._showContent = function () {
+    if (this._oMessageContainer && this._oContentContainer) {
+        this._oMessageContainer.style.display = 'none';
+        this._oContentContainer.style.display = 'flex';
+    }
+};
 
 /**
  * Creates Refresh button.
@@ -183,6 +234,8 @@ OElementsRegistryMasterView.prototype._createHandlers = function () {
  * @private
  */
 OElementsRegistryMasterView.prototype._setReferences = function () {
+    this._oContentContainer = this.oContainerDOM.querySelector('#elementsRegistryContent');
+    this._oMessageContainer = this.oContainerDOM.querySelector('#elementsRegistryMessage');
     this._oFilterContainer = this.oContainerDOM.querySelector('#elementsRegistrySearch');
     this._oFilterCheckBox = this.oContainerDOM.querySelector('#elementsRegistryCheckbox');
     this._oFilterResults = this.oContainerDOM.querySelector('#elementsRegistryResults');
@@ -396,8 +449,10 @@ OElementsRegistryMasterView.prototype.setData = function (data) {
     let oNode;
 
     if (!data.isSupported) {
-        this.oContainerDOM.innerHTML = '<h1>Current version of OpenUI5/SAPUI5 doesn\'t support element registry</h1>';
+        this._showMessage(this.sNotSupportedMessage);
         return;
+    } else {
+        this._showContent();
     }
 
     if (JSON.stringify(oldData) === JSON.stringify(aData)) {

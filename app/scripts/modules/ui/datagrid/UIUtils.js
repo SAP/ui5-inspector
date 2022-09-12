@@ -400,11 +400,11 @@ const Descriptors = {
 registerCustomElement('div', 'dt-close-button', class extends HTMLDivElement {
     constructor() {
         super();
-        //const root = createShadowRootWithCoreStyles(this, 'ui/closeButton.css');
-        //this._buttonElement = root.createChild('div', 'close-button');
+        // const root = createShadowRootWithCoreStyles(this, 'ui/closeButton.css');
+        // this._buttonElement = root.createChild('div', 'close-button');
         this._buttonElement = this.createChild('div', 'close-button');
-        //UI.ARIAUtils.setAccessibleName(this._buttonElement, ls`Close`);
-        //UI.ARIAUtils.markAsButton(this._buttonElement);
+        // UI.ARIAUtils.setAccessibleName(this._buttonElement, ls`Close`);
+        // UI.ARIAUtils.markAsButton(this._buttonElement);
         const regularIcon = Icon.create('smallicon-cross', 'default-icon');
         this._hoverIcon = Icon.create('mediumicon-red-cross-hover', 'hover-icon');
         this._activeIcon = Icon.create('mediumicon-red-cross-active', 'active-icon');

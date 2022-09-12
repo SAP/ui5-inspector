@@ -1,12 +1,16 @@
 
 elements-registry-master-view {
     display: flex;
-    flex-direction: column;
     overflow: hidden;
     position: relative;
-    flex: 1 1 0;
-    flex-wrap: nowrap;
     width: 100%;
+
+    #elementsRegistryContent {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0;
+        flex-wrap: nowrap;
+    }
 
     span[is="dt-icon-label"] { flex: 0 0 auto; }
     [is="ui-icon"] { display: inline-block; flex-shrink: 0; }
@@ -32,7 +36,6 @@ elements-registry-master-view {
         display: flex;
         left: 0;
         line-height: 1;
-        min-width: 550px;
         padding: 5px;
         align-items: center;
     }

@@ -15,13 +15,12 @@ jobs:
         run: npm ci
       - name: Run tests
         run: grunt test
-      # Uploads the artifact to the action assests
-      - uses: actions/upload-artifact@v2
-        with:
-          name: artifact
-          path: dist/
       # Release using semantic-relaease if there are new smenatic commits
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
+      - name: Bump Version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ./.github/actions/bump-version

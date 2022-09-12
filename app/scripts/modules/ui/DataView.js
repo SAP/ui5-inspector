@@ -46,6 +46,20 @@ function DataView(target, options) {
     };
 
     /**
+     * Method fired when the Focus button is clicked.
+     * @param {Object} target - arget control to be focused
+     */
+     this.onControlFocused = function (target) {
+    };
+
+    /**
+     * Method fired when the Invalidate button is clicked.
+     * @param {Object} target - target control to be invalidated
+     */
+     this.onControlInvalidated = function (target) {
+    };
+
+    /**
      * Method fired when a clickable element is clicked.
      * @param {Object} event
      */
@@ -55,10 +69,11 @@ function DataView(target, options) {
     if (options) {
 
         this.onPropertyUpdated = options.onPropertyUpdated || this.onPropertyUpdated;
-        this.onControlInvalidated = options.onControlInvalidated || this.onControlInvalidated;
-        this.onControlFocused = options.onControlFocused || this.onControlFocused;
 
         this.onValueClick = options.onValueClick || this.onValueClick;
+
+        this.onControlInvalidated = options.onControlInvalidated || this.onControlInvalidated;
+        this.onControlFocused = options.onControlFocused || this.onControlFocused;
 
         options.data ? this.setData(options.data) : undefined;
     }
@@ -198,7 +213,7 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
         };
     }
 
-    if (vValue && vValue === 'object') {
+    if (vValue && typeof vValue === 'object') {
         valueHTML = JSONFormatter.formatJSONtoHTML(vValue);
     } else if (typeof type === 'object') {
         valueHTML = DVHelper.wrapInSelectTag(vValue, attributes, type);
@@ -283,7 +298,7 @@ DataView.prototype._generateHTML = function () {
 
     html += DVHelper.openUL();
     html += DVHelper.openLI();
-    html += DVHelper.addToolsButtons(viewObjects.own.options);
+    html += DVHelper.addToolsButtons(viewObjects.own ? viewObjects.own.options : {});
     html += DVHelper.closeLI();
     html += DVHelper.closeUL();
 
@@ -441,21 +456,19 @@ DataView.prototype._onEnterHandler = function () {
 };
 
 DataView.prototype._onInvalidateElement = function (target) {
-    var that = this;
+        var that = this;
         var propertyData = {};
 
         propertyData.controlId = target.getAttribute('data-control-id');
-
         that.onControlInvalidated(propertyData);
 
 };
 
 DataView.prototype._onFocusElement = function (target) {
-    var that = this;
+        var that = this;
         var propertyData = {};
 
         propertyData.controlId = target.getAttribute('data-control-id');
-
         that.onControlFocused(propertyData);
 
 

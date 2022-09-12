@@ -2,7 +2,6 @@
     'use strict';
 
     var utils = require('../modules/utils/utils.js');
-    var messenger = require('../modules/background/messenger.js');
     var ContextMenu = require('../modules/background/ContextMenu.js');
     var pageAction = require('../modules/background/pageAction.js');
 
@@ -12,14 +11,32 @@
         contexts: ['all']
     });
 
+    var contextMenuCopyHtml = new ContextMenu({
+        title: 'Copy HTML',
+        id: 'context-menu-copy-html',
+        contexts: ['all']
+    });
+
     /**
-     * This method will be fired when an instanced is clicked. The idea is to be overwritten from the instance.
+     * This method will be fired when an instance is clicked. The idea is to be overwritten from the instance.
      * @param {Object} info - Information sent when a context menu item is clicked. Check chrome.contextMenus.onClicked.
      * @param {Object} tab - The details of the tab where the click took place.
      */
     contextMenu.onClicked = function (info, tab) {
-        messenger.sendToAll({
-            action: 'on-contextMenu-control-select',
+        utils.sendToAll({
+            action: 'do-context-menu-control-select',
+            target: contextMenu._rightClickTarget
+        }, tab.id);
+    };
+
+    /**
+     * This method will be fired when an instance is clicked. The idea is to be overwritten from the instance.
+     * @param {Object} info - Information sent when a context menu item is clicked. Check chrome.contextMenus.onClicked.
+     * @param {Object} tab - The details of the tab where the click took place.
+     */
+     contextMenuCopyHtml.onClicked = function (info, tab) {
+        utils.sendToAll({
+            action: 'do-context-menu-copy-html',
             target: contextMenu._rightClickTarget
         }, tab.id);
     };
@@ -39,10 +56,19 @@
                 pageAction.create({
                     version: framework.version,
                     framework: framework.name,
-                    tabId: messageSender.sender.tab.id
+                    tabId: messageSender.tab.id
                 });
-            }
 
+                pageAction.enable();
+            }
+        },
+
+        /**
+         * Handler for UI5 none detection on the current inspected page.
+         * @param {Object} message
+         */
+        'on-ui5-not-detected': function (message) {
+            pageAction.disable();
         },
 
         /**
@@ -50,7 +76,16 @@
          * @param {Object} message
          */
         'do-script-injection': function (message) {
-            chrome.tabs.executeScript(message.tabId, {file: message.file});
+            chrome.windows.getCurrent(w => {
+                chrome.tabs.query({ active: true, windowId: w.id }, tabs => {
+                    chrome.scripting.executeScript({
+                        target: {
+                            tabId: tabs[0].id
+                        },
+                        files: [message.file]
+                    });
+                });
+            });
         },
 
         /**
@@ -67,6 +102,7 @@
          */
         'on-ui5-devtool-show': function (message) {
             contextMenu.create();
+            contextMenuCopyHtml.create();
         },
 
         /**
@@ -75,70 +111,24 @@
          */
         'on-ui5-devtool-hide': function (message) {
             contextMenu.removeAll();
+            contextMenuCopyHtml.removeAll();
         }
     };
 
-    /**
-     * Add handler for resolving messages from the other scripts.
-     * @param {Object} port - An object which allows two way communication with other scripts/pages.
-     * @param {string} tabId - The tab ID of the current inspected page.
-     * @private
-     */
-    function _listenForPortMessages(port, tabId) {
-        port.onMessage.addListener(function (message, messageSender, sendResponse) {
-            // Resolve incoming messages
-            utils.resolveMessage({
-                message: message,
-                messageSender: messageSender,
-                sendResponse: sendResponse,
-                actions: messageHandler
-            });
-
-            // Send message to all ports
-            messenger.sendToAll(message, tabId);
+    chrome.runtime.onMessage.addListener(function (request, messageSender, sendResponse) {
+        // Resolve incoming messages
+        utils.resolveMessage({
+            message: request,
+            messageSender: messageSender,
+            sendResponse: sendResponse,
+            actions: messageHandler
         });
-    }
 
-    /**
-     * Delete the disconnected port from 'ports' object.
-     * @param {Object} port - An object which allows two way communication with other scripts/pages.
-     * @param {string} tabId - The tab ID of the current inspected page.
-     * @private
-     */
-    function _listenForPortDisconnect(port, tabId) {
-        port.onDisconnect.addListener(function (port) {
-            messenger.deletePort(port, tabId);
+        utils.sendToAll(request);
+    });
 
-            // Delete the context menu when devtools is closed
-            if (port.name.indexOf('devtools-initialize') !== -1) {
-                contextMenu.removeAll();
-            }
-        });
-    }
-
-    /**
-     * Save the connected port and attache the needed event listeners.
-     * @param {Object} port - An object which allows two way communication with other scripts/pages.
-     * @param {string} tabId - The tab ID of the current inspected page.
-     * @private
-     */
-    function _setPort(port, tabId) {
-        messenger.addPort(port, tabId);
-        _listenForPortMessages(port, tabId);
-        _listenForPortDisconnect(port, tabId);
-    }
-
-    // Listens for messages from devtools panel and content scripts
-    chrome.runtime.onConnect.addListener(function (port) {
-        var splitPortName = port.name.split('-');
-        var tabId;
-
-        if (port.name.indexOf('tabId') !== -1) {
-            tabId = splitPortName[splitPortName.length - 1];
-        } else {
-            tabId = port.sender.tab.id;
-        }
-
-        _setPort(port, tabId);
+    chrome.runtime.onInstalled.addListener(() => {
+        // Page actions are disabled by default and enabled on select tabs
+        chrome.action.disable();
     });
 }());

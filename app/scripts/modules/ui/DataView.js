@@ -198,7 +198,7 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
         };
     }
 
-    if (vValue && vValue === 'object') {
+    if (vValue && typeof vValue === 'object') {
         valueHTML = JSONFormatter.formatJSONtoHTML(vValue);
     } else if (typeof type === 'object') {
         valueHTML = DVHelper.wrapInSelectTag(vValue, attributes, type);

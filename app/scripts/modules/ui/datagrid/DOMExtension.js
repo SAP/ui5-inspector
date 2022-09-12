@@ -81,7 +81,6 @@ Element.prototype.createChild = function(elementName, className, customElementTy
 };
 
 
-
 Element.prototype.removeChildren = function() {
     if (this.firstChild) {
         this.textContent = '';
@@ -102,6 +101,7 @@ Node.prototype.window = function() {
  * @return {?Node}
  */
 Node.prototype.enclosingNodeOrSelfWithNodeNameInArray = function(nameArray) {
+    // eslint-disable-next-line consistent-this
     for (let node = this; node && node !== this.ownerDocument; node = node.parentNodeOrShadowHost()) {
         for (let i = 0; i < nameArray.length; ++i) {
             if (node.nodeName.toLowerCase() === nameArray[i].toLowerCase()) {

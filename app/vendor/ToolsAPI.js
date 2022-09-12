@@ -65,7 +65,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
             return {
                 commonInformation: {
                     frameworkName: _getFrameworkName(oVersionInfo.name),
-                    version: oVersionInfo.version,
+                    version: sap.ui.getCore().getConfiguration().getVersion().toString(),
                     buildTime: oVersionInfo.buildTimestamp,
                     userAgent: navigator.userAgent,
                     applicationHREF: window.location.href,
@@ -621,8 +621,8 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
 
         var elementRegistry = {
             getRegisteredElements: function () {
-                var oVersionInfo = sap.ui.getVersionInfo(),
-                    isSupported = parseFloat(oVersionInfo.version) >= 1.67,
+                var iFrameWorkMinorVersion = sap.ui.getCore().getConfiguration().getVersion().getMinor(),
+                    isSupported = iFrameWorkMinorVersion >= 67,
                     aRegisteredElements = [],
                     oElements;
 
@@ -632,7 +632,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     Object.keys(oElements).forEach(function (sKey) {
                         var oParent = oElements[sKey].getParent();
 
-                        aResults.push({
+                        aRegisteredElements.push({
                             id: oElements[sKey].getId(),
                             type: oElements[sKey].getMetadata().getName(),
                             isControl: oElements[sKey].isA("sap.ui.core.Control"),

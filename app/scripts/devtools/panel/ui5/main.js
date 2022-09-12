@@ -91,6 +91,20 @@
                 action: 'do-control-property-change',
                 data: changeData
             });
+        },
+
+        onControlInvalidated: function (changeData) {
+            port.postMessage({
+                action: 'do-control-invalidate',
+                data: changeData
+            });
+        },
+
+        onControlFocused: function (changeData) {
+            port.postMessage({
+                action: 'do-control-focus',
+                data: changeData
+            });
         }
     });
 

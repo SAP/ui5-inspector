@@ -1,5 +1,4 @@
 const path = require('path');
-const fsPromises = require('fs').promises;
 const core = require('@actions/core');
 const github = require('@actions/github');
 const exec = require('@actions/exec');
@@ -16,36 +15,17 @@ const run = async () => {
     });
 
     core.info('Set variables');
-    const version = latestRelease.data.tag_name;
-    const filePaths = [{
-        filePath: 'package.json',
-        formatSpaces: 2
-    }, {
-        filePath: 'app/manifest.json',
-        formatSpaces: 4
-    }];
+    const version = latestRelease.data.tag_name.slice(1);
 
     core.info('Update files version field');
-    for (let fileObj of filePaths) {
-        let { filePath, formatSpaces } = fileObj;
-        filePath = path.join(process.env.GITHUB_WORKSPACE, filePath);
-        const content = await fsPromises.readFile(filePath);
-        const parsedContent = JSON.parse(content);
-        const newVersion = version.slice(1);
+    await exec.exec('node', [path.join(process.env.GITHUB_WORKSPACE, './scripts/update-version.js'), version]);
 
-        if (parsedContent.version === newVersion) {
-            core.info('No new version to update!');
-            return;
-        }
-
-        parsedContent.version = newVersion;
-        await fsPromises.writeFile(filePath, JSON.stringify(parsedContent, null, formatSpaces));
-    }
-
-    await exec.exec('git', ['config', '--global', 'user.name', 'UI5 Inspector BOT']);
+    await exec.exec('git', ['config', '--global', 'user.name', 'github-actions']);
     await exec.exec('git', ['config', '--global', 'user.email', 'actions@users.noreply.github.com']);
+    await exec.exec('git', ['checkout', '-b', `bump-version-${version}`]);
     await exec.exec('git', ['commit', '-am', `chore: release ${version}`]);
-    await exec.exec('git', ['push', '-u', 'origin', `HEAD:master`]);
+    await exec.exec('git', ['push', '-u', 'origin', `bump-version-${version}`]);
+    await exec.exec('gh', ['pr', 'create', '--fill']);
 };
 
 run()

@@ -4,8 +4,8 @@ const path = require('path');
 const args = process.argv.slice(2);
 console.log('Updating version - ' + args[0]);
 
-const packagePath = path.join(__dirname, '../package.json')
-const manifestPath = path.join(__dirname, '../app/manifest.json')
+const packagePath = path.join(path.dirname(__dirname), 'package.json');
+const manifestPath = path.join(path.dirname(__dirname), 'app/manifest.json');
 
 const version = args[0];
 const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));

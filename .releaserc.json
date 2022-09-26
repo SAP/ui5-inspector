@@ -4,6 +4,12 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "node ./scripts/update-version.js ${nextRelease.version} && npm i"
+        }
+    ],
+    [
       "@semantic-release/github",
       {
         "assets": [

@@ -79,6 +79,7 @@ body {
   font-family: Consolas, Lucida Console, monospace;
   font-size: 12px;
   height: 100%;
+  width: 100%;
   line-height: 14px;
   flex-grow: 1;
 }
@@ -172,6 +173,7 @@ tabbar > contents {
 }
 tabbar > contents > content {
   display: none;
+  width: 100%;
 }
 tabbar > contents > [selected] {
   display: flex;
@@ -314,6 +316,7 @@ data-view {
   overflow: auto;
   width: 100%;
   -webkit-transform: translateZ(0);
+  word-break: break-all;
 }
 data-view clickable-value {
   color: #0000ee;
@@ -409,8 +412,6 @@ splitter > end {
   overflow: hidden;
   position: relative;
   transform: translateZ(0);
-  word-break: break-all;
-  min-width: 100px;
 }
 splitter > end[withHeader] {
   padding-top: 20px;
@@ -470,23 +471,23 @@ splitter > divider handler {
   right: -3px;
   top: 0;
 }
-splitter[orientation="vertical"] {
+splitter.verticalOrientation {
   flex-direction: column;
 }
-splitter[orientation="vertical"] > start {
+splitter.verticalOrientation > start {
   flex: 1 50px;
 }
-splitter[orientation="vertical"] > divider {
+splitter.verticalOrientation > divider {
   height: 1px;
   width: auto;
 }
-splitter[orientation="vertical"] > end {
+splitter.verticalOrientation > end {
   min-height: 50px;
   height: 50%;
   min-width: 0;
   width: auto;
 }
-splitter[orientation="vertical"] > divider handler {
+splitter.verticalOrientation > divider handler {
   bottom: -3px;
   left: 0;
   right: 0;
@@ -1131,7 +1132,6 @@ elements-registry-master-view filter {
   display: flex;
   left: 0;
   line-height: 1;
-  min-width: 550px;
   padding: 5px;
   align-items: center;
 }

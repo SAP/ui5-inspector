@@ -1,10 +1,10 @@
 {
     "manifest_version": 3,
     "name": "UI5 Inspector",
-    "version": "1.0.1",
+    "version": "1.2.1",
     "background": {
         "service_worker": "/scripts/background/main.js"
-      },
+    },
     "content_scripts": [
         {
             "js": [
@@ -22,8 +22,8 @@
     "description": "With the UI5 Inspector, you can easily debug and support your OpenUI5 or SAPUI5-based apps.",
     "devtools_page": "/html/devtools/index.html",
     "icons": {
-        "128": "/images/icon-128.png",
-        "16": "/images/icon-16.png"
+        "16": "/images/icon-16.png",
+        "128": "/images/icon-128.png"
     },
     "action": {
         "default_icon": {
@@ -42,22 +42,24 @@
         "http://*/*",
         "https://*/*"
     ],
-    "web_accessible_resources": [{
-        "matches": [
-            "http://*/*",
-            "https://*/*"
-        ],
-        "resources": [
-            "/scripts/injected/*.js",
-            "/vendor/ToolsAPI.js",
-            "/vendor/ace.js",
-            "/vendor/ext-searchbox.js",
-            "/vendor/mode-json.js",
-            "/vendor/mode-xml.js",
-            "/vendor/theme-chrome.js",
-            "/vendor/theme-vibrant_ink.js",
-            "/vendor/vkbeautify.js",
-            "/modules/utils/multipartmixed2har.js"
-        ]
-    }]
+    "web_accessible_resources": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "resources": [
+                "/scripts/injected/*.js",
+                "/vendor/ToolsAPI.js",
+                "/vendor/ace.js",
+                "/vendor/ext-searchbox.js",
+                "/vendor/mode-json.js",
+                "/vendor/mode-xml.js",
+                "/vendor/theme-chrome.js",
+                "/vendor/theme-vibrant_ink.js",
+                "/vendor/vkbeautify.js",
+                "/modules/utils/multipartmixed2har.js"
+            ]
+        }
+    ]
 }

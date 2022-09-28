@@ -863,4 +863,21 @@ module.exports = {
     getControlEventsFormattedForDataView: function (controlId, events) {
         return controlEvents.formatControlEvents(controlId, events);
     },
+    /**
+     * Returns actions for control.
+     * @param {string} controlId
+     * @returns {Object}
+     */
+    getControlActionsFormattedForDataView: function (controlId) {
+        return {
+            actions: {
+                data: ['Focus', 'Invalidate']
+            },
+            own: {
+                options: {
+                    controlId: controlId
+                }
+            }
+        };
+    }
 };

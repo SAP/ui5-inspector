@@ -160,7 +160,8 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
                 controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
                 controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
                 controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations),
-                controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
+                controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents),
+                controlActions: controlUtils.getControlActionsFormattedForDataView(controlId)
             });
         },
 

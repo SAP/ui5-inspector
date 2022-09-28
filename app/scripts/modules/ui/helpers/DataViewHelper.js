@@ -62,9 +62,8 @@ function _closeLI() {
  * @returns {string}
  * @private
  */
-function addToolsButtons(options) {
-    return '<button id="control-invalidate" data-control-id="' + options.controlId + '">Invalidate</button>' +
-    '<button id="control-focus" data-control-id="' + options.controlId + '">Focus</button>';
+function _addToolsButtons(options, type) {
+    return '<button class="tools-button" id="control-' + type.toLowerCase() + '" data-control-id="' + options.controlId + '">' + type + '</button>';
 }
 
 /**
@@ -397,7 +396,7 @@ function _getObjectProperty(sourceObject, path) {
 
 module.exports = {
     addArrow: _addArrow,
-    addToolsButtons: addToolsButtons,
+    addToolsButtons: _addToolsButtons,
     addKeyTypeInfoBegin: _addKeyTypeInfoBegin,
     addKeyTypeInfoEnd: _addKeyTypeInfoEnd,
     closeLI: _closeLI,

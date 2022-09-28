@@ -157,7 +157,7 @@ function _onWindowFocusLost () {
         enabled: true
     });
 
-    window.removeEventListener(_onWindowFocusLost);
+    window.removeEventListener('blur', _onWindowFocusLost);
 }
 
 /**

@@ -729,6 +729,42 @@ describe('DataView', function () {
 
         });
 
+        // describe('_clickHandler with tools buttins', function () {
+
+        //     var focusButtonElement;
+        //     var dataViewElement;
+        //     var invalidateButtonElement;
+        //     var focusHandlerSpy;
+        //     var invalidateHandlerSpy;
+
+        //     beforeEach(function () {
+        //         sampleView.setData(mockDataWithNestedObject);
+        //         dataViewElement = document.getElementById('data-view');
+        //         focusButtonElement = document.getElementById('control-focus');
+        //         invalidateButtonElement = document.getElementById('control-invalidate');
+        //         focusHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onFocusElement');
+        //         invalidateHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onInvalidateElement');
+        //     });
+
+        //     afterEach(function () {
+        //         dataViewElement = null;
+        //         focusHandlerSpy.restore();
+        //         invalidateHandlerSpy.restore();
+        //     });
+
+        //     it('should call focusHandler once', function () {
+        //         focusButtonElement.click();
+        //         focusHandlerSpy.callCount.should.equal(1);
+        //         focusHandlerSpy.calledWith(focusButtonElement).should.equal(true);
+        //     });
+
+        //     it('should call invalidateHandler once', function () {
+        //         invalidateButtonElement.click();
+        //         invalidateHandlerSpy.callCount.should.equal(1);
+        //         invalidateHandlerSpy.calledWith(invalidateButtonElement).should.equal(true);
+        //     });
+        // });
+
         describe('_blurHandler', function () {
             var sampleView;
             var blurHandlerSpy;

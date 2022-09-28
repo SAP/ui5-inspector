@@ -46,6 +46,20 @@ function DataView(target, options) {
     };
 
     /**
+     * Method fired when the Focus button is clicked.
+     * @param {Object} target - arget control to be focused
+     */
+     this.onControlFocused = function (target) {
+    };
+
+    /**
+     * Method fired when the Invalidate button is clicked.
+     * @param {Object} target - target control to be invalidated
+     */
+     this.onControlInvalidated = function (target) {
+    };
+
+    /**
      * Method fired when a clickable element is clicked.
      * @param {Object} event
      */
@@ -59,6 +73,9 @@ function DataView(target, options) {
         this.onControlFocused = options.onControlFocused || this.onControlFocused;
 
         this.onValueClick = options.onValueClick || this.onValueClick;
+
+        this.onControlInvalidated = options.onControlInvalidated || this.onControlInvalidated;
+        this.onControlFocused = options.onControlFocused || this.onControlFocused;
 
         options.data ? this.setData(options.data) : undefined;
     }
@@ -281,12 +298,6 @@ DataView.prototype._generateHTML = function () {
         return;
     }
 
-    html += DVHelper.openUL();
-    html += DVHelper.openLI();
-    html += DVHelper.addToolsButtons(viewObjects.own.options);
-    html += DVHelper.closeLI();
-    html += DVHelper.closeUL();
-
     // Go trough all the objects on the top level in the data structure and
     // skip the ones that does not have anything to display
     for (var key in viewObjects) {
@@ -295,6 +306,17 @@ DataView.prototype._generateHTML = function () {
         }
 
         var currentObject = viewObjects[key];
+
+        if (key === 'actions' && currentObject.data && currentObject.data.length) {
+            for (var action = 0; action < currentObject.data.length; action++) {
+               var currentAction = currentObject.data[action];
+               html += this._addSectionTitle({options: {title: currentAction + ' control'}},
+                DVHelper.addToolsButtons(viewObjects.own ? viewObjects.own.options : {}, currentAction));
+
+            }
+            break;
+        }
+
 
         if (!DVHelper.getObjectLength(currentObject.data)) {
             html += this._addSectionTitle(currentObject, DVHelper.getNoDataHTML(noAvailableData));
@@ -441,23 +463,21 @@ DataView.prototype._onEnterHandler = function () {
 };
 
 DataView.prototype._onInvalidateElement = function (target) {
-    var that = this;
+
+        var that = this;
         var propertyData = {};
 
         propertyData.controlId = target.getAttribute('data-control-id');
-
         that.onControlInvalidated(propertyData);
 
 };
 
 DataView.prototype._onFocusElement = function (target) {
-    var that = this;
+        var that = this;
         var propertyData = {};
 
         propertyData.controlId = target.getAttribute('data-control-id');
-
         that.onControlFocused(propertyData);
-
 
 };
 

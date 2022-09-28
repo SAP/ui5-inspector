@@ -99,20 +99,6 @@
                 action: 'do-control-property-change',
                 data: changeData
             });
-        },
-
-        onControlInvalidated: function (changeData) {
-            port.postMessage({
-                action: 'do-control-invalidate',
-                data: changeData
-            });
-        },
-
-        onControlFocused: function (changeData) {
-            port.postMessage({
-                action: 'do-control-focus',
-                data: changeData
-            });
         }
     });
 
@@ -165,6 +151,22 @@
             port.postMessage({
                 action: 'do-console-log-event-listener',
                 data: event.data
+            });
+        }
+    });
+
+    var controlActions = new DataView('control-actions', {
+        onControlInvalidated: function (changeData) {
+            port.postMessage({
+                action: 'do-control-invalidate',
+                data: changeData
+            });
+        },
+
+        onControlFocused: function (changeData) {
+            port.postMessage({
+                action: 'do-control-focus',
+                data: changeData
             });
         }
     });
@@ -382,6 +384,7 @@
             controlBindingInfoLeftDataView.setData(message.controlBindings);
             controlAggregations.setData(message.controlAggregations);
             controlEvents.setData(message.controlEvents);
+            controlActions.setData(message.controlActions);
 
             // Set bindings count
             document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';

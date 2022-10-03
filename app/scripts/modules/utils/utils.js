@@ -110,8 +110,8 @@ function _isObjectEmpty(obj) {
 
 function _getPort () {
     return {
-        postMessage: function (message) {
-            chrome.runtime.sendMessage(message);
+        postMessage: function (message, callback) {
+            chrome.runtime.sendMessage(message, callback);
         },
         onMessage: function (callback) {
             chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -125,10 +125,17 @@ function _getPort () {
  * Send message to all ports listening.
  * @param {Object} message
  */
-function _sendToAll(message) {
+function _sendToAll(message, callback) {
+    var frameId = message.frameId;
+    var options;
     chrome.windows.getCurrent(w => {
         chrome.tabs.query({ active: true, windowId: w.id }, tabs => {
-            chrome.tabs.sendMessage(tabs[0].id, message);
+            // options.frameId allows to send the message to
+            // a specific frame instead of all frames in the tab
+            if (frameId !== undefined) {
+                options = { frameId };
+            }
+            chrome.tabs.sendMessage(tabs[0].id, message, options, callback);
         });
     });
 }

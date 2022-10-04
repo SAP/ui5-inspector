@@ -74,9 +74,6 @@ function DataView(target, options) {
 
         this.onValueClick = options.onValueClick || this.onValueClick;
 
-        this.onControlInvalidated = options.onControlInvalidated || this.onControlInvalidated;
-        this.onControlFocused = options.onControlFocused || this.onControlFocused;
-
         options.data ? this.setData(options.data) : undefined;
     }
 }
@@ -355,7 +352,6 @@ DataView.prototype._addSectionTitle = function (config, htmlPart) {
     html += htmlPart;
     html += DVHelper.closeLI();
     html += DVHelper.closeUL();
-
 
     return html;
 };

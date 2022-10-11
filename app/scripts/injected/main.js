@@ -61,6 +61,50 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
     // Initialize
     mutation.init();
 
+    /**
+     * Writes HTML content of a Control in the user's clipboard
+     * @param {String} text
+     * @private
+     */
+    function _writeInClipboardFromDevTools(text) {
+        return new Promise((resolve, reject) => {
+            /* jshint ignore:start */
+            var _asyncCopyFn = (async () => {
+                try {
+                    var value = await navigator.clipboard.writeText(text);
+                    resolve(value);
+                } catch (e) {
+                    reject(e);
+                }
+                window.removeEventListener('focus', _asyncCopyFn);
+            });
+
+            window.addEventListener('focus', _asyncCopyFn);
+            /* jshint ignore:end */
+
+            var event = new Event('focus');
+            window.dispatchEvent(event);
+        });
+    }
+
+    /**
+     * Sets control's property.
+     * @param {Object} oControl
+     * @param {Object} oData - property's data
+     * @private
+     */
+    function _setControlProperties (oControl, oData) {
+        var sProperty = oData.property;
+        var oNewValue = oData.value;
+
+        try {
+            // Change the property through its setter
+            oControl['set' + sProperty](oNewValue);
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+
     // Name space for message handler functions.
     var messageHandler = {
 
@@ -74,7 +118,8 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             message.send({
                 action: 'on-receiving-initial-data',
                 applicationInformation: applicationUtils.getApplicationInfo(frameworkInformation),
-                controlTree: controlUtils.getControlTreeModel(controlTreeModel, frameworkInformation.commonInformation)
+                controlTree: controlUtils.getControlTreeModel(controlTreeModel, frameworkInformation.commonInformation),
+                elementRegistry: ToolsAPI.getRegisteredElements()
             });
         },
 
@@ -120,6 +165,36 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         },
 
         /**
+         * Handler for element selection in the Elements Registry.
+         * @param {Object} event
+         */
+        'do-control-select-elements-registry': function (event) {
+            var controlId = event.detail.target;
+            var controlProperties = ToolsAPI.getControlProperties(controlId);
+            var controlBindings = ToolsAPI.getControlBindings(controlId);
+            var controlAggregations = ToolsAPI.getControlAggregations(controlId);
+            var controlEvents = ToolsAPI.getControlEvents(controlId);
+
+            message.send({
+                action: 'on-control-select-elements-registry',
+                controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
+                controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
+                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations),
+                controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
+            });
+        },
+
+        /**
+         * Handler for refreshing elements in Elements Registry.
+         */
+        'do-elements-registry-refresh': function () {
+            message.send({
+                action: 'on-receiving-elements-registry-refresh-data',
+                elementRegistry: ToolsAPI.getRegisteredElements()
+            });
+        },
+
+        /**
          * Send message with the inspected UI5 control, from the context menu.
          * @param {Object} event
          */
@@ -137,30 +212,79 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          * @param {Object} event
          */
         'do-control-property-change': function (event) {
-            var data = event.detail.data;
-            var controlId = data.controlId;
-            var property = data.property;
-            var newValue = data.value;
+            var oData = event.detail.data;
+            var sControlId = oData.controlId;
+            var oControl = sap.ui.getCore().byId(sControlId);
 
-            var control = sap.ui.getCore().byId(controlId);
-
-            if (!control) {
+            if (!oControl) {
                 return;
             }
 
-            try {
-                // Change the property through its setter
-                control['set' + property](newValue);
-            } catch (error) {
-                console.warn(error);
-            }
+            _setControlProperties(oControl, oData);
 
             // Update the DevTools with the actual property value of the control
             this['do-control-select']({
                 detail: {
-                    target: controlId
+                    target: sControlId
                 }
             });
+        },
+
+        /**
+         * Change control property, based on editing in the DataView.
+         * @param {Object} event
+         */
+        'do-control-property-change-elements-registry': function (event) {
+            var oData = event.detail.data;
+            var sControlId = oData.controlId;
+            var oControl = sap.ui.getCore().byId(sControlId);
+
+            if (!oControl) {
+                return;
+            }
+
+            _setControlProperties(oControl, oData);
+
+            // Update the DevTools with the actual property value of the control
+            this['do-control-select-elements-registry']({
+                detail: {
+                    target: sControlId
+                }
+            });
+        },
+
+        /**
+         * Selects Control with context menu click.
+         * @param {Object} event
+         */
+        'do-context-menu-control-select': function (event) {
+            message.send({
+                action: 'on-contextMenu-control-select',
+                target: event.detail.target
+            });
+        },
+
+        /**
+         * Copies HTML of Control with context menu click.
+         * @param {Object} event
+         */
+        'do-context-menu-copy-html': function (event) {
+            var elementID = event.detail.target;
+            var navigatorClipBoard = navigator && navigator.clipboard;
+            var selectedElement;
+
+            if (typeof elementID !== 'string') {
+                console.warn('Please use a valid string parameter');
+                return;
+            }
+
+            if (!navigatorClipBoard) {
+                console.warn('This functionality is not enabled');
+                return;
+            }
+
+            selectedElement = document.getElementById(elementID);
+            _writeInClipboardFromDevTools(selectedElement.outerHTML);
         }
     };
 

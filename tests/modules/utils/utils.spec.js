@@ -25,7 +25,7 @@ describe('utils', function () {
 
     describe('#formatter.convertUI5TimeStampToHumanReadableFormat()', function () {
         it('should re-format UI5 timestamp to human readable format', function () {
-            utils.formatter.convertUI5TimeStampToHumanReadableFormat('20150817-1459').should.be.equal('2015/08/17 14:59h');
+            utils.formatter.convertUI5TimeStampToHumanReadableFormat('201508171459').should.be.equal('2015/08/17 14:59h');
         });
     });
 
@@ -128,6 +128,17 @@ describe('utils', function () {
             utils.applyTheme('light');
 
             expect(document.getElementById('ui5inspector-theme').href).to.have.string('/styles/themes/light/light.css');
+        });
+    });
+
+    describe('#getPort()', function () {
+
+        it('should return port object', function () {
+
+            var port = utils.getPort('dark');
+
+            port.onMessage.should.be.a('function');
+            port.postMessage.should.be.a('function');
         });
     });
 });

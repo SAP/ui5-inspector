@@ -1,11 +1,9 @@
 (function () {
     'use strict';
-
     var utils = require('../modules/utils/utils.js');
     var highLighter = require('../modules/content/highLighter.js');
-    var port = chrome.runtime.connect({name: 'content'});
+    var port = utils.getPort();
 
-    // ================================================================================
     // Inject needed scripts into the inspected page
     // ================================================================================
 
@@ -16,7 +14,7 @@
      */
     var injectScript = function (source, callback) {
         var script = document.createElement('script');
-        script.src = chrome.extension.getURL(source);
+        script.src = chrome.runtime.getURL(source);
         document.head.appendChild(script);
 
         /**
@@ -70,7 +68,8 @@
         }
     };
 
-    port.onMessage.addListener(function (message, messageSender, sendResponse) {
+    // Listen for messages from the background page
+    port.onMessage(function (message, messageSender, sendResponse) {
         // Resolve incoming messages
         utils.resolveMessage({
             message: message,

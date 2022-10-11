@@ -1,6 +1,6 @@
-sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap/ui/core/Core', 'sap/ui/core/ElementMetadata'],
-    function (jQuery, library, Global, Core, ElementMetadata) {
-        'use strict';
+sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
+    function (jQuery, ElementMetadata) {
+        "use strict";
 
         var configurationInfo = sap.ui.getCore().getConfiguration();
 
@@ -13,23 +13,11 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
          * @returns {string}
          * @private
          */
-        function _getFrameworkName() {
-            var versionInfo;
-            var frameworkInfo;
-
-            try {
-                versionInfo = sap.ui.getVersionInfo();
-            } catch (e) {
-                versionInfo = undefined;
-            }
-
-            if (versionInfo) {
-                // Use group artifact version for maven builds or name for other builds (like SAPUI5-on-ABAP)
-                frameworkInfo = versionInfo.gav ? versionInfo.gav : versionInfo.name;
-
-                return frameworkInfo.indexOf('openui5') !== -1 ? 'OpenUI5' : 'SAPUI5';
+        function _getFrameworkName(distributionName) {
+            if (distributionName) {
+                return distributionName.toLowerCase().indexOf("openui5") !== -1 ? "OpenUI5" : "SAPUI5";
             } else {
-                return '';
+                return "";
             }
         }
 
@@ -38,12 +26,11 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
          * @returns {Object}
          * @private
          */
-        function _getLibraries() {
-            var libraries = Global.versioninfo ? Global.versioninfo.libraries : undefined;
+        function _getLibraries(libraries) {
             var formattedLibraries = Object.create(null);
 
-            if (libraries !== undefined) {
-                libraries.forEach(function (element, index, array) {
+            if (libraries.length > 0) {
+                libraries.forEach(function (element) {
                     formattedLibraries[element.name] = element.version;
                 });
             }
@@ -60,7 +47,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             var libraries = sap.ui.getCore().getLoadedLibraries();
             var formattedLibraries = Object.create(null);
 
-            Object.keys(sap.ui.getCore().getLoadedLibraries()).forEach(function (element, index, array) {
+            Object.keys(sap.ui.getCore().getLoadedLibraries()).forEach(function (element) {
                 formattedLibraries[element] = libraries[element].version;
             });
 
@@ -73,21 +60,22 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
          * @private
          */
         function _getFrameworkInformation() {
+            let oVersionInfo = sap.ui.getVersionInfo();
+
             return {
                 commonInformation: {
-                    frameworkName: _getFrameworkName(),
-                    version: Global.version,
-                    buildTime: Global.buildinfo.buildtime,
-                    lastChange: Global.buildinfo.lastchange,
+                    frameworkName: _getFrameworkName(oVersionInfo.name),
+                    version: sap.ui.getCore().getConfiguration().getVersion().toString(),
+                    buildTime: oVersionInfo.buildTimestamp,
                     userAgent: navigator.userAgent,
                     applicationHREF: window.location.href,
                     documentTitle: document.title,
-                    documentMode: document.documentMode || '',
+                    documentMode: document.documentMode || "",
                     debugMode: jQuery.sap.debug(),
                     statistics: jQuery.sap.statistics()
                 },
 
-                configurationBootstrap: window['sap-ui-config'] || Object.create(null),
+                configurationBootstrap: window["sap-ui-config"] || Object.create(null),
 
                 configurationComputed: {
                     theme: configurationInfo.getTheme(),
@@ -102,7 +90,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                     noDuplicateIds: configurationInfo.getNoDuplicateIds()
                 },
 
-                libraries: _getLibraries(),
+                libraries: _getLibraries(oVersionInfo.libraries),
 
                 loadedLibraries: _getLoadedLibraries(),
 
@@ -133,20 +121,20 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 var subResult = results;
                 var control = sap.ui.getCore().byId(node.id);
 
-                if (node.getAttribute('data-sap-ui') && control) {
+                if (node.getAttribute("data-sap-ui") && control) {
                     results.push({
                         id: control.getId(),
                         name: control.getMetadata().getName(),
-                        type: 'sap-ui-control',
+                        type: "sap-ui-control",
                         content: []
                     });
 
                     subResult = results[results.length - 1].content;
-                } else if (node.getAttribute('data-sap-ui-area')) {
+                } else if (node.getAttribute("data-sap-ui-area")) {
                     results.push({
                         id: node.id,
-                        name: 'sap-ui-area',
-                        type: 'data-sap-ui',
+                        name: "sap-ui-area",
+                        type: "data-sap-ui",
                         content: []
                     });
 
@@ -212,7 +200,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                     currRegistry = eventRegistry[key];
                     result.events[key] = Object.create(null);
                     result.events[key].paramsType = Object.create(null);
-                    
+
                     if (metaParams) {
                         for (var param in metaParams) {
                             result.events[key].paramsType[param] = metaParams[param].type;
@@ -272,7 +260,8 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 Object.keys(controlPropertiesFromMetadata).forEach(function (key) {
                     result.properties[key] = Object.create(null);
                     result.properties[key].value = control.getProperty(key);
-                    result.properties[key].type = controlPropertiesFromMetadata[key].getType().getName ? controlPropertiesFromMetadata[key].getType().getName() : '';
+                    result.properties[key].type = controlPropertiesFromMetadata[key].getType().getName ? controlPropertiesFromMetadata[key].getType().getName() : "";
+                    result.properties[key].isDefault = control.getMetadata().getProperty(key).getDefaultValue() === control.getProperty(key);
                 });
 
                 return result;
@@ -296,7 +285,8 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 Object.keys(inheritedMetadataProperties).forEach(function (key) {
                     result.properties[key] = Object.create(null);
                     result.properties[key].value = inheritedMetadataProperties[key].get(control);
-                    result.properties[key].type = inheritedMetadataProperties[key].getType().getName ? inheritedMetadataProperties[key].getType().getName() : '';
+                    result.properties[key].type = inheritedMetadataProperties[key].getType().getName ? inheritedMetadataProperties[key].getType().getName() : "";
+                    result.properties[key].isDefault = control.getMetadata().getProperty(key).getDefaultValue() === control.getProperty(key);
                 });
 
                 return result;
@@ -334,6 +324,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                 if (control) {
                     properties.own = this._getOwnProperties(control);
                     properties.inherited = this._getInheritedProperties(control);
+                    properties.isPropertiesData = true;
                 }
 
                 return properties;
@@ -433,7 +424,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             // ================================================================================
 
             /**
-             * Creates an object containing all information about a model, it's data and the
+             * Creates an object containing all information about a model, it"s data and the
              * data with respect to the given path.
              *
              * @param {Object} model - model can be either a "real" model or a model-context
@@ -459,10 +450,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                     mode: ""
                 };
                 try {
-                    var pathParts = path.split('>');
+                    var pathParts = path.split(">");
                     var pathContainsModelName = pathParts.length > 1;
                     var pathWithoutModel = pathContainsModelName ? pathParts[1] : pathParts[0];
-                    var isRelative = pathWithoutModel.indexOf('/') !== 0;
+                    var isRelative = pathWithoutModel.indexOf("/") !== 0;
                     var type = model.getMetadata().getName();
                     var isResourceModel = type === "sap.ui.model.resource.ResourceModel";
                     var fullPath;
@@ -474,10 +465,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                     }
 
                     // include contextpath if any (getPath function is only defined on model-context)
-                    contextPath = isRelative && model.getPath && model.getPath() || '';
+                    contextPath = isRelative && model.getPath && model.getPath() || "";
                     // when the model is resource the full path must be without /
                     if (isRelative && pathWithoutModel && !isResourceModel) {
-                        fullPath = contextPath + '/' + pathWithoutModel;
+                        fullPath = contextPath + "/" + pathWithoutModel;
                     } else {
                         fullPath = contextPath + pathWithoutModel;
                     }
@@ -485,7 +476,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                     model = model.getModel && model.getModel() || model;
 
                     // functions in the model cannot communicated via message
-                    modelInfo.modelData = isResourceModel ? "" : model.getObject(contextPath || '/');
+                    modelInfo.modelData = isResourceModel ? "" : model.getObject(contextPath || "/");
                     modelInfo.pathData = model.getProperty(fullPath);
                     modelInfo.fullPath = fullPath;
                     modelInfo.path = pathWithoutModel;
@@ -513,7 +504,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
              * @private
              */
             _getModelInfoFromBinding: function (binding, bindingInfo) {
-                return this._getModelInfo(binding.getContext() || binding.getModel(), (bindingInfo.model ? bindingInfo.model + '>' : '') + bindingInfo.path);
+                return this._getModelInfo(binding.getContext() || binding.getModel(), (bindingInfo.model ? bindingInfo.model + ">" : "") + bindingInfo.path);
             },
 
             /**
@@ -564,7 +555,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                         propertiesBindingData[key].type =
                             control.getMetadata().getProperty(key) &&
                             control.getMetadata().getProperty(key).getType() &&
-                            control.getMetadata().getProperty(key).getType().getName ? control.getMetadata().getProperty(key).getType().getName() : '';
+                            control.getMetadata().getProperty(key).getType().getName ? control.getMetadata().getProperty(key).getType().getName() : "";
                         propertiesBindingData[key].mode = binding.getBindingMode();
                         propertiesBindingData[key].model = this._getModelFromContext(control, key);
                     }
@@ -619,7 +610,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
                     return {
                         parts: Object.keys(bindingContexts).map(function (key) {
                             return controlInformation._getModelInfo(bindingContexts[key].getModel(),
-                                (key && key !== 'undefined' && key !== 'null' ? key + '>' : '') + bindingContexts[key].getPath());
+                                (key && key !== "undefined" && key !== "null" ? key + ">" : "") + bindingContexts[key].getPath());
                         })
                     };
                 }
@@ -627,6 +618,34 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
             },
 
         };
+
+        var elementRegistry = {
+            getRegisteredElements: function () {
+                var iFrameWorkMinorVersion = sap.ui.getCore().getConfiguration().getVersion().getMinor(),
+                    isSupported = iFrameWorkMinorVersion >= 67,
+                    aRegisteredElements = [],
+                    oElements;
+
+                if (isSupported) {
+                    oElements = sap.ui.core.Element.registry.all();
+
+                    Object.keys(oElements).forEach(function (sKey) {
+                        var oParent = oElements[sKey].getParent();
+
+                        aRegisteredElements.push({
+                            id: oElements[sKey].getId(),
+                            type: oElements[sKey].getMetadata().getName(),
+                            isControl: oElements[sKey].isA("sap.ui.core.Control"),
+                            isRendered: oElements[sKey].isActive(),
+                            parentId: oParent && (oParent.isA("sap.ui.core.Control") || oParent.isA("sap.ui.core.Element")) ? oParent.getId() : '',
+                            aggregation: oElements[sKey].sParentAggregationName ? oElements[sKey].sParentAggregationName : ''
+                        })
+                    });
+                }
+
+                return {aRegisteredElements, isSupported};
+            }
+        }
 
         // ================================================================================
         // Public API
@@ -702,7 +721,9 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/library', 'sap/ui/Global', 'sap
              */
             getControlEvents: function (controlId) {
                 return controlInformation._getEvents(controlId);
-            }
+            },
+
+            getRegisteredElements: elementRegistry.getRegisteredElements
         };
 
     });

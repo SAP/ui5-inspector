@@ -7,7 +7,7 @@
     // ================================================================================
 
     // true: Prohibit bitwise operators (&, |, ^, etc.)
-    "bitwise": true,
+    "bitwise": false,
 
     // true: Identifiers must be in camelCase
     "camelcase": true,
@@ -52,7 +52,7 @@
     "strict": false,
 
     // {int} Max number of formal params allowed per function
-    "maxparams": 3,
+    "maxparams": 4,
 
     // {int} Max depth of nested blocks (within functions)
     "maxdepth": 3,
@@ -62,7 +62,7 @@
 
     // {int} Max cyclomatic complexity per function. The cyclomatic complexity of a section of source code is the count
     // of the number of linearly independent paths through the source code.
-    "maxcomplexity": 10,
+    "maxcomplexity": 12,
 
     // ================================================================================
     // Relaxing
@@ -163,6 +163,7 @@
         "expect": true,
         "sinon": true,
         "should": true,
-        "Event": true
+        "Event": true,
+		"ace": true
     }
 }

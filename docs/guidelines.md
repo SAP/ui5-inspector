@@ -6,17 +6,19 @@ When a file is consistently not following these rules and adhering to the rules 
 
 ### Table of Contents
 
-1.  [General](#general)
-1.  [JavaScript Coding Guidelines](#javascript-coding-guidelines)
-    *  [Code Formatting](#code-formatting)
-    *  [Naming Conventions](#naming-conventions)
-    *  [Documentation (JSDoc)](#documentation-jsdoc)
-1.  [Product Standards / Acceptance Criteria](#product-standards--acceptance-criteria)
-1.  [File Names and Encoding](#file-names-and-encoding)
-1.  [Git Guidelines](#git-guidelines)
-1.  [Tools](#tools)
-    *  [JSCS](#JSCS)
-    *  [JSHint](#JSHint)
+- [Development Conventions and Guidelines](#development-conventions-and-guidelines)
+    - [Table of Contents](#table-of-contents)
+  - [General](#general)
+  - [JavaScript Coding Guidelines](#javascript-coding-guidelines)
+    - [Code Formatting](#code-formatting)
+    - [Naming Conventions](#naming-conventions)
+    - [Documentation (JSDoc)](#documentation-jsdoc)
+  - [Product Standards / Acceptance Criteria](#product-standards--acceptance-criteria)
+  - [File Names and Encoding](#file-names-and-encoding)
+  - [Git Guidelines](#git-guidelines)
+  - [Tools](#tools)
+    - [ESLint](#eslint)
+    - [JSHint](#jshint)
 
 
 
@@ -39,7 +41,7 @@ JavaScript Coding Guidelines
 
 ### Code Formatting
 
--   Our JSCS and JSHint checks needs to run successfully; Check the ".jscsrc" and ".jshintrc" files for more information:
+-   Our ESLint and JSHint checks needs to run successfully; Check the ".eslintrc" and ".jshintrc" files for more information:
 -   The WebStorm default settings for the JavaScript editor are pretty fine, but make sure space are used for indentation
 
 ### Naming Conventions
@@ -48,7 +50,7 @@ JavaScript Coding Guidelines
 
 ### Documentation (JSDoc)
 
-For documenting JavaScript, UI5 Inspector uses the JSDoc3. See the [JSDoc3 Toolkit Homepage](http://usejsdoc.org/) for an explanation of the available tags. The JSDoc3 is checked from the JSCS and it is a mandatory.
+For documenting JavaScript, UI5 Inspector uses the JSDoc3. See the [JSDoc3 Toolkit Homepage](http://usejsdoc.org/) for an explanation of the available tags. The JSDoc3 is checked from the ESLint and it is a mandatory.
 
 
 Product Standards / Acceptance Criteria
@@ -95,10 +97,9 @@ The commit message consists of two or three parts, separated by empty lines:
 -   A commit message can thus look like this:
 
     ``` wiki
-    [FIX] ControlTree: prevent rerendering if the same model is set.
+    fix: prevent rerendering if the same model is set.
 
-    Change-Id: I3c7d6e4d52fa71e9412b729b7a234a112915c2a4
-    Fixes https://github.com/SAP/ui5-inspector/issues/1
+    Fixes #123
     ```
 
 
@@ -108,9 +109,9 @@ Tools
 -   It is helpful to configure your JavaScript editor to display whitespace and linebreak characters; this makes issues with mixed tabs/spaces and windows-style linebreaks immediately obvious
 -   It also helps to configure the code formatter of your code editor accordingly. The default formatter for JavaScript in WebStorm is already pretty ok.
 
-### JSCS
+### ESLint
 
-UI5 Inspector comes with a ruleset for [JSCS](http://jscs.info/). Adhering to these rules is mandatory.
+UI5 Inspector comes with a ruleset for [ESLint](https://eslint.org/). Adhering to these rules is mandatory.
 
 ### JSHint
 

@@ -1,4 +1,12 @@
+/* globals createElement, ResizeObserver */
+
 'use strict';
+
+require('./datagrid/UIUtils.js');
+
+// adopting the same value that already used in the split
+// DevTools panels (e.g. "Elements" and "Sources")
+const HORIZONTAL_SPLIT_MIN_WIDTH = 680;
 
 /**
  * Returns the HTML for the divider.
@@ -35,6 +43,7 @@ function _applyInlineStylesForEndContainer(_splitterInstance, skipSizing) {
     var $end = _splitterInstance.$this.querySelector('end');
 
     $end.style.display = _splitterInstance._hideEndContainer ? 'none' : '';
+    _splitterInstance.$this.classList.toggle('endVisible', !_splitterInstance._hideEndContainer);
     if (!skipSizing) {
         $end.style.width = _splitterInstance._endContainerWidth || undefined;
         $end.style.height = _splitterInstance._endContainerHeight || undefined;
@@ -47,13 +56,13 @@ function _applyInlineStylesForEndContainer(_splitterInstance, skipSizing) {
  * @private
  */
 function _applyInlineStylesForCloseButton(_splitterInstance) {
-    var $closeButton = _splitterInstance.$this.querySelector('close-button');
+    var $closeButton = _splitterInstance.$this.querySelector('.toolbar-item');
 
     if ($closeButton) {
         if (_splitterInstance._hideEndContainer) {
             $closeButton.style.display = 'none';
         } else {
-            $closeButton.style.display = 'block';
+            $closeButton.style.display = 'flex';
         }
     }
 }
@@ -65,6 +74,7 @@ function _applyInlineStylesForCloseButton(_splitterInstance) {
  * @private
  */
 function _applyInlineStyles(_splitterInstance, _skipSizing) {
+    // eslint-disable-next-line consistent-this
     var that = _splitterInstance;
     var $end = that.$this.querySelector('end');
     var skipSizing = _skipSizing || false;
@@ -100,7 +110,8 @@ function _createEndContainerHeader(splitterInstance) {
  * @private
  */
 function _createCloseButton(splitterInstance) {
-    var closeButtonElement = document.createElement('close-button');
+    var closeButtonElement = createElement('div', 'dt-close-button');
+    closeButtonElement.classList.add('toolbar-item');
     splitterInstance.$this.querySelector('end').appendChild(closeButtonElement);
 
     closeButtonElement.onclick = splitterInstance.hideEndContainer.bind(splitterInstance);
@@ -164,8 +175,7 @@ function SplitContainer(domId, options) {
         _createCloseButton(this);
     }
 
-    /** @type {boolean}*/
-    this.isVerticalSplitter = this.$this.getAttribute('orientation') === 'vertical';
+    this._updateOrientation();
 
     /**
      * Place the resize holder HTML right after the 'start' element
@@ -173,6 +183,9 @@ function SplitContainer(domId, options) {
     this.$this.querySelector(':scope > start').insertAdjacentHTML('afterend', _getResizeHolderHTML());
 
     this.$this.querySelector('handler').onmousedown = this._mouseDownHandler.bind(this);
+
+    const oResizeObserver = new ResizeObserver(this._onResize.bind(this));
+    oResizeObserver.observe(this.$this);
 }
 
 /**
@@ -192,6 +205,72 @@ SplitContainer.prototype.showEndContainer = function () {
 };
 
 /**
+ * Sets optimal orientation (vertical/horizontal)
+ * based on own size
+ */
+ SplitContainer.prototype._updateOrientation = function () {
+    var iWidth = this.$this.offsetWidth;
+    if (!iWidth) {
+        return; // container is hidden
+    }
+    var bNeedsVerticalSplit =  iWidth < HORIZONTAL_SPLIT_MIN_WIDTH || iWidth < this.$this.offsetHeight;
+    this._setOrientation(bNeedsVerticalSplit);
+};
+
+/**
+ * Sets optimal orientation (vertical/horizontal)
+ * based on own size
+ */
+SplitContainer.prototype._setOrientation = function (bNeedsVerticalSplit) {
+    if (bNeedsVerticalSplit === this.isVerticalSplitter) {
+        return;
+    }
+    /** @type {boolean}*/
+    this.isVerticalSplitter = bNeedsVerticalSplit;
+
+    this.$this.classList.toggle('verticalOrientation', this.isVerticalSplitter);
+    if (this.isVerticalSplitter) { // should enable css for vertical split
+        this._$endElement.style.height = this._endContainerHeight;
+        this._$startElement.style.height = this._startContainerHeight;
+        this._$endElement.style.width = ''; // clear opisite mode css
+        this._$startElement.style.width = ''; // clear opisite mode css
+    } else {
+        this._$endElement.style.width = this._endContainerWidth;
+        this._$startElement.style.width = this._startContainerWidth;
+        this._$endElement.style.height = ''; // clear opisite mode css
+        this._$startElement.style.height = ''; // clear opisite mode css
+    }
+};
+
+
+/**
+ * Called wien the window is resized
+ */
+SplitContainer.prototype._onResize = function () {
+    var iOverflowX;
+    var iOverflowY;
+
+    if (this.isVerticalSplitter) {
+        iOverflowY = Math.floor(this.$this.getBoundingClientRect().height) - window.innerHeight;
+        if (iOverflowY > 0 && this._$endElement.style.height) {
+            // part of the end container overflowed outside the viewport
+            // => update its height to make the end container fit the viewport
+            this._endContainerHeight = (this._$endElement.offsetHeight - iOverflowY) + 'px';
+            this._$endElement.style.height = this._endContainerHeight;
+        }
+    } else {
+        iOverflowX = Math.floor(this.$this.getBoundingClientRect().width) - window.innerWidth;
+        if (iOverflowX > 0 && this._$endElement.style.width) {
+            // part of the end container overflowed outside the viewport
+            // => update its width to make the end container fit the viewport
+            this._endContainerWidth = (this._$endElement.offsetWidth - iOverflowX) + 'px';
+            this._$endElement.style.width = this._endContainerWidth;
+        }
+    }
+    this._updateOrientation();
+};
+
+/**
  * Handler for mousemove.
  * @param {Object} event
  * @private
@@ -200,9 +279,11 @@ SplitContainer.prototype._mouseMoveHandler = function (event) {
     var splitContainerRect = this.$this.getBoundingClientRect();
 
     if (this.isVerticalSplitter) {
-        this._$endElement.style.height = (splitContainerRect.top + splitContainerRect.height - event.clientY) + 'px';
+        this._endContainerHeight = (splitContainerRect.top + splitContainerRect.height - event.clientY) + 'px';
+        this._$endElement.style.height = this._endContainerHeight;
     } else {
-        this._$endElement.style.width = (splitContainerRect.left + splitContainerRect.width - event.clientX) + 'px';
+        this._endContainerWidth = (splitContainerRect.left + splitContainerRect.width - event.clientX) + 'px';
+        this._$endElement.style.width = this._endContainerWidth;
     }
 };
 

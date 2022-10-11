@@ -93,8 +93,7 @@ function _generateValueOptions(value, type) {
     var types;
     var i;
 
-    if (Object.keys(type).length)
-    {
+    if (Object.keys(type).length) {
         types = Object.keys(type);
 
         for (i = 0; i < types.length; i++) {
@@ -180,6 +179,16 @@ function _valueNeedsQuotes(value, valueWrappedInHTML) {
     }
 
     return valueWrappedInHTML;
+}
+
+/**
+ * Creates span for default value.
+ * @returns {string}
+ * @private
+ */
+function _createDefaultSpan() {
+
+    return '<span gray>(default value)</span>';
 }
 
 /**
@@ -386,7 +395,7 @@ module.exports = {
     formatValueForDataView: _formatValueForDataView,
     getCorrectedValue: _getCorrectedValue,
     getObjectLength: _getObjectLength,
-    getObjectProperty:_getObjectProperty,
+    getObjectProperty: _getObjectProperty,
     getULAttributesFromOptions: _getULAttributesFromOptions,
     getNoDataHTML: _getNoDataHTML,
     openUL: _openUL,
@@ -396,5 +405,6 @@ module.exports = {
     wrapInTag: _wrapInTag,
     wrapInSelectTag: _wrapInSelectTag,
     wrapInCheckBox: _wrapInCheckBox,
-    valueNeedsQuotes: _valueNeedsQuotes
+    valueNeedsQuotes: _valueNeedsQuotes,
+    createDefaultSpan: _createDefaultSpan
 };

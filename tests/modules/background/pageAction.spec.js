@@ -3,16 +3,15 @@
 var pageAction = require('../../../app/scripts/modules/background/pageAction.js');
 
 window.chrome = require('chrome-stub');
-window.chrome.pageAction = {
-    /**
-     * Mock function of chrome api.
-     */
-    show: function () {
-    },
+window.chrome.action = {
     /**
      * Mock function of chrome api.
      */
     setTitle: function () {
+    },
+    disable: function () {
+    },
+    enable: function () {
     }
 };
 
@@ -22,39 +21,51 @@ describe('pageAction', function () {
     });
 
     describe('#create()', function () {
-        var pageActionShow;
         var pageActionSetTitle;
 
         beforeEach(function () {
-            pageActionShow = sinon.spy(window.chrome.pageAction, 'show');
-            pageActionSetTitle = sinon.spy(window.chrome.pageAction, 'setTitle');
+            pageActionSetTitle = sinon.spy(window.chrome.action, 'setTitle');
         });
 
         afterEach(function () {
-            window.chrome.pageAction.show.restore();
-            window.chrome.pageAction.setTitle.restore();
+            pageActionSetTitle.restore();
         });
 
-        it('should call chrome.pageAction.show', function () {
-            var mock = {
-                framework: 'mock-framework',
-                version: 'mock-version',
-                tabId: 'mock-tabId'
-            };
-            pageAction.create(mock);
-
-            pageActionShow.callCount.should.equal(1);
-            pageActionShow.calledWith(mock.tabId).should.equal(true);
-        });
-
-        it('should call chrome.pageAction.setTitle', function () {
+        it('should call chrome.action.setTitle', function () {
             pageAction.create({
                 framework: 'mock-framework',
                 version: 'mock-version',
                 tabId: 'mock-tabId'
             });
 
-            pageActionShow.callCount.should.equal(1);
+            pageActionSetTitle.callCount.should.equal(1);
+        });
+    });
+
+    describe('#disable() & #enable()', function () {
+        var disableStub;
+        var enableStub;
+
+        beforeEach(function () {
+            disableStub = sinon.spy(window.chrome.action, 'disable');
+            enableStub = sinon.spy(window.chrome.action, 'enable');
+        });
+
+        afterEach(function () {
+            disableStub.restore();
+            enableStub.restore();
+        });
+
+        it('should call chrome.action.disable', function () {
+            pageAction.disable();
+
+            disableStub.callCount.should.equal(1);
+        });
+
+        it('should call chrome.action.enable', function () {
+            pageAction.enable();
+
+            enableStub.callCount.should.equal(1);
         });
     });
 });

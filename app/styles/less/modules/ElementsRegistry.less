@@ -1,0 +1,90 @@
+
+elements-registry-master-view {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+
+    #elementsRegistryContent {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0;
+        flex-wrap: nowrap;
+    }
+
+    span[is="dt-icon-label"] { flex: 0 0 auto; }
+    [is="ui-icon"] { display: inline-block; flex-shrink: 0; }
+    [is="ui-icon"].icon-mask { background-color: rgb(110, 110, 110); -webkit-mask-position: var(--spritesheet-position); }
+    .spritesheet-smallicons:not(.icon-mask) { background-image: url("/images/smallIcons.svg"); }
+    .spritesheet-smallicons.icon-mask { -webkit-mask-image: url("/images/smallIcons.svg"); }
+    .spritesheet-largeicons.icon-mask { -webkit-mask-image: url("/images/largeIcons.svg"); }
+    .spritesheet-mediumicons.icon-mask { -webkit-mask-image: url("/images/mediumIcons.svg"); }
+    .spritesheet-mediumicons:not(.icon-mask) { background-image: url(/images/mediumIcons.svg); }
+    :host-context(.force-white-icons) [is="ui-icon"].spritesheet-smallicons, .force-white-icons [is="ui-icon"].spritesheet-smallicons, [is="ui-icon"].force-white-icons.spritesheet-smallicons, -theme-preserve { -webkit-mask-image: url("/images/smallIcons.svg"); -webkit-mask-position: var(--spritesheet-position); background: rgb(250, 250, 250) !important; }
+    ::selection { background-color: @bg-datagrid; }
+    [data-aria-utils-animation-hack] { animation: 0s ease 0s 1 normal none running ANIMATION-HACK; }
+    cursor: default; font-family: ".SFNSDisplay-Regular", "Helvetica Neue", "Lucida Grande", sans-serif; font-size: 12px; tab-size: 4; user-select: none;
+
+    .largeicon-clear:hover:not(:active) { background-color: #333; }
+
+    [is=ui-icon]:not(.icon-mask) {
+        background-position: var(--spritesheet-position);
+    }
+
+    filter {
+        border-bottom: solid 1px @border-grey-light;
+        display: flex;
+        left: 0;
+        line-height: 1;
+        padding: 5px;
+        align-items: center;
+    }
+
+    filter > start,
+    filter > end {
+        display: flex;
+    }
+
+    filter > start {
+        flex: 1 1 0;
+    }
+
+    filter [type="search"] {
+        border: solid 1px @border-gray-dark;
+        border-radius: 2px;
+        background-color: @bg-search-field;
+        color: @text-color;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    filter [type="checkbox"] {
+        margin-right: 2px;
+    }
+
+    filter label {
+        display: flex;
+        line-height: 20px;
+        padding: 0 6px;
+        white-space: nowrap;
+        align-items: center;
+    }
+
+}
+
+elements-registry-master-view:not([show-filtered-elements]) {
+    .matching {
+        background: @bg-highlight-color !important;
+    }
+
+    .selected {
+        background: @lighter-blue !important;
+        ::selection {
+            background: @gray-dark !important;
+        }
+    }
+}
+
+.elementsRegistry splitter {
+    background-color:  @bg-datagrid-header;
+}

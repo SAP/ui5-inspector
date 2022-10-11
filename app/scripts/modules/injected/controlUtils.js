@@ -73,7 +73,7 @@ function _extendObject() {
  */
 function _extendOptionsForModelDataview(options, modelInfo) {
     var additionalOptions = {};
-    if (modelInfo.mode === 'TwoWay' && options.showValue) {
+    if (modelInfo && modelInfo.mode === 'TwoWay' && options.showValue) {
         additionalOptions.editableValues = ['value'];
         additionalOptions.editModel = modelInfo.modelName;
         additionalOptions.editModelPath = modelInfo.fullPath;
@@ -150,6 +150,10 @@ function _assembleModelReferences(options, modelInfo, key) {
 function _assembleModelInfoDataview(options, modelInfo) {
     if (!modelInfo) {
         return null;
+    }
+
+    if (modelInfo.parts) {
+        modelInfo.parts = modelInfo.parts.filter(partModelInfo => partModelInfo !== null);
     }
 
     options.data = options.data || Object.create(null);
@@ -247,6 +251,7 @@ var controlProperties = (function () {
             var parent = properties[INHERITED][i];
             var title = parent.meta.controlName;
             var props = parent.properties;
+            var formatedProps = {};
 
             parent = _assembleDataToView({
                 controlId: controlId,
@@ -257,8 +262,11 @@ var controlProperties = (function () {
             parent.types = {};
 
             for (var key in props) {
-                parent.data[key] = props[key].value;
+                formatedProps[key] = Object.create(null);
                 parent.types[key]  =  props[key].type ? _formatTypes (props[key].type) : '';
+                formatedProps[key].value = props[key].value;
+                formatedProps[key].isDefault = props[key].isDefault && props[key].value !== '';
+                parent.data[key] = formatedProps[key];
             }
 
             var parentTitle = '<span gray>Inherits from</span>';
@@ -358,15 +366,18 @@ var controlProperties = (function () {
         var title = properties[OWN].meta.controlName;
         var props = properties[OWN].properties;
         var types = {};
+        var formatedProps = {};
 
         for (var key in props) {
+            formatedProps[key] = Object.create(null);
             if (props[key].type === 'object') {
                 props[key] = _formatNestedProperties(props[key], key);
                 continue;
             }
 
             types[key] = props[key].type ? _formatTypes (props[key].type) : '';
-            props[key] = props[key].value;
+            formatedProps[key].value = props[key].value;
+            formatedProps[key].isDefault = props[key].isDefault && props[key].value !== '';
         }
 
         properties[OWN] = _assembleDataToView({
@@ -374,7 +385,7 @@ var controlProperties = (function () {
             expandable: false,
             title: title
         });
-        properties[OWN].data = props;
+        properties[OWN].data = formatedProps;
         properties[OWN].types = types;
         properties[OWN].options.title = '#' + controlId + ' <span gray>(' + title + ')</span>';
 

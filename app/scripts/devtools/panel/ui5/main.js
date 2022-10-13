@@ -1,5 +1,5 @@
 
-// jshint maxstatements:40
+// jshint maxstatements:50
 (function () {
     'use strict';
 
@@ -15,6 +15,7 @@
     // ================================================================================
     var utils = require('../../../modules/utils/utils.js');
     var TabBar = require('../../../modules/ui/TabBar.js');
+    var FrameSelect = require('../../../modules/ui/FrameSelect.js');
     var ControlTree = require('../../../modules/ui/ControlTree.js');
     var DataView = require('../../../modules/ui/DataView.js');
     var Splitter = require('../../../modules/ui/SplitContainer.js');
@@ -31,7 +32,10 @@
     var port = Object.assign(utils.getPort(), {
         onMessage: function (callback) {
             chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-                if (sender.tab && sender.tab.id === chrome.devtools.inspectedWindow.tabId) {
+                // accept only messages from the inspected tab
+                // or from the extension's own background script
+                if ((sender.tab && sender.tab.id === chrome.devtools.inspectedWindow.tabId) ||
+                    (!sender.tab && sender.id === chrome.runtime.id)) {
                     callback(request, sender, sendResponse);
                 }
             });
@@ -41,6 +45,11 @@
     // Bootstrap for 'Control inspector' tab
     // ================================================================================
     utils.setOSClassName();
+
+    var frameData = {};
+    var framesSelect;
+    var displayFrameData;
+    var updateSupportabilityOverlay;
 
     // Main tabbar inside 'UI5' devtools panel
     var UI5TabBar = new TabBar('ui5-tabbar');
@@ -60,8 +69,10 @@
         onSelectionChanged: function (selectedElementId) {
             port.postMessage({
                 action: 'do-control-select',
-                target: selectedElementId
+                target: selectedElementId,
+                frameId: framesSelect.getSelectedId()
             });
+            frameData[framesSelect.getSelectedId()].selectedElementId = selectedElementId;
         },
 
         /**
@@ -71,7 +82,8 @@
         onHoverChanged: function (hoveredElementId) {
             port.postMessage({
                 action: 'on-control-tree-hover',
-                target: hoveredElementId
+                target: hoveredElementId,
+                frameId: framesSelect.getSelectedId()
             });
         },
 
@@ -97,7 +109,8 @@
         onPropertyUpdated: function (changeData) {
             port.postMessage({
                 action: 'do-control-property-change',
-                data: changeData
+                data: changeData,
+                frameId: framesSelect.getSelectedId()
             });
         }
     });
@@ -150,7 +163,8 @@
         onValueClick: function (event) {
             port.postMessage({
                 action: 'do-console-log-event-listener',
-                data: event.data
+                data: event.data,
+                frameId: framesSelect.getSelectedId()
             });
         }
     });
@@ -202,7 +216,8 @@
              */
             port.postMessage({
                 action: 'do-control-select-elements-registry',
-                target: sControlId
+                target: sControlId,
+                frameId: framesSelect.getSelectedId()
             });
         },
         /**
@@ -210,7 +225,8 @@
          */
         onRefreshButtonClicked: function () {
             port.postMessage({
-                action: 'do-elements-registry-refresh'
+                action: 'do-elements-registry-refresh',
+                frameId: framesSelect.getSelectedId()
             });
         }
     });
@@ -233,7 +249,8 @@
         onPropertyUpdated: function (changeData) {
             port.postMessage({
                 action: 'do-control-property-change-elements-registry',
-                data: changeData
+                data: changeData,
+                frameId: framesSelect.getSelectedId()
             });
         }
     });
@@ -286,9 +303,73 @@
         onValueClick: function (event) {
             port.postMessage({
                 action: 'do-console-log-event-listener',
-                data: event.data
+                data: event.data,
+                frameId: framesSelect.getSelectedId()
             });
         }
+    });
+
+    displayFrameData = function (options) {
+        var frameId = options.selectedId;
+        var oldFrameId = options.oldSelectedId;
+        var UI5Data = frameData[frameId];
+
+        framesSelect.setSelectedId(frameId);
+        updateSupportabilityOverlay();
+
+        if (UI5Data) {
+            controlTree.setData(UI5Data.controlTree);
+            UI5Data.selectedElementId && controlTree.setSelectedElement(UI5Data.selectedElementId);
+            appInfo.setData(UI5Data.applicationInformation);
+            UI5Data.elementRegistry && oElementsRegistryMasterView.setData(UI5Data.elementRegistry);
+
+            controlProperties.setData(UI5Data.controlProperties || {});
+            controlBindingInfoLeftDataView.setData(UI5Data.controlBindings || {});
+            controlAggregations.setData(UI5Data.controlAggregations || {});
+            controlEvents.setData(UI5Data.controlEvents || {});
+
+            controlPropertiesElementsRegistry.setData({});
+            controlBindingInfoLeftDataViewElementsRegistry.setData({});
+            controlAggregationsElementsRegistry.setData({});
+            controlEventsElementsRegistry.setData({});
+
+            // Set bindings count
+            if (UI5Data.controlBindings) {
+                document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(UI5Data.controlBindings).length + ')';
+            }
+            controlTree.setSelectedElement(UI5Data.nearestUI5Control);
+        }
+
+        // after switching to inspect a new frame,
+        // hide any highlights that were needed for
+        // the previousy inspected frame
+        port.postMessage({
+            action: 'on-hide-highlight',
+            frameId: oldFrameId
+        });
+    };
+
+    updateSupportabilityOverlay = function () {
+        var currentFrameData = frameData[framesSelect.getSelectedId()];
+        if (!currentFrameData) {
+            return;
+        }
+
+        var overlay = document.getElementById('supportability');
+        var overlayNoUI5Section = overlay.querySelector('[no-ui5-version]');
+        var overlayUnsupportedVersionSection = overlay.querySelector('[unsupported-version]');
+
+        var showOverlay = !currentFrameData.isUI5Detected || !currentFrameData.isVersionSupported;
+        var showNoUI5Overlay = !currentFrameData.isUI5Detected;
+        var showUnsupportedVersionOverlay = currentFrameData.isUI5Detected && !currentFrameData.isVersionSupported;
+
+        overlay.hidden = !showOverlay;
+        overlayNoUI5Section.style.display = showNoUI5Overlay ? 'block' : 'none';
+        overlayUnsupportedVersionSection.style.display = showUnsupportedVersionOverlay ? 'block' : 'none';
+    };
+
+    framesSelect = new FrameSelect('frame-select', {
+        onSelectionChange: displayFrameData
     });
 
     // ================================================================================
@@ -302,23 +383,22 @@
          * Handler for UI5 detection on the current inspected page.
          * @param {Object} message
          */
-        'on-ui5-detected': function (message) {
-            var overlay = document.getElementById('supportability');
-            var overlayNoUI5Section = overlay.querySelector('[no-ui5-version]');
-            var overlayUnsupportedVersionSection = overlay.querySelector('[unsupported-version]');
+        'on-ui5-detected': function (message, messageSender) {
+            frameData[messageSender.frameId] = {
+                isUI5Detected: true,
+                isVersionSupported: message.isVersionSupported,
+                url: messageSender.url
+            };
+            framesSelect.setData(frameData);
 
-            overlay.setAttribute('hidden', true);
-            overlayUnsupportedVersionSection.style.display = 'none';
-
-            if (!message.isVersionSupported) {
-                overlay.removeAttribute('hidden');
-                overlayNoUI5Section.style.display = 'none';
-                overlayUnsupportedVersionSection.style.display = 'block';
+            if (framesSelect.getSelectedId() === messageSender.frameId) {
+                updateSupportabilityOverlay();
             }
 
             port.postMessage({
                 action: 'do-script-injection',
                 tabId: chrome.devtools.inspectedWindow.tabId,
+                frameId: messageSender.frameId,
                 file: '/scripts/content/main.js'
             });
         },
@@ -327,9 +407,10 @@
          * Get the initial needed information, when the main injected script is available.
          * @param {Object} message
          */
-        'on-main-script-injection': function (message) {
+        'on-main-script-injection': function (message, messageSender) {
             port.postMessage({
-                action: 'get-initial-information'
+                action: 'get-initial-information',
+                frameId: messageSender.frameId
             });
         },
 
@@ -337,68 +418,115 @@
          * Visualize the initial needed data for the extension.
          * @param {Object} message
          */
-        'on-receiving-initial-data': function (message) {
-            controlTree.setData(message.controlTree);
-            appInfo.setData(message.applicationInformation);
-            oElementsRegistryMasterView.setData(message.elementRegistry);
+        'on-receiving-initial-data': function (message, messageSender) {
+            var frameId = messageSender.frameId;
+            frameData[frameId].controlTree = message.controlTree;
+            frameData[frameId].applicationInformation = message.applicationInformation;
+            frameData[frameId].elementRegistry = message.elementRegistry;
+
+            if (framesSelect.getSelectedId() === frameId) {
+                controlTree.setData(message.controlTree);
+                appInfo.setData(message.applicationInformation);
+                oElementsRegistryMasterView.setData(message.elementRegistry);
+            }
         },
 
         /**
          * Refresh Elements Registry data.
          * @param {Object} message
          */
-        'on-receiving-elements-registry-refresh-data': function (message) {
-            oElementsRegistryMasterView.setData(message.elementRegistry);
+        'on-receiving-elements-registry-refresh-data': function (message, messageSender) {
+            var frameId = messageSender.frameId;
+            frameData[frameId].elementRegistry = message.elementRegistry;
+            if (framesSelect.getSelectedId() === frameId) {
+                oElementsRegistryMasterView.setData(message.elementRegistry);
+            }
         },
 
         /**
          * Updates the ControlTree, when the DOM in the inspected window is changed.
          * @param {Object} message
          */
-        'on-application-dom-update': function (message) {
-            controlTree.setData(message.controlTree);
+        'on-application-dom-update': function (message, messageSender) {
+            var frameId = messageSender.frameId;
+            var frameIds = Object.keys(frameData).map( x => parseInt(x));
+            frameData[frameId].controlTree = message.controlTree;
+            if (framesSelect.getSelectedId() === frameId) {
+                controlTree.setData(message.controlTree);
+            }
+
+            if (frameIds.length > 1) {
+                // send a request to the background script
+                // to ping each of the frame ids listed in <code>aFrameIds</code>
+                // The background page will send an "on-ping-frames" async response
+                // with the updated list once it pinged all individual frames
+                port.postMessage({
+                    action: 'do-ping-frames',
+                    frameIds: frameIds
+                });
+            }
         },
 
         /**
          * Handler for ControlTree element selecting.
          * @param {Object} message
          */
-        'on-control-select': function (message) {
-            controlProperties.setData(message.controlProperties);
-            controlBindingInfoLeftDataView.setData(message.controlBindings);
-            controlAggregations.setData(message.controlAggregations);
-            controlEvents.setData(message.controlEvents);
+        'on-control-select': function (message, messageSender) {
+            var frameId = messageSender.frameId;
+            frameData[frameId].controlProperties = message.controlProperties;
+            frameData[frameId].controlBindings = message.controlBindings;
+            frameData[frameId].controlAggregations = message.controlAggregations;
+            frameData[frameId].controlEvents = message.controlEvents;
 
-            // Set bindings count
-            document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
+            if (framesSelect.getSelectedId() === frameId) {
+                controlProperties.setData(message.controlProperties);
+                controlBindingInfoLeftDataView.setData(message.controlBindings);
+                controlAggregations.setData(message.controlAggregations);
+                controlEvents.setData(message.controlEvents);
 
-            // Close possible open binding info and/or methods info
-            controlBindingsSplitter.hideEndContainer();
+                // Set bindings count
+                document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
+
+                // Close possible open binding info and/or methods info
+                controlBindingsSplitter.hideEndContainer();
+            }
         },
 
         /**
          * Handler for Elements Registry element selecting.
          * @param {Object} message
          */
-        'on-control-select-elements-registry': function (message) {
-            controlPropertiesElementsRegistry.setData(message.controlProperties);
-            controlBindingInfoLeftDataViewElementsRegistry.setData(message.controlBindings);
-            controlAggregationsElementsRegistry.setData(message.controlAggregations);
-            controlEventsElementsRegistry.setData(message.controlEvents);
+        'on-control-select-elements-registry': function (message, messageSender) {
+            var frameId = messageSender.frameId;
+            frameData[frameId].controlProperties = message.controlProperties;
+            frameData[frameId].controlBindings = message.controlBindings;
+            frameData[frameId].controlAggregations = message.controlAggregations;
+            frameData[frameId].controlEvents = message.controlEvents;
 
-            // Set bindings count
-            document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
+            if (framesSelect.getSelectedId() === frameId) {
+                controlPropertiesElementsRegistry.setData(message.controlProperties);
+                controlBindingInfoLeftDataViewElementsRegistry.setData(message.controlBindings);
+                controlAggregationsElementsRegistry.setData(message.controlAggregations);
+                controlEventsElementsRegistry.setData(message.controlEvents);
 
-            // Close possible open binding info and/or methods info
-            controlBindingsSplitterElementsRegistry.hideEndContainer();
+                // Set bindings count
+                document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
+                // Close possible open binding info and/or methods info
+                controlBindingsSplitterElementsRegistry.hideEndContainer();
+            }
         },
 
         /**
          * Select ControlTree element, based on selection in the Element panel.
          * @param {Object} message
          */
-        'on-select-ui5-control-from-element-tab': function (message) {
-            controlTree.setSelectedElement(message.nearestUI5Control);
+        'on-select-ui5-control-from-element-tab': function (message, messageSender) {
+            var frameId = messageSender.frameId;
+            frameData[frameId].nearestUI5Control = message.nearestUI5Control;
+
+            if (framesSelect.getSelectedId() === frameId) {
+                controlTree.setSelectedElement(message.nearestUI5Control);
+            }
         },
 
         /**
@@ -406,6 +534,10 @@
          * @param {Object} message
          */
         'on-contextMenu-control-select': function (message) {
+            displayFrameData({
+                selectedId: message.frameId,
+                oldSelectedId: framesSelect.getSelectedId()
+            });
             controlTree.setSelectedElement(message.target);
         },
 
@@ -413,15 +545,31 @@
          * Handler for UI5 none detection on the current inspected page.
          * @param {Object} message
          */
-        'on-ui5-not-detected': function (message) {
-            var overlay = document.getElementById('supportability');
-            var overlayNoUI5Section = overlay.querySelector('[no-ui5-version]');
-            var overlayUnsupportedVersionSection = overlay.querySelector('[unsupported-version]');
+        'on-ui5-not-detected': function (message, messageSender) {
+            frameData[messageSender.frameId] = {
+                isUI5Detected: false
+            };
+            framesSelect.setData(frameData);
+            if (framesSelect.getSelectedId() === messageSender.frameId) {
+                updateSupportabilityOverlay();
+            }
+        },
 
-            overlay.removeAttribute('hidden');
+        'on-ping-frames': function(message) {
+            var aLatestFrameIds = message.frameIds;
+            var aFrameIds = Object.keys(frameData).map(x => parseInt(x));
+            var bFrameUpdate = false;
 
-            overlayNoUI5Section.style.display = 'block';
-            overlayUnsupportedVersionSection.style.display = 'none';
+            aFrameIds.forEach(function(iFrameId) {
+                if (aLatestFrameIds.indexOf(iFrameId) < 0) {
+                    delete frameData[iFrameId];
+                    bFrameUpdate = true;
+                }
+            });
+
+            if (bFrameUpdate) {
+                framesSelect.setData(frameData);
+            }
         }
     };
 
@@ -440,6 +588,9 @@
 
     // Restart everything when the URL is changed
     chrome.devtools.network.onNavigated.addListener(function () {
+        frameData = {};
+        framesSelect.setSelectedId(0);
+        framesSelect.setData(frameData);
         port.postMessage({ action: 'do-ui5-detection' });
     });
 }());

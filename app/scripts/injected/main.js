@@ -203,7 +203,8 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
 
             message.send({
                 action: 'on-contextMenu-control-select',
-                target: portMessage.target
+                target: portMessage.target,
+                frameId: event.detail.frameId
             });
         },
 
@@ -260,7 +261,8 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         'do-context-menu-control-select': function (event) {
             message.send({
                 action: 'on-contextMenu-control-select',
-                target: event.detail.target
+                target: event.detail.target,
+                frameId: event.detail.frameId
             });
         },
 

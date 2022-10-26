@@ -28,7 +28,7 @@
             target: contextMenu._rightClickTarget,
             // specify the frame in which the user clicked
             frameId: info.frameId
-        }, tab.id);
+        });
     };
 
     /**
@@ -41,7 +41,7 @@
             action: 'do-context-menu-copy-html',
             target: contextMenu._rightClickTarget,
             frameId: info.frameId
-        }, tab.id);
+        });
     };
 
     // Name space for message handler functions.

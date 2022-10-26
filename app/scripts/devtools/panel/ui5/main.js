@@ -547,7 +547,8 @@
          */
         'on-ui5-not-detected': function (message, messageSender) {
             frameData[messageSender.frameId] = {
-                isUI5Detected: false
+                isUI5Detected: false,
+                url: messageSender.url
             };
             framesSelect.setData(frameData);
             if (framesSelect.getSelectedId() === messageSender.frameId) {

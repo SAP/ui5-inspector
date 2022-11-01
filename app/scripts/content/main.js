@@ -65,6 +65,15 @@
          */
         'on-control-tree-hover': function (message) {
             highLighter.setDimensions(message.target);
+        },
+
+        'on-hide-highlight': function () {
+            highLighter.hide();
+        },
+
+        'do-ping': function (message, messageSender, sendResponse) {
+            // respond to ping
+            sendResponse(true /* alive status */);
         }
     };
 

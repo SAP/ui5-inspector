@@ -8,7 +8,7 @@ var _highLighter = null;
  * @private
  */
 function _hideHighLighter() {
-    _highLighter.style.display = 'none';
+    _highLighter && (_highLighter.style.display = 'none');
 }
 
 /**
@@ -16,7 +16,7 @@ function _hideHighLighter() {
  * @private
  */
 function _showHighLighter() {
-    _highLighter.style.display = 'block';
+    _highLighter &&  (_highLighter.style.display = 'block');
 }
 
 /**
@@ -75,5 +75,6 @@ module.exports = {
         }
 
         return this;
-    }
+    },
+    hide: _hideHighLighter
 };

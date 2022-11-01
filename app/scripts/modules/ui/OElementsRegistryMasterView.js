@@ -461,6 +461,8 @@ OElementsRegistryMasterView.prototype.setData = function (data) {
 
     this._data = aData;
 
+    this.oDataGrid.rootNode().removeChildren();
+
     this._data.forEach(function (oElement) {
         oNode = new DataGrid.SortableDataGridNode(oElement);
 

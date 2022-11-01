@@ -67,6 +67,15 @@ function _addToolsButtons(options, type) {
 }
 
 /**
+ * Create text line with text, requiring attention.
+ * @returns {string}
+ * @private
+ */
+ function _addDisclaimer(text) {
+    return '<div class="disclaimer">' + text + '</div>';
+}
+
+/**
  * @param {Object|Array} element
  * @returns {number}
  * @private
@@ -397,6 +406,7 @@ function _getObjectProperty(sourceObject, path) {
 module.exports = {
     addArrow: _addArrow,
     addToolsButtons: _addToolsButtons,
+    addDisclaimer: _addDisclaimer,
     addKeyTypeInfoBegin: _addKeyTypeInfoBegin,
     addKeyTypeInfoEnd: _addKeyTypeInfoEnd,
     closeLI: _closeLI,

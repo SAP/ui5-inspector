@@ -104,7 +104,7 @@ overlay {
   height: 100%;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 18px;
   width: 100%;
   z-index: 9999999;
 }
@@ -381,6 +381,22 @@ data-view [gray] {
 }
 data-view button.tools-button {
   display: block;
+}
+data-view .disclaimer {
+  font-size: 10px;
+  padding-left: 5px;
+  color: lightcoral;
+}
+/* ==========================================================================
+   FrameSelect
+   ========================================================================== */
+frame-select {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 10px;
+}
+frame-select select {
+  outline: 2px solid #C98730;
 }
 /* ==========================================================================
    SplitContainer

@@ -25,8 +25,10 @@
     contextMenu.onClicked = function (info, tab) {
         utils.sendToAll({
             action: 'do-context-menu-control-select',
-            target: contextMenu._rightClickTarget
-        }, tab.id);
+            target: contextMenu._rightClickTarget,
+            // specify the frame in which the user clicked
+            frameId: info.frameId
+        });
     };
 
     /**
@@ -37,8 +39,9 @@
      contextMenuCopyHtml.onClicked = function (info, tab) {
         utils.sendToAll({
             action: 'do-context-menu-copy-html',
-            target: contextMenu._rightClickTarget
-        }, tab.id);
+            target: contextMenu._rightClickTarget,
+            frameId: info.frameId
+        });
     };
 
     // Name space for message handler functions.
@@ -80,7 +83,9 @@
                 chrome.tabs.query({ active: true, windowId: w.id }, tabs => {
                     chrome.scripting.executeScript({
                         target: {
-                            tabId: tabs[0].id
+                            // inject the script only into the frame
+                            // specified in the request from the devTools UI5 panel script
+                            tabId: tabs[0].id, frameIds: [message.frameId]
                         },
                         files: [message.file]
                     });
@@ -112,6 +117,39 @@
         'on-ui5-devtool-hide': function (message) {
             contextMenu.removeAll();
             contextMenuCopyHtml.removeAll();
+        },
+
+        'do-ping-frames': function (message, messageSender) {
+            var frameIds = message.frameIds;
+            var liveFrameIds = [];
+            var pingFrame = function (i) {
+                    if (i >= frameIds.length) {
+                        // no more frameId to ping
+                        // => done with pinging each frame
+                        // => send a message [to the devTools UI5 panel]
+                        // with the updated list of 'live' frame ids
+                        chrome.runtime.sendMessage(messageSender.id, {
+                            action: 'on-ping-frames',
+                            frameIds: liveFrameIds
+                        });
+                        return;
+                    }
+
+                    var frameId = frameIds[i];
+                    // ping the next frame
+                    // from the <code>frameIds</code> list
+                    utils.sendToAll({
+                        action: 'do-ping',
+                        frameId: frameId
+                    }, function (isAlive) {
+                        if (isAlive) {
+                            liveFrameIds.push(frameId);
+                        }
+                        pingFrame(i + 1);
+                    });
+                };
+
+                pingFrame(0);
         }
     };
 

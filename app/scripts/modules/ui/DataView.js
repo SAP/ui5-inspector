@@ -307,9 +307,10 @@ DataView.prototype._generateHTML = function () {
         if (key === 'actions' && currentObject.data && currentObject.data.length) {
             for (var action = 0; action < currentObject.data.length; action++) {
                var currentAction = currentObject.data[action];
+               var disclaimer = currentAction === 'Focus' ? 'When focusing an element, to see the visual focus, you need to close the DevTools panel.' : '';
+               html += DVHelper.addDisclaimer(disclaimer);
                html += this._addSectionTitle({options: {title: currentAction + ' control'}},
                 DVHelper.addToolsButtons(viewObjects.own ? viewObjects.own.options : {}, currentAction));
-
             }
             break;
         }

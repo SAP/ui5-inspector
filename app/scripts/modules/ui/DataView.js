@@ -46,6 +46,20 @@ function DataView(target, options) {
     };
 
     /**
+     * Method fired when the Focus button is clicked.
+     * @param {Object} target - arget control to be focused
+     */
+     this.onControlFocused = function (target) {
+    };
+
+    /**
+     * Method fired when the Invalidate button is clicked.
+     * @param {Object} target - target control to be invalidated
+     */
+     this.onControlInvalidated = function (target) {
+    };
+
+    /**
      * Method fired when a clickable element is clicked.
      * @param {Object} event
      */
@@ -55,6 +69,8 @@ function DataView(target, options) {
     if (options) {
 
         this.onPropertyUpdated = options.onPropertyUpdated || this.onPropertyUpdated;
+        this.onControlInvalidated = options.onControlInvalidated || this.onControlInvalidated;
+        this.onControlFocused = options.onControlFocused || this.onControlFocused;
 
         this.onValueClick = options.onValueClick || this.onValueClick;
 
@@ -288,6 +304,18 @@ DataView.prototype._generateHTML = function () {
 
         var currentObject = viewObjects[key];
 
+        if (key === 'actions' && currentObject.data && currentObject.data.length) {
+            for (var action = 0; action < currentObject.data.length; action++) {
+               var currentAction = currentObject.data[action];
+               var disclaimer = currentAction === 'Focus' ? 'When focusing an element, to see the visual focus, you need to close the DevTools panel.' : '';
+               html += DVHelper.addDisclaimer(disclaimer);
+               html += this._addSectionTitle({options: {title: currentAction + ' control'}},
+                DVHelper.addToolsButtons(viewObjects.own ? viewObjects.own.options : {}, currentAction));
+            }
+            break;
+        }
+
+
         if (!DVHelper.getObjectLength(currentObject.data)) {
             html += this._addSectionTitle(currentObject, DVHelper.getNoDataHTML(noAvailableData));
             continue;
@@ -392,6 +420,14 @@ DataView.prototype._onClickHandler = function () {
         if (targetElement.nodeName === 'INPUT') {
             that._onCheckBoxHandler(targetElement);
         }
+
+        if (targetElement.nodeName === 'BUTTON') {
+            switch (targetElement.id) {
+                case 'control-invalidate' : that._onInvalidateElement(targetElement); break;
+                case 'control-focus' : that._onFocusElement(targetElement); break;
+            }
+        }
+
     };
 };
 
@@ -421,6 +457,25 @@ DataView.prototype._onEnterHandler = function () {
             e.target.blur();
         }
     };
+};
+
+DataView.prototype._onInvalidateElement = function (target) {
+
+        var that = this;
+        var propertyData = {};
+
+        propertyData.controlId = target.getAttribute('data-control-id');
+        that.onControlInvalidated(propertyData);
+
+};
+
+DataView.prototype._onFocusElement = function (target) {
+        var that = this;
+        var propertyData = {};
+
+        propertyData.controlId = target.getAttribute('data-control-id');
+        that.onControlFocused(propertyData);
+
 };
 
 /**

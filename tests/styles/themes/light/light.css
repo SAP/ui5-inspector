@@ -379,6 +379,14 @@ data-view value[contentEditable=true]:focus {
 data-view [gray] {
   color: #bbb;
 }
+data-view button.tools-button {
+  display: block;
+}
+data-view .disclaimer {
+  font-size: 10px;
+  padding-left: 5px;
+  color: lightcoral;
+}
 /* ==========================================================================
    FrameSelect
    ========================================================================== */

@@ -58,6 +58,24 @@ function _closeLI() {
 }
 
 /**
+ * Create "invalidate" and "focus" buttons.
+ * @returns {string}
+ * @private
+ */
+function _addToolsButtons(options, type) {
+    return '<button class="tools-button" id="control-' + type.toLowerCase() + '" data-control-id="' + options.controlId + '">' + type + '</button>';
+}
+
+/**
+ * Create text line with text, requiring attention.
+ * @returns {string}
+ * @private
+ */
+ function _addDisclaimer(text) {
+    return '<div class="disclaimer">' + text + '</div>';
+}
+
+/**
  * @param {Object|Array} element
  * @returns {number}
  * @private
@@ -387,6 +405,8 @@ function _getObjectProperty(sourceObject, path) {
 
 module.exports = {
     addArrow: _addArrow,
+    addToolsButtons: _addToolsButtons,
+    addDisclaimer: _addDisclaimer,
     addKeyTypeInfoBegin: _addKeyTypeInfoBegin,
     addKeyTypeInfoEnd: _addKeyTypeInfoEnd,
     closeLI: _closeLI,

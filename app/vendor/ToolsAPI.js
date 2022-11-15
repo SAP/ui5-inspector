@@ -630,15 +630,17 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     oElements = sap.ui.core.Element.registry.all();
 
                     Object.keys(oElements).forEach(function (sKey) {
-                        var oParent = oElements[sKey].getParent();
+                        var oElement = oElements[sKey];
+                        var oParent = oElement.getParent();
 
                         aRegisteredElements.push({
-                            id: oElements[sKey].getId(),
-                            type: oElements[sKey].getMetadata().getName(),
-                            isControl: oElements[sKey].isA("sap.ui.core.Control"),
-                            isRendered: oElements[sKey].isActive(),
+                            id: oElement.getId(),
+                            type: oElement.getMetadata().getName(),
+                            isControl: oElement.isA("sap.ui.core.Control"),
+                            isRendered: oElement.isActive(),
                             parentId: oParent && (oParent.isA("sap.ui.core.Control") || oParent.isA("sap.ui.core.Element")) ? oParent.getId() : '',
-                            aggregation: oElements[sKey].sParentAggregationName ? oElements[sKey].sParentAggregationName : ''
+                            aggregation: oElement.sParentAggregationName ? oElement.sParentAggregationName : '',
+                            xml: oElement._xContent && (new XMLSerializer()).serializeToString(oElement._xContent)
                         })
                     });
                 }

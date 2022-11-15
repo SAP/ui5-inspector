@@ -21,6 +21,7 @@
     var Splitter = require('../../../modules/ui/SplitContainer.js');
     var ODataDetailView = require('../../../modules/ui/ODataDetailView.js');
     var ODataMasterView = require('../../../modules/ui/ODataMasterView.js');
+    var XMLDetailView = require('../../../modules/ui/XMLDetailView.js');
     var OElementsRegistryMasterView = require('../../../modules/ui/OElementsRegistryMasterView.js');
 
     // Apply theme
@@ -220,7 +221,10 @@
         }
     });
 
+    // XML visualization for XML Views
+    var oXMLDetailView = new XMLDetailView('elements-registry-control-xmlview');
     var oElementsRegistryMasterView = new OElementsRegistryMasterView('elements-registry-tab-master', {
+        XMLDetailView: oXMLDetailView,
         /**
          * Method fired when a Control is selected.
          * @param {string} sControlId

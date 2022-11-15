@@ -797,6 +797,27 @@ odata-detail-view {
   border: none;
   white-space: pre;
 }
+xml-view {
+  height: 100%;
+}
+#elements-registry-control-xmlview .editorAlt {
+  display: flex;
+}
+#elements-registry-control-xmlview .editorAlt div {
+  margin: auto;
+}
+#elements-registry-control-xmlview div.hidden {
+  visibility: hidden;
+}
+#elements-registry-control-xmlview .editorAlt,
+#elements-registry-control-xmlview #xmlEditor {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+}
 /*
  * Copyright (C) 2008 Apple Inc. All Rights Reserved.
  *

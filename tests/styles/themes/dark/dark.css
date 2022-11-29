@@ -805,6 +805,7 @@ xml-view {
 }
 #elements-registry-control-xmlview .editorAlt div {
   margin: auto;
+  cursor: pointer;
 }
 #elements-registry-control-xmlview div.hidden {
   visibility: hidden;

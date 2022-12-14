@@ -516,6 +516,14 @@ a {
 		top: 11.25rem;
 	}
 
+	.hero-intro__description {
+		max-width: 55%;
+	}
+
+	.hero-intro__description br {
+		display: none;
+	}
+
 	.example-app-cards {
 		gap: 1.875rem;
 	}
@@ -575,8 +583,6 @@ a {
 	}
 
 	.hero-info__description {
-		/* Custom */
-		font-size: 1.4rem;
 		text-align: left;
 	}
 
@@ -614,9 +620,9 @@ a {
 		margin-bottom: 3.125rem;
 	}
 
-    .main-features-row:last-child {
-        margin-bottom: 6.75rem;
-    }
+	.main-features-row:last-child {
+		margin-bottom: 6.75rem;
+	}
 
 	.reversed {
 		grid-row: unset;
@@ -640,9 +646,9 @@ a {
 	}
 
 	/* ------------- FOOTER ------------- */
-    .footer {
-        border-top-left-radius: 3.5rem;
-    }
+	.footer {
+		border-top-left-radius: 3.5rem;
+	}
 
 	.footer-grid {
 		padding: 3.125rem 0;
@@ -689,15 +695,8 @@ a {
 		margin-bottom: 3.55rem;
 	}
 
-	.hero-intro__description {
-		max-width: 50%;
-	}
-
-	.hero-intro__description br {
-		display: none;
-	}
-
-    .example-app__description {
+	.hero-info__description,
+	.example-app__description {
 		font-size: 1.3rem;
 	}
 }
@@ -707,7 +706,7 @@ a {
 /******************************/
 @media (max-width: 20em) {
 	.hero-bg-image {
-		top: 10.5rem;
+		top: 11.5rem;
 	}
 
 	.example-app__card {
@@ -730,7 +729,7 @@ a {
 		text-align: left;
 	}
 
-    .footer-grid {
-        max-width: 90%;
-    }
+	.footer-grid {
+		max-width: 90%;
+	}
 }

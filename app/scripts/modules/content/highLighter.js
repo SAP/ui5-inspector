@@ -1,51 +1,50 @@
 'use strict';
 
-// Reference for the highlighter DOM element
-var _highLighter = null;
-
 /**
- * Hide the highlighter.
- * @private
+ * Singleton helper to highlight controls DOM elements
  */
-function _hideHighLighter() {
-    _highLighter && (_highLighter.style.display = 'none');
-}
+var Highlighter = {
+    // Reference for the highlighter DOM element
+    _highLighterDomEl: null,
 
-/**
- * Show the highlighter.
- * @private
- */
-function _showHighLighter() {
-    _highLighter &&  (_highLighter.style.display = 'block');
-}
+    /**
+     * Hide the highlighter.
+     * @public
+     */
+    hide: function () {
+        this._highLighterDomEl && (this._highLighterDomEl.style.display = 'none');
+    },
 
-/**
- * Create DOM element for visual highlighting.
- * @private
- */
-function _createHighLighter() {
-    var highLighter = document.createElement('div');
-    highLighter.style.cssText = 'box-sizing: border-box;border:1px solid blue;background: rgba(20, 20, 200, 0.4);position: absolute';
+    /**
+     * Show the highlighter.
+     * @private
+     */
+    _show: function () {
+        this._highLighterDomEl && (this._highLighterDomEl.style.display = 'block');
+    },
 
-    var highLighterWrapper = document.createElement('div');
-    highLighterWrapper.id = 'ui5-highlighter';
-    highLighterWrapper.style.cssText = 'position: fixed;top:0;right:0;bottom:0;left:0;z-index: 1000;overflow: hidden;';
-    highLighterWrapper.appendChild(highLighter);
+    /**
+     * Create DOM element for visual highlighting.
+     * @private
+     */
+    _create: function () {
+        var highLighter = document.createElement('div');
+        highLighter.style.cssText = 'box-sizing: border-box;border:1px solid blue;background: rgba(20, 20, 200, 0.4);position: absolute';
 
-    document.body.appendChild(highLighterWrapper);
+        var highLighterWrapper = document.createElement('div');
+        highLighterWrapper.id = 'ui5-highlighter';
+        highLighterWrapper.style.cssText = 'position: fixed;top:0;right:0;bottom:0;left:0;z-index: 1000;overflow: hidden;';
+        highLighterWrapper.appendChild(highLighter);
 
-    // Save reference for later usage
-    _highLighter = document.getElementById('ui5-highlighter');
+        document.body.appendChild(highLighterWrapper);
 
-    // Add event handler
-    _highLighter.onmouseover = _hideHighLighter;
-}
+        // Save reference for later usage
+        this._highLighterDomEl = document.getElementById('ui5-highlighter');
 
-/**
- * Highlight controls.
- * @type {{setDimensions: Function}}
- */
-module.exports = {
+        // Add event handler
+        this._highLighterDomEl.onmouseover = this.hide.bind(this);
+    },
+
     /**
      * Set the position of the visual highlighter.
      * @param {string} elementId - The id of the DOM element that need to be highlighted
@@ -56,13 +55,17 @@ module.exports = {
         var targetDomElement;
         var targetRect;
 
-        if (_highLighter === null && !document.getElementById('ui5-highlighter')) {
-            _createHighLighter();
+        // the hightlighter DOM element may already have been created in a previous DevTools session
+        // (followed by closing and reopening the DevTools)
+        this._highLighterDomEl || (this._highLighterDomEl = document.getElementById('ui5-highlighter'));
+
+        if (!this._highLighterDomEl) {
+            this._create();
         } else {
-            _showHighLighter();
+            this._show();
         }
 
-        highlighter = _highLighter.firstElementChild;
+        highlighter = this._highLighterDomEl.firstElementChild;
         targetDomElement = document.getElementById(elementId);
 
         if (targetDomElement) {
@@ -75,6 +78,7 @@ module.exports = {
         }
 
         return this;
-    },
-    hide: _hideHighLighter
+    }
 };
+
+module.exports = Highlighter;

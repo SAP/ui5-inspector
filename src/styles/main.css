@@ -118,7 +118,7 @@ th {
 
 	/* --- Colors --- */
 	--primary-text-color: #333333;
-	--primary-emphasize-color: #1873B4;
+	--primary-emphasize-color: #1873b4;
 	--white-color: #ffffff;
 	--header-bg-color: #f7f7f7;
 	--header-text-color: #000000;
@@ -142,6 +142,8 @@ th {
 	--example-app-description-font-size: 1.25rem;
 
 	/* --- Main Features --- */
+	/* (100 - 83.65%) / 2 */
+	--main-features-padding: 0 8.175%;
 	--main-features-subtitle-font-size: 2.25rem;
 	--main-features-description-font-size: 1.5rem;
 
@@ -391,6 +393,25 @@ a {
 }
 
 /* -------- SECTION: MAIN FEATURES -------- */
+.main-features {
+	position: relative;
+}
+
+.main-features::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: url("../assets/images/left-bg.svg"), url("../assets/images/right-bg.svg");
+	background-color: var(--white-color);
+	background-position-x: left, right;
+	background-size: 58rem, 40rem;
+	background-repeat: no-repeat;
+	z-index: -1;
+}
+
 .main-features__title {
 	max-width: var(--section-max-width);
 	margin-left: auto;
@@ -405,6 +426,7 @@ a {
 }
 
 .main-features-content--wrapper:last-child {
+	background-color: var(--white-color);
 	box-shadow: var(--card-box-shadow);
 }
 
@@ -537,12 +559,22 @@ a {
 		font-size: 9px;
 	}
 
+	.example-app__card--inner {
+		padding: 1.25rem 1.875rem;
+	}
+
 	.footer-grid {
 		max-width: var(--section-max-width);
 	}
+}
 
-	.example-app__card--inner {
-		padding: 1.25rem 1.875rem;
+/******************************/
+/* BELOW 900px ( 900 / 16 = 56.25em )*/
+/******************************/
+@media (max-width: 56.25em) {
+	.main-features::before {
+		background-size: 45rem, 30rem;
+		background-position-y: 0, 30rem;
 	}
 }
 
@@ -591,6 +623,12 @@ a {
 	.example-app__icon {
 		width: 4.75rem;
 	}
+
+	.main-features::before {
+		background-image: url('../assets/images/left-bg.svg');
+		background-position: center;
+		background-size: cover;
+	}
 }
 
 /******************************/
@@ -637,9 +675,7 @@ a {
 
 	/* ------------- MAIN FEATURES -------------- */
 	.main-features {
-		max-width: var(--section-max-width);
-		margin-left: auto;
-		margin-right: auto;
+		padding: var(--main-features-padding);
 	}
 
 	.main-features__title {
@@ -652,7 +688,6 @@ a {
 	}
 
 	.main-features-row {
-		position: relative;
 		grid-template-columns: 1fr;
 	}
 

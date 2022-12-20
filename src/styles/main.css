@@ -625,9 +625,9 @@ a {
 	}
 
 	.main-features::before {
-		background-image: url('../assets/images/left-bg.svg');
-		background-position: center;
-		background-size: cover;
+		background-size: 40rem, 25rem;
+    	background-position-y: 0, bottom;
+		background-position-x: -10rem, right;
 	}
 }
 

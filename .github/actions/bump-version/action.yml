@@ -1,5 +1,0 @@
-name: 'Bump version'
-description: 'Bump version in files'
-runs:
-    using: 'node16'
-    main: 'index.js'

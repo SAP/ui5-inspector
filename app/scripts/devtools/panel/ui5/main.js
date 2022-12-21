@@ -183,6 +183,13 @@
                 action: 'do-control-focus',
                 data: changeData
             });
+        },
+
+        onCopyControlToConsole: function(changeData) {
+            port.postMessage({
+                action: 'do-copy-control-to-console',
+                data: changeData
+            });
         }
     });
 
@@ -392,6 +399,20 @@
         onSelectionChange: displayFrameData
     });
 
+    var updateControlIdLinks = () => {
+        document.querySelectorAll('.controlId').forEach(element => element.addEventListener('click', function() {
+            const controlId = element.innerText;
+            if (controlId) {
+                const changeData = {
+                    controlId: controlId
+                };
+                port.postMessage({
+                    action: 'do-copy-control-to-console',
+                    data: changeData
+                });
+            }
+        }));
+    };
     // ================================================================================
     // Communication
     // ================================================================================
@@ -511,6 +532,8 @@
 
                 // Close possible open binding info and/or methods info
                 controlBindingsSplitter.hideEndContainer();
+                // Make control ids clickable
+                updateControlIdLinks();
             }
         },
 
@@ -535,6 +558,8 @@
                 document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
                 // Close possible open binding info and/or methods info
                 controlBindingsSplitterElementsRegistry.hideEndContainer();
+                // Make control ids clickable
+                updateControlIdLinks();
             }
         },
 

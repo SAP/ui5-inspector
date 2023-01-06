@@ -283,7 +283,7 @@ ControlTree.prototype.setSelectedElement = function (elementID) {
         return;
     }
 
-    selectedElement = this._controlTreeContainer.querySelector('#' + elementID);
+    selectedElement = this._controlTreeContainer.querySelector(`[id="${elementID}"]`);
 
     if (selectedElement === null) {
         console.warn('The selected element is not a child of the ControlTree');

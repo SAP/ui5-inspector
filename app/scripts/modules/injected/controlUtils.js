@@ -387,7 +387,7 @@ var controlProperties = (function () {
         });
         properties[OWN].data = formatedProps;
         properties[OWN].types = types;
-        properties[OWN].options.title = '#' + controlId + ' <span gray>(' + title + ')</span>';
+        properties[OWN].options.title = '#<span class="controlId" title="Click to copy control to console">' + controlId + '</span><span gray>(' + title + ')</span>';
 
         _formatInheritedProperties(controlId, properties);
         _getControlPropertiesAssociations(controlId, properties[OWN]);
@@ -871,7 +871,7 @@ module.exports = {
     getControlActionsFormattedForDataView: function (controlId) {
         return {
             actions: {
-                data: ['Focus', 'Invalidate']
+                data: ['Focus', 'Invalidate', 'Copy to Console']
             },
             own: {
                 options: {

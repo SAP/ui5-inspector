@@ -6,18 +6,21 @@ data-view {
     -webkit-transform: translateZ(0);
     word-break: break-all;
 
-    clickable-value {
+    clickable-value,
+    .controlId {
         color: @light-blue;
     }
 
     anchor,
-    clickable-value {
+    clickable-value,
+    .controlId {
         cursor: pointer;
         text-decoration: underline;
     }
 
     anchor:hover,
-    clickable-value:hover {
+    clickable-value:hover,
+    .controlId:hover {
         text-decoration: none;
     }
 
@@ -94,7 +97,4 @@ data-view {
         color: lightcoral;
     }
 
-    .controlId {
-        cursor: pointer;
-    }
 }

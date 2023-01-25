@@ -7,6 +7,12 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
     var rightClickHandler = require('../modules/injected/rightClickHandler.js');
     var applicationUtils = require('../modules/injected/applicationUtils');
 
+    var ui5TempName = 'ui5$temp';
+	var ui5Temp = window[ui5TempName] = {}; // Container for all temp. variables
+	var tempVarCount = 0;
+
+    const log = (m) => console.log(`ui5-inspector: ${m}`);
+
     // Create global reference for the extension.
     ui5inspector.createReferences();
 
@@ -320,6 +326,32 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
 
             selectedElement = document.getElementById(elementID);
             _writeInClipboardFromDevTools(selectedElement.outerHTML);
+        },
+        /**
+         * Handler to copy the element into a temp variable on the console
+         * @param {Object} event
+         */
+        'do-copy-control-to-console': function (event) {
+            var oData = event.detail.data;
+            var sControlId = oData.controlId;
+            const control = sap.ui.getCore().byId(sControlId);
+            if (control) {
+                try {
+                    const tempVarName = ui5Temp[sControlId] && ui5Temp[sControlId].savedAs || `ui5$${tempVarCount++}`;
+                    const instance = window[tempVarName] = ui5Temp[sControlId] = {
+                        control: control,
+                        isA: control.getMetadata().getName(),
+                        savedAs: tempVarName
+                    };
+
+                    log(`Control copied to global var ${tempVarName}, all vars are collected in global var ${ui5TempName}`);
+                    console.log(instance);
+                } catch (exc) {
+                    // Ignore errors gracefully
+                }
+            } else {
+                log(`No Control with id ${sControlId} exists`);
+            }
         }
     };
 

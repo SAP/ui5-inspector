@@ -387,6 +387,9 @@ data-view .disclaimer {
   padding-left: 5px;
   color: lightcoral;
 }
+data-view .controlId {
+  cursor: pointer;
+}
 /* ==========================================================================
    FrameSelect
    ========================================================================== */

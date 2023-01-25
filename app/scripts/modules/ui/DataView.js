@@ -52,6 +52,13 @@ function DataView(target, options) {
      this.onControlFocused = function (target) {
     };
 
+        /**
+     * Method fired when the Copy to Console button is clicked.
+     * @param {Object} target - arget control to be focused
+     */
+        this.onCopyControlToConsole = function (target) {
+        };
+
     /**
      * Method fired when the Invalidate button is clicked.
      * @param {Object} target - target control to be invalidated
@@ -71,6 +78,7 @@ function DataView(target, options) {
         this.onPropertyUpdated = options.onPropertyUpdated || this.onPropertyUpdated;
         this.onControlInvalidated = options.onControlInvalidated || this.onControlInvalidated;
         this.onControlFocused = options.onControlFocused || this.onControlFocused;
+        this.onCopyControlToConsole = options.onCopyControlToConsole || this.onCopyControlToConsole;
 
         this.onValueClick = options.onValueClick || this.onValueClick;
 
@@ -425,6 +433,7 @@ DataView.prototype._onClickHandler = function () {
             switch (targetElement.id) {
                 case 'control-invalidate' : that._onInvalidateElement(targetElement); break;
                 case 'control-focus' : that._onFocusElement(targetElement); break;
+                case 'control-copy to console' : that._onCopyElementToConsole(targetElement); break;
             }
         }
 
@@ -475,6 +484,15 @@ DataView.prototype._onFocusElement = function (target) {
 
         propertyData.controlId = target.getAttribute('data-control-id');
         that.onControlFocused(propertyData);
+
+};
+
+DataView.prototype._onCopyElementToConsole = function (target) {
+    var that = this;
+    var propertyData = {};
+
+    propertyData.controlId = target.getAttribute('data-control-id');
+    that.onCopyControlToConsole(propertyData);
 
 };
 

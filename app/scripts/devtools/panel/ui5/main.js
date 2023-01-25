@@ -51,6 +51,20 @@
     var framesSelect;
     var displayFrameData;
     var updateSupportabilityOverlay;
+    var sharedDataViewOptions = {
+
+        /**
+         * Send message upon click to copy control to console
+         * @param {Object} data
+         */
+        onCopyControlToConsole: function(data) {
+            port.postMessage({
+                action: 'do-copy-control-to-console',
+                data: data,
+                frameId: framesSelect.getSelectedId()
+            });
+        }
+    };
 
     // Main tabbar inside 'UI5' devtools panel
     var UI5TabBar = new TabBar('ui5-tabbar');
@@ -101,7 +115,7 @@
     var controlTreeTabBar = new TabBar('control-tree-tabbar');
 
     // Dataview for control properties
-    var controlProperties = new DataView('control-properties', {
+    var controlProperties = new DataView('control-properties', Object.assign({
 
         /**
          * Send message, that an proprety in the DataView is changed.
@@ -114,7 +128,7 @@
                 frameId: framesSelect.getSelectedId()
             });
         }
-    });
+    }, sharedDataViewOptions));
 
     // Vertical splitter for 'Bindings' tab
     var controlBindingsSplitter = new Splitter('control-bindings-splitter', {
@@ -124,7 +138,7 @@
     });
 
     // Dataview for control aggregations
-    var controlAggregations = new DataView('control-aggregations');
+    var controlAggregations = new DataView('control-aggregations', sharedDataViewOptions);
 
     // Dataview for control binding information
     var controlBindingInfoRightDataView = new DataView('control-bindings-right');
@@ -155,7 +169,7 @@
     });
 
     // Dataview for control events
-    var controlEvents = new DataView('control-events', {
+    var controlEvents = new DataView('control-events', Object.assign ({
 
         /**
          * Method fired when a clickable element is clicked.
@@ -168,9 +182,9 @@
                 frameId: framesSelect.getSelectedId()
             });
         }
-    });
+    }, sharedDataViewOptions));
 
-    var controlActions = new DataView('control-actions', {
+    var controlActions = new DataView('control-actions', Object.assign({
         onControlInvalidated: function (changeData) {
             port.postMessage({
                 action: 'do-control-invalidate',
@@ -183,15 +197,8 @@
                 action: 'do-control-focus',
                 data: changeData
             });
-        },
-
-        onCopyControlToConsole: function(changeData) {
-            port.postMessage({
-                action: 'do-copy-control-to-console',
-                data: changeData
-            });
         }
-    });
+    }, sharedDataViewOptions));
 
     // Bootstrap for 'Control inspector' tab
     // ================================================================================
@@ -267,7 +274,7 @@
     var elementsRegistryTabBar = new TabBar('elements-registry-tabbar');
 
     // Dataview for control properties
-    var controlPropertiesElementsRegistry = new DataView('elements-registry-control-properties', {
+    var controlPropertiesElementsRegistry = new DataView('elements-registry-control-properties', Object.assign({
 
         /**
          * Send message, that an proprety in the DataView is changed.
@@ -280,7 +287,7 @@
                 frameId: framesSelect.getSelectedId()
             });
         }
-    });
+    }, sharedDataViewOptions));
 
     // Vertical splitter for 'Bindings' tab
     var controlBindingsSplitterElementsRegistry = new Splitter('elements-registry-control-bindings-splitter', {
@@ -290,7 +297,7 @@
     });
 
     // Dataview for control aggregations
-    var controlAggregationsElementsRegistry = new DataView('elements-registry-control-aggregations');
+    var controlAggregationsElementsRegistry = new DataView('elements-registry-control-aggregations', sharedDataViewOptions);
 
     // Dataview for control binding information
     var controlBindingInfoRightDataViewElementsRegistry = new DataView('elements-registry-control-bindings-right');
@@ -321,7 +328,7 @@
     });
 
     // Dataview for control events
-    var controlEventsElementsRegistry = new DataView('elements-registry-control-events', {
+    var controlEventsElementsRegistry = new DataView('elements-registry-control-events', Object.assign({
 
         /**
          * Method fired when a clickable element is clicked.
@@ -334,7 +341,7 @@
                 frameId: framesSelect.getSelectedId()
             });
         }
-    });
+    }, sharedDataViewOptions));
 
     displayFrameData = function (options) {
         var frameId = options.selectedId;
@@ -399,20 +406,6 @@
         onSelectionChange: displayFrameData
     });
 
-    var updateControlIdLinks = () => {
-        document.querySelectorAll('.controlId').forEach(element => element.addEventListener('click', function() {
-            const controlId = element.innerText;
-            if (controlId) {
-                const changeData = {
-                    controlId: controlId
-                };
-                port.postMessage({
-                    action: 'do-copy-control-to-console',
-                    data: changeData
-                });
-            }
-        }));
-    };
     // ================================================================================
     // Communication
     // ================================================================================
@@ -532,8 +525,6 @@
 
                 // Close possible open binding info and/or methods info
                 controlBindingsSplitter.hideEndContainer();
-                // Make control ids clickable
-                updateControlIdLinks();
             }
         },
 
@@ -558,8 +549,6 @@
                 document.querySelector('#tab-bindings count').innerHTML = '&nbsp;(' + Object.keys(message.controlBindings).length + ')';
                 // Close possible open binding info and/or methods info
                 controlBindingsSplitterElementsRegistry.hideEndContainer();
-                // Make control ids clickable
-                updateControlIdLinks();
             }
         },
 

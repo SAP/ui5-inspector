@@ -458,6 +458,8 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     var isResourceModel = type === "sap.ui.model.resource.ResourceModel";
                     var fullPath;
                     var contextPath;
+                    // Remember the context in case it is odata.v4.Context
+                    var context = type === 'sap.ui.model.odata.v4.Context' && model;
 
                     // we dont care about the context if path is absolute
                     if(!isRelative) {
@@ -475,9 +477,15 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     // in case its a model context, retrieve the underlying model
                     model = model.getModel && model.getModel() || model;
 
-                    // functions in the model cannot communicated via message
-                    modelInfo.modelData = isResourceModel ? "" : model.getObject(contextPath || "/");
-                    modelInfo.pathData = model.getProperty(fullPath);
+                    // in case it is v4 ODataContext we get the data from the context
+                    if (context) {
+                        // There is no modelData in OData v4 just pathData
+                        modelInfo.pathData = path !== context.getPath() ? context.getObject(path) : context.getObject();
+                    } else {
+                        // functions in the model cannot communicated via message
+                        modelInfo.modelData = isResourceModel ? "" : model.getObject(contextPath || "/");
+                        modelInfo.pathData = model.getProperty(fullPath);
+                    }
                     modelInfo.fullPath = fullPath;
                     modelInfo.path = pathWithoutModel;
                     modelInfo.mode =  model.getDefaultBindingMode();
@@ -609,8 +617,10 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                 if (bindingContexts && Object.keys(bindingContexts).length) {
                     return {
                         parts: Object.keys(bindingContexts).map(function (key) {
-                            return controlInformation._getModelInfo(bindingContexts[key].getModel(),
-                                (key && key !== "undefined" && key !== "null" ? key + ">" : "") + bindingContexts[key].getPath());
+                            var context = bindingContexts[key];
+                            var modelOrContext = context.getMetadata().getName() === 'sap.ui.model.odata.v4.Context' ? context : context.getModel();
+                            return controlInformation._getModelInfo(modelOrContext,
+                                (key && key !== "undefined" && key !== "null" ? key + ">" : "") + context.getPath());
                         })
                     };
                 }

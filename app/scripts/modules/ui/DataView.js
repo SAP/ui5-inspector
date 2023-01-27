@@ -437,6 +437,10 @@ DataView.prototype._onClickHandler = function () {
             }
         }
 
+        if (targetElement.nodeName === 'SPAN' && targetElement.classList.contains('controlId')) {
+            that._onCopyElementToConsole(targetElement);
+        }
+
     };
 };
 

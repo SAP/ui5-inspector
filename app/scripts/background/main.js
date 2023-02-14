@@ -88,7 +88,6 @@
          */
         'on-ui5-devtool-show': function (message) {
             contextMenu.create();
-            contextMenuCopyHtml.create();
         },
 
         /**
@@ -97,7 +96,6 @@
          */
         'on-ui5-devtool-hide': function (message) {
             contextMenu.removeAll();
-            contextMenuCopyHtml.removeAll();
         },
 
         'do-ping-frames': function (message, messageSender) {

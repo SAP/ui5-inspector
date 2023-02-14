@@ -327,7 +327,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             selectedElement = document.getElementById(elementID);
             _writeInClipboardFromDevTools(selectedElement.outerHTML)
             .catch(function(err) {
-            });;
+            });
         },
         /**
          * Handler to copy the element into a temp variable on the console

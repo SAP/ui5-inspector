@@ -309,7 +309,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          * Copies HTML of Control with context menu click.
          * @param {Object} event
          */
-        'do-context-menu-copy-html': function (event) {
+         'do-control-copy-html': function (event) {
             var elementID = event.detail.target;
             var navigatorClipBoard = navigator && navigator.clipboard;
             var selectedElement;

@@ -200,7 +200,7 @@
         },
         onCopyControlHTMLToConsole: function (changeData) {
             port.postMessage({
-                action: 'do-context-menu-copy-html',
+                action: 'do-control-copy-html',
                 target: changeData.controlId
             });
         }

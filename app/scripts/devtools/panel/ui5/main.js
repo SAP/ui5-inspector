@@ -197,6 +197,12 @@
                 action: 'do-control-focus',
                 data: changeData
             });
+        },
+        onCopyControlHTMLToConsole: function (changeData) {
+            port.postMessage({
+                action: 'do-context-menu-copy-html',
+                target: changeData.controlId
+            });
         }
     }, sharedDataViewOptions));
 

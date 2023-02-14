@@ -11,12 +11,6 @@
         contexts: ['all']
     });
 
-    var contextMenuCopyHtml = new ContextMenu({
-        title: 'Copy HTML',
-        id: 'context-menu-copy-html',
-        contexts: ['all']
-    });
-
     /**
      * This method will be fired when an instance is clicked. The idea is to be overwritten from the instance.
      * @param {Object} info - Information sent when a context menu item is clicked. Check chrome.contextMenus.onClicked.
@@ -27,19 +21,6 @@
             action: 'do-context-menu-control-select',
             target: contextMenu._rightClickTarget,
             // specify the frame in which the user clicked
-            frameId: info.frameId
-        });
-    };
-
-    /**
-     * This method will be fired when an instance is clicked. The idea is to be overwritten from the instance.
-     * @param {Object} info - Information sent when a context menu item is clicked. Check chrome.contextMenus.onClicked.
-     * @param {Object} tab - The details of the tab where the click took place.
-     */
-     contextMenuCopyHtml.onClicked = function (info, tab) {
-        utils.sendToAll({
-            action: 'do-context-menu-copy-html',
-            target: contextMenu._rightClickTarget,
             frameId: info.frameId
         });
     };

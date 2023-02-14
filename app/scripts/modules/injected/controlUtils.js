@@ -871,7 +871,7 @@ module.exports = {
     getControlActionsFormattedForDataView: function (controlId) {
         return {
             actions: {
-                data: ['Focus', 'Invalidate', 'Copy to Console']
+                data: ['Focus', 'Invalidate', 'Copy to Console', 'Copy HTML to Console']
             },
             own: {
                 options: {

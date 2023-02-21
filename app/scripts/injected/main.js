@@ -72,17 +72,18 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
      * @param {String} text
      * @private
      */
-    function _writeInClipboardFromDevTools(text) {
+     function _writeInClipboardFromDevTools(text) {
         return new Promise((resolve, reject) => {
             /* jshint ignore:start */
-            var _asyncCopyFn = (async (ev) => {
+            var _asyncCopyFn = (async () => {
                 try {
-                    window.removeEventListener('focus', _asyncCopyFn);
-                    console.log('Copy HTML from here:' + '\n' + text);
-                    await ev.target.navigator.clipboard.writeText(text);
+                    var value = await navigator.clipboard.writeText(text);
+                    resolve(value);
                 } catch (e) {
+                    log(e);
                     reject(e);
                 }
+                window.removeEventListener('focus', _asyncCopyFn);
             });
 
             window.addEventListener('focus', _asyncCopyFn);
@@ -325,9 +326,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             }
 
             selectedElement = document.getElementById(elementID);
-            _writeInClipboardFromDevTools(selectedElement.outerHTML)
-            .catch(function(err) {
-            });
+            _writeInClipboardFromDevTools(selectedElement.outerHTML);
         },
         /**
          * Handler to copy the element into a temp variable on the console

@@ -318,16 +318,19 @@ data-view {
   -webkit-transform: translateZ(0);
   word-break: break-all;
 }
-data-view clickable-value {
+data-view clickable-value,
+data-view .controlId {
   color: #0000ee;
 }
 data-view anchor,
-data-view clickable-value {
+data-view clickable-value,
+data-view .controlId {
   cursor: pointer;
   text-decoration: underline;
 }
 data-view anchor:hover,
-data-view clickable-value:hover {
+data-view clickable-value:hover,
+data-view .controlId:hover {
   text-decoration: none;
 }
 data-view arrow {
@@ -386,9 +389,6 @@ data-view .disclaimer {
   font-size: 10px;
   padding-left: 5px;
   color: lightcoral;
-}
-data-view .controlId {
-  cursor: pointer;
 }
 /* ==========================================================================
    FrameSelect

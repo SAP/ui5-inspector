@@ -68,33 +68,6 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
     mutation.init();
 
     /**
-     * Writes HTML content of a Control in the user's clipboard
-     * @param {String} text
-     * @private
-     */
-     function _writeInClipboardFromDevTools(text) {
-        return new Promise((resolve, reject) => {
-            /* jshint ignore:start */
-            var _asyncCopyFn = (async () => {
-                try {
-                    var value = await navigator.clipboard.writeText(text);
-                    resolve(value);
-                } catch (e) {
-                    log(e);
-                    reject(e);
-                }
-                window.removeEventListener('focus', _asyncCopyFn);
-            });
-
-            window.addEventListener('focus', _asyncCopyFn);
-            /* jshint ignore:end */
-
-            var event = new Event('focus');
-            window.dispatchEvent(event);
-        });
-    }
-
-    /**
      * Sets control's property.
      * @param {Object} oControl
      * @param {Object} oData - property's data
@@ -326,7 +299,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             }
 
             selectedElement = document.getElementById(elementID);
-            _writeInClipboardFromDevTools(selectedElement.outerHTML);
+            log('\n' + 'Copy HTML' + '\n' + selectedElement.outerHTML);
         },
         /**
          * Handler to copy the element into a temp variable on the console

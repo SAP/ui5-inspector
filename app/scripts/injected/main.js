@@ -11,7 +11,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
 	var ui5Temp = window[ui5TempName] = {}; // Container for all temp. variables
 	var tempVarCount = 0;
 
-    const log = (m) => console.log(`ui5-inspector: ${m}`);
+    const log = (m, options) => console.log(`ui5-inspector: ${m}`, options ? options : false);
 
     // Create global reference for the extension.
     ui5inspector.createReferences();
@@ -299,7 +299,8 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             }
 
             selectedElement = document.getElementById(elementID);
-            log('\n' + 'Copy HTML' + '\n' + selectedElement.outerHTML);
+            log('\n' + '%cCopy HTML ⬇️', 'color:#12b1eb; font-size:12px');
+            console.log(selectedElement);
         },
         /**
          * Handler to copy the element into a temp variable on the console

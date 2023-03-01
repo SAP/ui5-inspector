@@ -280,21 +280,15 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         },
 
         /**
-         * Copies HTML of Control with context menu click.
+         * Copies HTML of Control to Console.
          * @param {Object} event
          */
          'do-control-copy-html': function (event) {
             var elementID = event.detail.target;
-            var navigatorClipBoard = navigator && navigator.clipboard;
             var selectedElement;
 
             if (typeof elementID !== 'string') {
                 console.warn('Please use a valid string parameter');
-                return;
-            }
-
-            if (!navigatorClipBoard) {
-                console.warn('This functionality is not enabled');
                 return;
             }
 

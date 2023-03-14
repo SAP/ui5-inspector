@@ -62,7 +62,7 @@
 
     // {int} Max cyclomatic complexity per function. The cyclomatic complexity of a section of source code is the count
     // of the number of linearly independent paths through the source code.
-    "maxcomplexity": 12,
+    "maxcomplexity": 13,
 
     // ================================================================================
     // Relaxing

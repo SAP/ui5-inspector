@@ -197,6 +197,14 @@
                 action: 'do-control-focus',
                 data: changeData
             });
+        },
+        onCopyControlHTMLToConsole: function (changeData) {
+            port.postMessage({
+                action: 'do-control-copy-html',
+                target: changeData.controlId,
+                tabId: chrome.devtools.inspectedWindow.tabId,
+                file: '/scripts/background/main.js'
+            });
         }
     }, sharedDataViewOptions));
 

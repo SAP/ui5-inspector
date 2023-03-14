@@ -252,7 +252,7 @@ var clickableValueData = {
 
 var mockDataViewActions = {
     actions: {
-        data: ['Focus', 'Invalidate']
+        data: ['Focus', 'Invalidate', 'Copy HTML to Console']
     },
     own: {
         options: {
@@ -745,22 +745,27 @@ describe('DataView', function () {
             var focusButtonElement;
             var dataViewElement;
             var invalidateButtonElement;
+            var copyHTMLButtonElement;
             var focusHandlerSpy;
             var invalidateHandlerSpy;
+            var copyElementHTMLToConsoleHandler;
 
             beforeEach(function () {
                 sampleView.setData(mockDataViewActions);
                 dataViewElement = document.getElementById('data-view');
                 focusButtonElement = document.getElementById('control-focus');
                 invalidateButtonElement = document.getElementById('control-invalidate');
+                copyHTMLButtonElement = document.getElementById('control-copy html to console');
                 focusHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onFocusElement');
                 invalidateHandlerSpy = sinon.spy(DataViewComponent.prototype, '_onInvalidateElement');
+                copyElementHTMLToConsoleHandler = sinon.spy(DataViewComponent.prototype, '_onCopyElementHTMLToConsole');
             });
 
             afterEach(function () {
                 dataViewElement = null;
                 focusHandlerSpy.restore();
                 invalidateHandlerSpy.restore();
+                copyElementHTMLToConsoleHandler.restore();
             });
 
             it('should call focusHandler once', function () {
@@ -773,6 +778,11 @@ describe('DataView', function () {
                 invalidateButtonElement.click();
                 invalidateHandlerSpy.callCount.should.equal(1);
                 invalidateHandlerSpy.calledWith(invalidateButtonElement).should.equal(true);
+            });
+            it('should call copyElementHTMLToConsoleHandler once', function () {
+                copyHTMLButtonElement.click();
+                copyElementHTMLToConsoleHandler.callCount.should.equal(1);
+                copyElementHTMLToConsoleHandler.calledWith(copyHTMLButtonElement).should.equal(true);
             });
         });
 

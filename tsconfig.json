@@ -1,0 +1,15 @@
+{
+  "include": [
+    "app/**/*",
+    "global.d.ts"
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "dist",
+    "target": "ES2021",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "rootDir": "app"
+  }
+}

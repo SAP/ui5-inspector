@@ -11,7 +11,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
 	var ui5Temp = window[ui5TempName] = {}; // Container for all temp. variables
 	var tempVarCount = 0;
 
-    const log = (m) => console.log(`ui5-inspector: ${m}`);
+    const log = (m, options) => console.log(`ui5-inspector: ${m}`, options ? options : false);
 
     // Create global reference for the extension.
     ui5inspector.createReferences();
@@ -66,32 +66,6 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
 
     // Initialize
     mutation.init();
-
-    /**
-     * Writes HTML content of a Control in the user's clipboard
-     * @param {String} text
-     * @private
-     */
-    function _writeInClipboardFromDevTools(text) {
-        return new Promise((resolve, reject) => {
-            /* jshint ignore:start */
-            var _asyncCopyFn = (async () => {
-                try {
-                    var value = await navigator.clipboard.writeText(text);
-                    resolve(value);
-                } catch (e) {
-                    reject(e);
-                }
-                window.removeEventListener('focus', _asyncCopyFn);
-            });
-
-            window.addEventListener('focus', _asyncCopyFn);
-            /* jshint ignore:end */
-
-            var event = new Event('focus');
-            window.dispatchEvent(event);
-        });
-    }
 
     /**
      * Sets control's property.
@@ -306,12 +280,11 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         },
 
         /**
-         * Copies HTML of Control with context menu click.
+         * Copies HTML of Control to Console.
          * @param {Object} event
          */
-        'do-context-menu-copy-html': function (event) {
+         'do-control-copy-html': function (event) {
             var elementID = event.detail.target;
-            var navigatorClipBoard = navigator && navigator.clipboard;
             var selectedElement;
 
             if (typeof elementID !== 'string') {
@@ -319,13 +292,9 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
                 return;
             }
 
-            if (!navigatorClipBoard) {
-                console.warn('This functionality is not enabled');
-                return;
-            }
-
             selectedElement = document.getElementById(elementID);
-            _writeInClipboardFromDevTools(selectedElement.outerHTML);
+            log('\n' + '%cCopy HTML ⬇️', 'color:#12b1eb; font-size:12px');
+            console.log(selectedElement);
         },
         /**
          * Handler to copy the element into a temp variable on the console

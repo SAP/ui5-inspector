@@ -52,11 +52,18 @@ function DataView(target, options) {
      this.onControlFocused = function (target) {
     };
 
-        /**
+    /**
      * Method fired when the Copy to Console button is clicked.
      * @param {Object} target - arget control to be focused
      */
         this.onCopyControlToConsole = function (target) {
+        };
+
+    /**
+     * Method fired when the Copy HTML to Console button is clicked.
+     * @param {Object} target - arget control to be focused
+     */
+         this.onCopyControlHTMLToConsole = function (target) {
         };
 
     /**
@@ -79,6 +86,7 @@ function DataView(target, options) {
         this.onControlInvalidated = options.onControlInvalidated || this.onControlInvalidated;
         this.onControlFocused = options.onControlFocused || this.onControlFocused;
         this.onCopyControlToConsole = options.onCopyControlToConsole || this.onCopyControlToConsole;
+        this.onCopyControlHTMLToConsole = options.onCopyControlHTMLToConsole || this.onCopyControlHTMLToConsole;
 
         this.onValueClick = options.onValueClick || this.onValueClick;
 
@@ -434,6 +442,7 @@ DataView.prototype._onClickHandler = function () {
                 case 'control-invalidate' : that._onInvalidateElement(targetElement); break;
                 case 'control-focus' : that._onFocusElement(targetElement); break;
                 case 'control-copy to console' : that._onCopyElementToConsole(targetElement); break;
+                case 'control-copy html to console' : that._onCopyElementHTMLToConsole(targetElement); break;
             }
         }
 
@@ -497,6 +506,15 @@ DataView.prototype._onCopyElementToConsole = function (target) {
 
     propertyData.controlId = target.getAttribute('data-control-id');
     that.onCopyControlToConsole(propertyData);
+
+};
+
+DataView.prototype._onCopyElementHTMLToConsole = function (target) {
+    var that = this;
+    var propertyData = {};
+
+    propertyData.controlId = target.getAttribute('data-control-id');
+    that.onCopyControlHTMLToConsole(propertyData);
 
 };
 

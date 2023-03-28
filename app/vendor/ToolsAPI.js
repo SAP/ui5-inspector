@@ -429,10 +429,11 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
              *
              * @param {Object} model - model can be either a "real" model or a model-context
              * @param {string} path
+             * @param {Object} [binding]
              * @returns {Object}
              * @private
              */
-            _getModelInfo: function (model, path) {
+            _getModelInfo: function (model, path, binding) {
                 if (!model) {
                     return null;
                 }
@@ -455,6 +456,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     var pathWithoutModel = pathContainsModelName ? pathParts[1] : pathParts[0];
                     var isRelative = pathWithoutModel.indexOf("/") !== 0;
                     var type = model.getMetadata().getName();
+                    var bindingType = binding && binding.getMetadata().getName() || "";
                     var isResourceModel = type === "sap.ui.model.resource.ResourceModel";
                     var fullPath;
                     var contextPath;
@@ -483,8 +485,13 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                         modelInfo.pathData = path !== context.getPath() ? context.getObject(path) : context.getObject();
                     } else {
                         // functions in the model cannot communicated via message
-                        modelInfo.modelData = isResourceModel ? "" : model.getObject(contextPath || "/");
-                        modelInfo.pathData = model.getProperty(fullPath);
+                        modelInfo.modelData = isResourceModel || type.startsWith("sap.ui.model.odata.v4") ? "" : model.getObject(contextPath || "/");
+                        if (bindingType.endsWith("ODataListBinding")) {
+                            // the binding has the data
+                            modelInfo.pathData = binding.getAllCurrentContexts().map(c => c.getObject());
+                        } else {
+                            modelInfo.pathData = model.getProperty(fullPath);
+                        }
                     }
                     modelInfo.fullPath = fullPath;
                     modelInfo.path = pathWithoutModel;
@@ -512,7 +519,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
              * @private
              */
             _getModelInfoFromBinding: function (binding, bindingInfo) {
-                return this._getModelInfo(binding.getContext() || binding.getModel(), (bindingInfo.model ? bindingInfo.model + ">" : "") + bindingInfo.path);
+                return this._getModelInfo(binding.getContext() || binding.getModel(), (bindingInfo.model ? bindingInfo.model + ">" : "") + bindingInfo.path, binding);
             },
 
             /**

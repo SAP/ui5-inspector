@@ -1,5 +1,5 @@
 
-// jshint maxstatements:50
+// jshint maxstatements:52
 (function () {
     'use strict';
 
@@ -22,6 +22,7 @@
     var ODataDetailView = require('../../../modules/ui/ODataDetailView.js');
     var ODataMasterView = require('../../../modules/ui/ODataMasterView.js');
     var XMLDetailView = require('../../../modules/ui/XMLDetailView.js');
+    var ControllerDetailView = require('../../../modules/ui/ControllerDetailView.js');
     var OElementsRegistryMasterView = require('../../../modules/ui/OElementsRegistryMasterView.js');
 
     // Apply theme
@@ -245,8 +246,10 @@
 
     // XML visualization for XML Views
     var oXMLDetailView = new XMLDetailView('elements-registry-control-xmlview');
+    var oControllerDetailView = new ControllerDetailView('elements-registry-control-controller');
     var oElementsRegistryMasterView = new OElementsRegistryMasterView('elements-registry-tab-master', {
         XMLDetailView: oXMLDetailView,
+        ControllerDetailView: oControllerDetailView,
         /**
          * Method fired when a Control is selected.
          * @param {string} sControlId

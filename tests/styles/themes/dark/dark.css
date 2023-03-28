@@ -803,6 +803,40 @@ odata-detail-view {
 xml-view {
   height: 100%;
 }
+#elements-registry-control-controller .editorAlt {
+  display: flex;
+}
+#elements-registry-control-controller .editorAlt div {
+  cursor: pointer;
+}
+#elements-registry-control-controller div.hidden {
+  display: none !important;
+}
+#elements-registry-control-controller .editorAlt {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  height: auto;
+}
+#elements-registry-control-controller .firstColAlignment {
+  text-align: end;
+}
+#elements-registry-control-controller .longTextReduce {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+#elements-registry-control-controller #controllerEditor {
+  display: grid;
+  grid-template-columns: 25% auto;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+xml-view {
+  height: 100%;
+}
 #elements-registry-control-xmlview .editorAlt {
   display: flex;
 }

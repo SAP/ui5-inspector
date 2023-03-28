@@ -125,6 +125,7 @@ function OElementsRegistryMasterView(domId, options) {
     this.oContainerDOM = document.getElementById(domId);
     this.sNotSupportedMessage = '<h1>Current version of OpenUI5/SAPUI5 doesn\'t support element registry</h1>';
     this.XMLDetailView = options.XMLDetailView;
+    this.ControllerDetailView = options.ControllerDetailView;
 
     /**
      * Selects an element.
@@ -524,6 +525,7 @@ OElementsRegistryMasterView.prototype.sortHandler = function () {
 OElementsRegistryMasterView.prototype.selectHandler = function (oEvent) {
     this.onSelectItem(oEvent.data._data.id);
     this.XMLDetailView.update(oEvent.data._data);
+    this.ControllerDetailView.update(oEvent.data._data.controllerInfo);
     this._sSelectedItem = oEvent.data._data.id;
 };
 

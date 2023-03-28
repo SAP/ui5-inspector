@@ -13,7 +13,7 @@ module.exports = function (grunt, config) {
         dev: {
             files: [{
                 expand: true,
-                cwd: '<%= app %>/scripts',
+                cwd: '<%= tempDist %>/scripts',
                 src: ['**/*.js', '!modules/**/*.js'],
                 dest: '<%= dist %>/scripts'
             }]

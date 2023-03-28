@@ -1,7 +1,7 @@
 'use strict';
 
 // TODO the highLighter module needs refactoring
-var highLighter = require('../../../app/scripts/modules/content/highLighter.js');
+var highLighter = require('../../../app/scripts/modules/content/highLighter.ts');
 
 describe('highLighter', function () {
     it('should return a object', function () {

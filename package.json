@@ -67,8 +67,8 @@
     "url": "https://github.com/SAP/ui5-inspector"
   },
   "scripts": {
-    "postinstall": "node -e \"require('grunt').tasks(['dist']);\" && npm run generate:typescript",
     "generate:typescript": "tsc",
+    "postinstall": "npm run generate:typescript && node -e \"require('grunt').tasks(['dist']);\"",
     "prepare": "husky install",
     "husky:pre-commit": "grunt test",
     "husky:commit-msg": "commitlint -e"

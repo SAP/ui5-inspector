@@ -12,6 +12,7 @@ npm-debug.log
 temp
 .tmp
 tests/reports
+tempDist
 
 # App files
 **/styles/*.css

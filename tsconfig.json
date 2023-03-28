@@ -5,11 +5,12 @@
   ],
   "compilerOptions": {
     "declaration": true,
-    "outDir": "dist",
+    "outDir": "tempDist",
     "target": "ES2021",
     "skipLibCheck": true,
     "sourceMap": true,
     "moduleResolution": "node",
-    "rootDir": "app"
+    "allowJs": true,
+    "checkJs": false
   }
 }

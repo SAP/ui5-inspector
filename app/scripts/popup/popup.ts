@@ -2,7 +2,7 @@
 
 var utils = require('../modules/utils/utils.js');
 
-chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+window.chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
     // Create a port with background page for continuous message communication
     var port = utils.getPort();
 
@@ -23,8 +23,8 @@ chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
          */
         'on-framework-information': function (message) {
             var linksDom;
-            var library = document.querySelector('library');
-            var buildtime = document.querySelector('buildtime');
+            var library: HTMLElement = document.querySelector('library');
+            var buildtime: HTMLElement = document.querySelector('buildtime');
 
             if (message.frameworkInformation.OpenUI5) {
                 linksDom = document.querySelector('links[openui5]');

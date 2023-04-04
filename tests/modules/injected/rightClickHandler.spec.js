@@ -1,6 +1,6 @@
 'use strict';
 
-var rightClickHandler = require('../../../app/scripts/modules/injected/rightClickHandler.js');
+var rightClickHandler = require('../../../app/scripts/modules/injected/rightClickHandler.ts');
 
 describe('rightClickHandler', function () {
     it('should return a object', function () {

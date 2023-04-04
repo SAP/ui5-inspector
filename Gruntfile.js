@@ -21,7 +21,8 @@ module.exports = function (grunt) {
             dist: 'dist',
             tests: 'tests',
             bower: 'bower_components',
-            grunt: 'grunt'
+            grunt: 'grunt',
+            tempDist: 'tempDist'
         }
     });
 

@@ -1,0 +1,16 @@
+{
+  "include": [
+    "app/**/*",
+    "global.d.ts"
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "tempDist",
+    "target": "ES2021",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": false
+  }
+}

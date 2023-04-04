@@ -1,0 +1,42 @@
+xml-view {
+    height: 100%;
+}
+
+#elements-registry-control-controller {
+    .editorAlt {
+        display: flex;
+        div {
+            cursor: pointer;
+        }
+    }
+
+    div.hidden {
+        display: none !important;
+    }
+
+    .editorAlt {
+        position: absolute;
+        top: .5rem;
+        left: .5rem;
+        right: .5rem;
+        bottom: .5rem;
+        height: auto;
+    }
+
+	.firstColAlignment {
+		text-align: end;
+	}
+
+	.longTextReduce {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	#controllerEditor{
+		display: grid;
+		grid-template-columns: 25% auto;
+		gap: .5rem;
+		padding: .5rem;
+	}
+}

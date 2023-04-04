@@ -36,8 +36,7 @@
     "permissions": [
         "scripting",
         "contextMenus",
-        "activeTab",
-        "clipboardWrite"
+        "activeTab"
     ],
     "host_permissions": [
         "http://*/*",

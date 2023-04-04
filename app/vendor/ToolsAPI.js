@@ -649,15 +649,19 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     Object.keys(oElements).forEach(function (sKey) {
                         var oElement = oElements[sKey];
                         var oParent = oElement.getParent();
+						var sElementId = oElement.getId();
+						var sControllerName = oElement._xContent && sap.ui.getCore().byId(sElementId).getControllerName();
+						var sControllerRelPath = sControllerName && sap.ui.require.toUrl(sControllerName.replaceAll('.', '/') + '.controller.js');
 
                         aRegisteredElements.push({
-                            id: oElement.getId(),
+                            id: sElementId,
                             type: oElement.getMetadata().getName(),
                             isControl: oElement.isA("sap.ui.core.Control"),
                             isRendered: oElement.isActive(),
                             parentId: oParent && (oParent.isA("sap.ui.core.Control") || oParent.isA("sap.ui.core.Element")) ? oParent.getId() : '',
                             aggregation: oElement.sParentAggregationName ? oElement.sParentAggregationName : '',
-                            xml: oElement._xContent && (new XMLSerializer()).serializeToString(oElement._xContent)
+                            xml: oElement._xContent && (new XMLSerializer()).serializeToString(oElement._xContent),
+                            controllerInfo: {sControllerName, sControllerRelPath}
                         })
                     });
                 }

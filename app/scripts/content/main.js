@@ -4,6 +4,22 @@
     var highLighter = require('../modules/content/highLighter.js');
     var port = utils.getPort();
 
+    function confirmScriptInjectionDone() {
+        // Add this action to the Q
+        // This is needed when the devtools are undocked from the current inspected window
+        setTimeout(function () {
+            port.postMessage({
+                action: 'on-main-script-injection'
+            });
+        }, 0);
+    }
+
+    var DONE_FLAG = 'MAIN_SCRIPT_INJECTION_DONE';
+    if (window[DONE_FLAG] === true) {
+        confirmScriptInjectionDone();
+        return;
+    }
+
     // Inject needed scripts into the inspected page
     // ================================================================================
 
@@ -31,13 +47,8 @@
 
     injectScript('vendor/ToolsAPI.js', function () {
         injectScript('scripts/injected/main.js', function () {
-            // Add this action to the Q
-            // This is needed when the devtools are undocked from the current inspected window
-            setTimeout(function () {
-                port.postMessage({
-                    action: 'on-main-script-injection'
-                });
-            }, 0);
+            window[DONE_FLAG] = true;
+            confirmScriptInjectionDone();
         });
     });
 

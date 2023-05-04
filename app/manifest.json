@@ -50,5 +50,10 @@
         "/vendor/theme-vibrant_ink.js",
         "/vendor/vkbeautify.js",
         "/modules/utils/multipartmixed2har.js"
-    ]
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "ui5-inspector@sap.com"
+        }
+    }
 }

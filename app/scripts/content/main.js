@@ -30,7 +30,7 @@
      */
     var injectScript = function (source, callback) {
         var script = document.createElement('script');
-        script.src = chrome.runtime.getURL(source);
+        script.src = chrome.extension.getURL(source);
         document.head.appendChild(script);
 
         /**

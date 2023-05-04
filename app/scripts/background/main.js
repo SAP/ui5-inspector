@@ -42,17 +42,8 @@
                     framework: framework.name,
                     tabId: messageSender.tab.id
                 });
-
-                pageAction.enable();
             }
-        },
 
-        /**
-         * Handler for UI5 none detection on the current inspected page.
-         * @param {Object} message
-         */
-        'on-ui5-not-detected': function (message) {
-            pageAction.disable();
         },
 
         /**
@@ -62,14 +53,7 @@
         'do-script-injection': function (message) {
             chrome.windows.getCurrent(w => {
                 chrome.tabs.query({ active: true, windowId: w.id }, tabs => {
-                    chrome.scripting.executeScript({
-                        target: {
-                            // inject the script only into the frame
-                            // specified in the request from the devTools UI5 panel script
-                            tabId: tabs[0].id, frameIds: [message.frameId]
-                        },
-                        files: [message.file]
-                    });
+                    chrome.tabs.executeScript(tabs[0].id, {file: message.file, frameId: message.frameId});
                 });
             });
         },
@@ -142,10 +126,5 @@
         });
 
         utils.sendToAll(request);
-    });
-
-    chrome.runtime.onInstalled.addListener(() => {
-        // Page actions are disabled by default and enabled on select tabs
-        chrome.action.disable();
     });
 }());

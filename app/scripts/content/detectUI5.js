@@ -8,7 +8,7 @@
 
     // Inject a script file in the current page
     var script = document.createElement('script');
-    script.src = chrome.runtime.getURL('/scripts/injected/detectUI5.js');
+    script.src = chrome.extension.getURL('/scripts/injected/detectUI5.js');
     document.head.appendChild(script);
 
     /**

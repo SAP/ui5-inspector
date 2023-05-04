@@ -1,9 +1,12 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "UI5 Inspector",
     "version": "1.6.1",
     "background": {
-        "service_worker": "/scripts/background/main.js"
+        "persistent": false,
+        "scripts": [
+            "/scripts/background/main.js"
+        ]
     },
     "content_scripts": [
         {
@@ -17,16 +20,14 @@
             ]
         }
     ],
-    "content_security_policy": {
-        "extension_pages": "default-src 'self'; img-src 'self' data:; style-src 'unsafe-inline';"
-    },
+    "content_security_policy": "default-src 'self'; style-src 'unsafe-inline';",
     "description": "With the UI5 Inspector, you can easily debug and support your OpenUI5 or SAPUI5-based apps.",
     "devtools_page": "/html/devtools/index.html",
     "icons": {
         "16": "/images/icon-16.png",
         "128": "/images/icon-128.png"
     },
-    "action": {
+    "page_action": {
         "default_icon": {
             "19": "/images/icon-19.png",
             "38": "/images/icon-38.png"
@@ -34,32 +35,20 @@
         "default_popup": "/html/popup/index.html"
     },
     "permissions": [
-        "scripting",
         "contextMenus",
-        "activeTab"
-    ],
-    "host_permissions": [
         "http://*/*",
         "https://*/*"
     ],
     "web_accessible_resources": [
-        {
-            "matches": [
-                "http://*/*",
-                "https://*/*"
-            ],
-            "resources": [
-                "/scripts/injected/*.js",
-                "/vendor/ToolsAPI.js",
-                "/vendor/ace.js",
-                "/vendor/ext-searchbox.js",
-                "/vendor/mode-json.js",
-                "/vendor/mode-xml.js",
-                "/vendor/theme-chrome.js",
-                "/vendor/theme-vibrant_ink.js",
-                "/vendor/vkbeautify.js",
-                "/modules/utils/multipartmixed2har.js"
-            ]
-        }
+        "/scripts/injected/*.js",
+        "/vendor/ToolsAPI.js",
+        "/vendor/ace.js",
+        "/vendor/ext-searchbox.js",
+        "/vendor/mode-json.js",
+        "/vendor/mode-xml.js",
+        "/vendor/theme-chrome.js",
+        "/vendor/theme-vibrant_ink.js",
+        "/vendor/vkbeautify.js",
+        "/modules/utils/multipartmixed2har.js"
     ]
 }

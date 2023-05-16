@@ -3,6 +3,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
         "use strict";
 
         var configurationInfo = sap.ui.getCore().getConfiguration();
+        var BaseConfig = sap.ui.require('sap/base/config/_Configuration');
 
         // ================================================================================
         // Technical Information
@@ -54,6 +55,42 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
             return formattedLibraries;
         }
 
+         /**
+         * Returns information whether the framework is in debug mode.
+         * @returns {boolean}
+         * @private
+         */
+
+        function _getDebugModeInfo() {
+            // check URI param
+            var vDebugInfo = BaseConfig.get({
+                name: 'sapUiDebug',
+                type: BaseConfig.Type.String,
+                defaultValue: false,
+                external: true,
+                freeze: true
+            });
+
+            // check local storage
+            try {
+                vDebugInfo = vDebugInfo || window.localStorage.getItem('sap-ui-debug');
+            } catch (e) {
+                // access to localStorage might be disallowed
+            }
+
+            // normalize vDebugInfo; afterwards, it either is a boolean or a string not representing a boolean
+            if ( typeof vDebugInfo === 'string' ) {
+                if ( /^(?:false|true|x|X)$/.test(vDebugInfo) ) {
+                    vDebugInfo = vDebugInfo !== 'false';
+                }
+            } else {
+                vDebugInfo = !!vDebugInfo;
+            }
+
+            return vDebugInfo;
+        }
+
+
         /**
          * Gets all the relevant information for the framework.
          * @returns {Object}
@@ -71,8 +108,8 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     applicationHREF: window.location.href,
                     documentTitle: document.title,
                     documentMode: document.documentMode || "",
-                    debugMode: jQuery.sap.debug(),
-                    statistics: jQuery.sap.statistics()
+                    debugMode: _getDebugModeInfo(),
+                    statistics: []
                 },
 
                 configurationBootstrap: window["sap-ui-config"] || Object.create(null),

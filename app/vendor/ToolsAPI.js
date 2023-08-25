@@ -63,13 +63,17 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
 
         function _getDebugModeInfo() {
             // check URI param
-            var vDebugInfo = BaseConfig.get({
-                name: 'sapUiDebug',
-                type: BaseConfig.Type.String,
-                defaultValue: false,
-                external: true,
-                freeze: true
-            });
+            var vDebugInfo;
+
+            if (BaseConfig) {
+                vDebugInfo = BaseConfig.get({
+                    name: 'sapUiDebug',
+                    type: BaseConfig.Type.String,
+                    defaultValue: false,
+                    external: true,
+                    freeze: true
+                });
+            }
 
             // check local storage
             try {

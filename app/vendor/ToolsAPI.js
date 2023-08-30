@@ -63,6 +63,11 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
 
         function _getDebugModeInfo() {
             // check URI param
+
+            if (!BaseConfig) {
+                return false;
+            }
+
             var vDebugInfo = BaseConfig.get({
                 name: 'sapUiDebug',
                 type: BaseConfig.Type.String,

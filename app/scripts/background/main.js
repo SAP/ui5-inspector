@@ -60,8 +60,8 @@
          * @param {Object} message
          */
         'do-script-injection': function (message) {
-            chrome.windows.getCurrent(w => {
-                chrome.tabs.query({ active: true, windowId: w.id }, tabs => {
+            chrome.windows.getCurrent().then(w => {
+                chrome.tabs.query({ active: true, windowId: w.id }).then(tabs => {
                     chrome.scripting.executeScript({
                         target: {
                             // inject the script only into the frame

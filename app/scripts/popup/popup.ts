@@ -2,7 +2,7 @@
 
 var utils = require('../modules/utils/utils.js');
 
-window.chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+window.chrome.tabs.query({active: true, currentWindow: true}).then(function (tabs) {
     // Create a port with background page for continuous message communication
     var port = utils.getPort();
 

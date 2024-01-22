@@ -61,8 +61,8 @@
          */
         'do-script-injection': function (message) {
             const frameId = message.frameId;
-            chrome.windows.getCurrent(w => {
-                chrome.tabs.query({ active: true, windowId: w.id }, tabs => {
+            chrome.windows.getCurrent().then(w => {
+                chrome.tabs.query({ active: true, windowId: w.id }).then(tabs => {
                     const target = {
                         tabId: tabs[0].id
                     };

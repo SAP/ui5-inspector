@@ -128,8 +128,8 @@ function _getPort () {
 function _sendToAll(message, callback) {
     var frameId = message.frameId;
     var options;
-    chrome.windows.getCurrent(w => {
-        chrome.tabs.query({ active: true, windowId: w.id }, tabs => {
+    chrome.windows.getCurrent().then(w => {
+        chrome.tabs.query({ active: true, windowId: w.id }).then(tabs => {
             // options.frameId allows to send the message to
             // a specific frame instead of all frames in the tab
             if (frameId !== undefined) {

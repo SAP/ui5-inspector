@@ -130,9 +130,17 @@
 	<footer class="footer">
 		<div class="footer-grid">
 			<div class="footer__item">
-				<a href="https://www.sap.com/" target="_blank">
-					<img src="./src/assets/images/SAP-logo.svg" alt="SAP Company Logo" width="96" height="48">
-				</a>
+				<ul class="footer-subsection__list footer-subselectionSAP">
+					<li class="footer-subsection__item">
+						© <span id="footer__year"></span> SAP SE or an SAP affiliate company and OpenUI5 contributors
+					</li>
+				<li class="footer-subsection__item">
+					This site is hosted by GitHub Pages.
+				</li>
+			</ul>
+			<a href="https://www.sap.com/" target="_blank">
+				<img src="./src/assets/images/SAP-logo.svg" alt="SAP Company Logo" width="96" height="48" class="footer__SAPIcon">
+			</a>
 			</div>
 			<div class="footer__item">
 				<h3 class="footer-subsection__title">Community</h3>
@@ -167,7 +175,16 @@
 						<a href="https://www.sap.com/about/legal/impressum.html" target="_blank">Legal Disclosure</a>
 					</li>
 					<li class="footer-subsection__item">
-						<a href="https://www.sap.com/about/legal/privacy.html" target="_blank">Privacy</a>
+						<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank">Privacy</a>
+					</li>
+					<li class="footer-subsection__item">
+						<a href="https://www.sap.com/corporate/en/legal/terms-of-use.html" target="_blank">Terms of Use</a>
+					</li>
+					<li class="footer-subsection__item">
+						<a href="https://www.sap.com/corporate/en/legal/trademark.html" target="_blank">Trademark</a>
+					</li>
+					<li class="footer-subsection__item">
+						<a href="https://www.sap.com/corporate/en/legal/copyright.html" target="_blank">Copyright</a>
 					</li>
 				</ul>
 			</div>
@@ -187,6 +204,7 @@
 			</div>
 		</div>
 	</footer>
+	<script src="./src/scripts/main.js"></script>
 </body>
 
 </html>

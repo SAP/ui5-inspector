@@ -510,6 +510,10 @@ a {
 	width: 2.1875rem;
 }
 
+.footer-subselectionSAP{
+	margin-bottom: 2rem;
+}
+
 /******************************/
 /* BELOW 1920px ( 1920 / 16 = 160em )*/
 /******************************/
@@ -719,13 +723,13 @@ a {
 	}
 
 	/* ------------- FOOTER ------------- */
-	.footer {
-		border-top-left-radius: 3.5rem;
+	.footer__SAPIcon{
+		position:absolute
 	}
 
 	.footer-grid {
 		padding: 3.125rem 0;
-		gap: 3.125rem 0.625rem;
+		gap: 2.125rem 0.625rem;
 	}
 
 	.footer__item:nth-child(1) {
@@ -756,6 +760,19 @@ a {
 
 	.footer-subsection__item:not(:last-child) {
 		margin-bottom: 1.75rem;
+	}
+}
+
+/******************************/
+/* BELOW 576px ( 576 / 16 = 36em )*/
+/******************************/
+@media (max-width: 36em) {
+	.footer__item:nth-child(2) {
+		margin-left: 3em;
+	}
+
+	.footer__item:nth-child(4) {
+		margin-left: 3em;
 	}
 }
 
@@ -798,5 +815,6 @@ a {
 
 	.footer-grid {
 		max-width: 90%;
+
 	}
 }

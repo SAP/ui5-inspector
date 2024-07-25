@@ -510,7 +510,7 @@ a {
 	width: 2.1875rem;
 }
 
-.footer-subselectionSAP{
+.footer-subsection__list--copyright{
 	margin-bottom: 2rem;
 }
 
@@ -723,7 +723,7 @@ a {
 	}
 
 	/* ------------- FOOTER ------------- */
-	.footer__SAPIcon{
+	.footer__logo{
 		position:absolute
 	}
 

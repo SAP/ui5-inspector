@@ -161,11 +161,17 @@ describe('Splitter', function () {
 
         it('should change the style height of the end container', function () {
             var splitterRect = splitter.$this.getBoundingClientRect();
-            var expectedResult = (splitterRect.top + splitterRect.height - mockEvent.clientY) + 'px';
+            // round to avoid floating point precision issues with different browsers
+            var expectedHeight = Math.round(splitterRect.top + splitterRect.height - mockEvent.clientY);
 
             splitter._mouseMoveHandler(mockEvent);
 
-            splitter._$endElement.style.height.should.be.equal(expectedResult);
+            var actualHeightStyle = splitter._$endElement.style.height;
+            // round to avoid floating point precision issues with different browsers
+            var actualHeight = parseInt(actualHeightStyle);
+
+            actualHeight.should.be.equal(expectedHeight);
+            actualHeightStyle.should.match(/px$/);
         });
 
         it('should not change the style height of the start container', function () {
@@ -176,11 +182,17 @@ describe('Splitter', function () {
 
         it('should change the style width of the end container', function () {
             var horizontalSplitterRect = horizontalSplitter.$this.getBoundingClientRect();
-            var expectedResult = (horizontalSplitterRect.left + horizontalSplitterRect.width - mockEvent.clientX) + 'px';
+            // round to avoid floating point precision issues with different browsers
+            var expectedWidth = Math.round(horizontalSplitterRect.left + horizontalSplitterRect.width - mockEvent.clientX);
 
             horizontalSplitter._mouseMoveHandler(mockEvent);
 
-            horizontalSplitter._$endElement.style.width.should.be.equal(expectedResult);
+            var actualWidthStyle = horizontalSplitter._$endElement.style.width;
+            // round to avoid floating point precision issues with different browsers
+            var actualWidth = parseInt(actualWidthStyle);
+
+            actualWidth.should.be.equal(expectedWidth);
+            actualWidthStyle.should.match(/px$/);
         });
 
         it('should not change the style width of the start container', function () {

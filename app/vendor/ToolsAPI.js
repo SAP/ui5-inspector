@@ -288,26 +288,12 @@ sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMe
          */
         function _getVersion() {
             var Version = sap.ui.require('sap/base/util/Version');
-            if (Version && Core.version) {
-                return Version(Core.version);
+            var VersionInfo = sap.ui.require('sap/ui/VersionInfo');
+            var versionStr = VersionInfo?._content?.version;
+            if (Version && versionStr) {
+                return Version(versionStr);
             }
             return _getOptionalGlobalConfig().getVersion();
-        }
-
-        /**
-         * Returns the version string of the framework.
-         * @returns {string}
-         */
-        function _getVersionString() {
-            return Core.version || _getVersion().toString();
-        }
-
-        /**
-         * Returns the build time of the framework.
-         * @returns {string}
-         */
-        function _getBuildTime() {
-            return Core.buildinfo?.buildtime || sap.ui.getVersionInfo().buildTimestamp;
         }
 
         /**
@@ -359,8 +345,8 @@ sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMe
                     var frameworkInfo = {
                         commonInformation: {
                             frameworkName: _getFrameworkName(oVersionInfo.name),
-                            version: _getVersion(),
-                            buildTime: _getBuildTime(),
+                            version: oVersionInfo.version,
+                            buildTime: oVersionInfo.buildTimestamp,
                             userAgent: navigator.userAgent,
                             applicationHREF: window.location.href,
                             documentTitle: document.title,

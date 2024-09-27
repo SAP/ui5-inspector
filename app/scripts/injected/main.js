@@ -46,11 +46,12 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
 
             if (isMutationValid === true) {
                 controlTreeModel = ToolsAPI.getRenderedControlTree();
-                commonInformation = ToolsAPI.getFrameworkInformation().commonInformation;
-
-                message.send({
-                    action: 'on-application-dom-update',
-                    controlTree: controlUtils.getControlTreeModel(controlTreeModel, commonInformation)
+                ToolsAPI.getFrameworkInformation().then(function(frameworkInformation) {
+                    commonInformation = frameworkInformation.commonInformation;
+                    message.send({
+                        action: 'on-application-dom-update',
+                        controlTree: controlUtils.getControlTreeModel(controlTreeModel, commonInformation)
+                    });
                 });
             }
         }),
@@ -93,13 +94,13 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          */
         'get-initial-information': function () {
             var controlTreeModel = ToolsAPI.getRenderedControlTree();
-            var frameworkInformation = ToolsAPI.getFrameworkInformation();
-
-            message.send({
-                action: 'on-receiving-initial-data',
-                applicationInformation: applicationUtils.getApplicationInfo(frameworkInformation),
-                controlTree: controlUtils.getControlTreeModel(controlTreeModel, frameworkInformation.commonInformation),
-                elementRegistry: ToolsAPI.getRegisteredElements()
+            ToolsAPI.getFrameworkInformation().then(function(frameworkInformation) {
+                message.send({
+                    action: 'on-receiving-initial-data',
+                    applicationInformation: applicationUtils.getApplicationInfo(frameworkInformation),
+                    controlTree: controlUtils.getControlTreeModel(controlTreeModel, frameworkInformation.commonInformation),
+                    elementRegistry: ToolsAPI.getRegisteredElements()
+                });
             });
         },
 
@@ -107,11 +108,11 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          * Send framework information.
          */
         'get-framework-information': function () {
-            var frameworkInformation = ToolsAPI.getFrameworkInformation();
-
-            message.send({
-                action: 'on-framework-information',
-                frameworkInformation: applicationUtils.getInformationForPopUp(frameworkInformation)
+            ToolsAPI.getFrameworkInformation().then(function(frameworkInformation) {
+                message.send({
+                    action: 'on-framework-information',
+                    frameworkInformation: applicationUtils.getInformationForPopUp(frameworkInformation)
+                });
             });
         },
 
@@ -121,7 +122,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          */
         'do-console-log-event-listener': function (event) {
             var evtData = event.detail.data;
-            console.log(sap.ui.getCore().byId(evtData.controlId).mEventRegistry[evtData.eventName][evtData.listenerIndex].fFunction);
+            console.log(controlUtils.getElementById(evtData.controlId).mEventRegistry[evtData.eventName][evtData.listenerIndex].fFunction);
         },
 
         /**
@@ -196,7 +197,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         'do-control-property-change': function (event) {
             var oData = event.detail.data;
             var sControlId = oData.controlId;
-            var oControl = sap.ui.getCore().byId(sControlId);
+            var oControl = controlUtils.getElementById(sControlId);
 
             if (!oControl) {
                 return;
@@ -215,7 +216,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         'do-control-invalidate': function (event) {
             var oData = event.detail.data;
             var sControlId = oData.controlId;
-            var oControl = sap.ui.getCore().byId(sControlId);
+            var oControl = controlUtils.getElementById(sControlId);
 
             if (!oControl) {
                 return;
@@ -234,7 +235,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         'do-control-focus': function (event) {
             var oData = event.detail.data;
             var sControlId = oData.controlId;
-            var oControl = sap.ui.getCore().byId(sControlId);
+            var oControl = controlUtils.getElementById(sControlId);
 
             if (!oControl) {
                 return;
@@ -251,7 +252,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         'do-control-property-change-elements-registry': function (event) {
             var oData = event.detail.data;
             var sControlId = oData.controlId;
-            var oControl = sap.ui.getCore().byId(sControlId);
+            var oControl = controlUtils.getElementById(sControlId);
 
             if (!oControl) {
                 return;
@@ -303,7 +304,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         'do-copy-control-to-console': function (event) {
             var oData = event.detail.data;
             var sControlId = oData.controlId;
-            const control = sap.ui.getCore().byId(sControlId);
+            const control = controlUtils.getElementById(sControlId);
             if (control) {
                 try {
                     const tempVarName = ui5Temp[sControlId] && ui5Temp[sControlId].savedAs || `ui5$${tempVarCount++}`;

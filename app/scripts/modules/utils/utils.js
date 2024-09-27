@@ -42,6 +42,8 @@ function _convertUI5TimeStampToHumanReadableFormat(timeStamp) {
         return;
     }
 
+    timeStamp = timeStamp.replace(/-/g, '');
+
     // Year
     formattedTime += timeStamp.substr(0, 4) + '/';
     // Month

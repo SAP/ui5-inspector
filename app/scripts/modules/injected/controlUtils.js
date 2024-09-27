@@ -26,6 +26,21 @@ function _assembleDataToView(options) {
 }
 
 /**
+ * Returns the registered element with the given ID, if any.
+ * @param {sap.ui.core.ID|null|undefined} sId ID of the element to search for
+ * @returns {sap.ui.core.Element|undefined} Element with the given ID or <code>undefined</code>
+ */
+function _getElementById(sId) {
+    var Element = sap.ui.require('sap/ui/core/Element');
+    if (typeof Element.getElementById === 'function') {
+        return Element.getElementById(sId);
+    }
+    if (typeof sap.ui.getCore === 'function' && typeof sap.ui.getCore().byId === 'function') {
+        return sap.ui.getCore().byId(sId);
+    }
+}
+
+/**
  * Create a clickable value for the DataView.
  * @param {Object} options
  * @constructor
@@ -227,7 +242,7 @@ var controlProperties = (function () {
      */
     function _formatTypes (type) {
         var objectType;
-        if (type.startsWith('sap.') && sap.ui.base.DataType.getType(type).getDefaultValue()) {
+        if (type.startsWith('sap.') && sap.ui.require('sap/ui/base/DataType').getType(type).getDefaultValue()) {
             objectType = _transformStringTypeToObject(type);
         } else {
             objectType = type;
@@ -308,7 +323,7 @@ var controlProperties = (function () {
      * @private
      */
     function _getControlPropertiesAssociations(controlId, properties) {
-        var control = sap.ui.getCore().byId(controlId);
+        var control = _getElementById(controlId);
 
         if (!control) {
             return;
@@ -879,5 +894,12 @@ module.exports = {
                 }
             }
         };
-    }
+    },
+
+    /**
+     * Returns UI5 element, given its id.
+     * @param {string} sId
+     * @returns {Object}
+     */
+    getElementById: _getElementById
 };

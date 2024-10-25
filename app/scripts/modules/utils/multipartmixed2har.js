@@ -186,14 +186,13 @@ const deMultipart = (content, req, res) => {
          * @param {Object} header
          */
         let resContentType = res.headers.find(header => header.name.toLowerCase() === 'content-type').value;
-        let raw = atob(content);
         let reqBoundary = '--' + req.postData.mimeType.split('boundary=')[1];
         let resBoundary = '--' + resContentType.split('boundary=')[1];
         // jscs:disable
         let requestsRaw = req.postData.text.split(reqBoundary)
             .filter(line => !line.startsWith('--') && line !== '')
             .filter(removeEmptyLinesFilter);
-        let responseRaw = raw.split(resBoundary)
+        let responseRaw = content.split(resBoundary)
             .filter(line => !line.startsWith('--') && line !== '')
             .filter(removeEmptyLinesFilter);
         // jscs:enable
@@ -218,7 +217,10 @@ const getContent = entry =>
          * Gets content of an entry.
          * @param {Object} content
          */
-        entry.getContent(content => resolve(content));
+        entry.getContent((content, encoding) => {
+            const decodedContent = (encoding === 'base64') ? atob(content) : content;
+            resolve(decodedContent);
+        });
     }));
 
 exports.getContent = getContent;

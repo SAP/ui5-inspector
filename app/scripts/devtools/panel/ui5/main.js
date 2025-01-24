@@ -182,6 +182,17 @@
                 data: event.data,
                 frameId: framesSelect.getSelectedId()
             });
+        },
+        /**
+         * Method fired when Clear fired events button is clicked.
+         * @param {Object} changeData
+         */
+        onClearEvents(changeData) {
+            port.postMessage({
+                action: 'do-control-clear-events',
+                target: changeData.controlId,
+                tabId: chrome.devtools.inspectedWindow.tabId
+            });
         }
     }, sharedDataViewOptions));
 

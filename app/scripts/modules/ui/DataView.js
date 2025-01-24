@@ -67,6 +67,13 @@ function DataView(target, options) {
         };
 
     /**
+     * Method fired when the Clear button is clicked.
+     * @param {Object} target
+     */
+    this.onClearEvents = function (target) {
+    };
+
+    /**
      * Method fired when the Invalidate button is clicked.
      * @param {Object} target - target control to be invalidated
      */
@@ -87,6 +94,7 @@ function DataView(target, options) {
         this.onControlFocused = options.onControlFocused || this.onControlFocused;
         this.onCopyControlToConsole = options.onCopyControlToConsole || this.onCopyControlToConsole;
         this.onCopyControlHTMLToConsole = options.onCopyControlHTMLToConsole || this.onCopyControlHTMLToConsole;
+        this.onClearEvents = options.onClearEvents || this.onClearEvents;
 
         this.onValueClick = options.onValueClick || this.onValueClick;
 
@@ -322,12 +330,12 @@ DataView.prototype._generateHTML = function () {
 
         if (key === 'actions' && currentObject.data && currentObject.data.length) {
             for (var action = 0; action < currentObject.data.length; action++) {
-               var currentAction = currentObject.data[action];
-               var disclaimer = currentAction === 'Focus' ? 'When focusing an element, to see the visual focus, you need to close the DevTools panel.' : '';
-               html += DVHelper.addDisclaimer(disclaimer);
-               html += this._addSectionTitle({options: {title: currentAction + ' control'}},
-                DVHelper.addToolsButtons(viewObjects.own ? viewObjects.own.options : {}, currentAction));
-            }
+                var currentAction = currentObject.data[action];
+                var disclaimer = currentAction === 'Focus' ? 'When focusing an element, to see the visual focus, you need to close the DevTools panel.' : '';
+                html += DVHelper.addDisclaimer(disclaimer);
+                html += this._addSectionTitle({options: {title: currentAction + ' control'}},
+                    DVHelper.addToolsButtons(viewObjects.own ? viewObjects.own.options : {}, currentAction));
+                }
             break;
         }
 
@@ -337,7 +345,25 @@ DataView.prototype._generateHTML = function () {
             continue;
         }
 
-        html += this._addSectionTitle(currentObject, this._generateHTMLSection(currentObject));
+            html += this._addSectionTitle(currentObject, this._generateHTMLSection(currentObject));
+
+        // Check if there are fired events and display Clear button
+        if (key === 'fired') {
+            var clearButton = '<button class="tools-button clear-events-btn" id="control-clear">Clear Events</button>';
+
+            html += this._addSectionTitle(
+                {
+                    options: {
+                        title: 'Clear Fired Events',
+                        controlId: 'clear-events' // Add a control ID
+                    }
+                },
+                DVHelper.addToolsButtons(
+                    viewObjects.own ? viewObjects.own.options : { controlId: 'clear-events' },
+                    'Clear'
+                )
+            );
+        }
     }
 
     this._DataViewContainer.innerHTML = html;
@@ -382,6 +408,70 @@ DataView.prototype._isEditableValue = function (element) {
     return element.nodeName === 'VALUE' && element.contentEditable === 'true';
 };
 
+// ===== Helper Methods =====
+// These methods help to break down the complexity
+
+DataView.prototype._handleEditableValue = function(targetElement) {
+    if (this._isEditableValue(targetElement)) {
+        this._onBlurHandler(targetElement);
+        DVHelper.selectEditableContent(targetElement, this._selectValue);
+        this._selectValue = false;
+    }
+};
+
+DataView.prototype._handleClickableValue = function(targetElement, event) {
+    if (targetElement.nodeName === 'CLICKABLE-VALUE') {
+        var attributes = event.target.attributes;
+        var key = attributes.key.value;
+        var parent = attributes.parent.value;
+        var currData = this.getData();
+        var eventData;
+
+        if (currData[parent]) {
+            eventData = DVHelper.getObjectProperty(currData[parent].data, key).eventData;
+        } else {
+            eventData = DVHelper.getObjectProperty(currData, parent + key).eventData;
+        }
+
+        this.onValueClick({
+            target: key,
+            data: eventData
+        });
+    }
+};
+
+DataView.prototype._handleSelectElement = function(targetElement) {
+    if (targetElement.nodeName === 'SELECT') {
+        this._onChangeHandler(targetElement);
+    }
+};
+
+DataView.prototype._handleInputElement = function(targetElement) {
+    if (targetElement.nodeName === 'INPUT') {
+        this._onCheckBoxHandler(targetElement);
+    }
+};
+
+DataView.prototype._handleButtonClick = function(targetElement) {
+    if (targetElement.nodeName === 'BUTTON') {
+        switch (targetElement.id) {
+            case 'control-invalidate': this._onInvalidateElement(targetElement); break;
+            case 'control-focus': this._onFocusElement(targetElement); break;
+            case 'control-copy to console': this._onCopyElementToConsole(targetElement); break;
+            case 'control-copy html to console': this._onCopyElementHTMLToConsole(targetElement); break;
+            case 'control-clear': this._onClearEvents(targetElement); break;
+        }
+    }
+};
+
+DataView.prototype._handleControlIdSpan = function(targetElement) {
+    if (targetElement.nodeName === 'SPAN' && targetElement.classList.contains('controlId')) {
+        this._onCopyElementToConsole(targetElement);
+    }
+};
+
+// ===== End of Helper Methods =====
+
 /**
  * Mouse click event handler for the editable values.
  * @private
@@ -403,53 +493,12 @@ DataView.prototype._onClickHandler = function () {
 
         DVHelper.toggleCollapse(target);
 
-        if (that._isEditableValue(targetElement)) {
-            that._onBlurHandler(targetElement);
-            DVHelper.selectEditableContent(targetElement, that._selectValue);
-            that._selectValue = false;
-        }
-
-        if (targetElement.nodeName === 'CLICKABLE-VALUE') {
-            var attributes = event.target.attributes;
-            var key = attributes.key.value;
-            var parent = attributes.parent.value;
-            var currData = that.getData();
-            var eventData;
-
-            if (currData[parent]) {
-                eventData = DVHelper.getObjectProperty(currData[parent].data, key).eventData;
-            } else {
-                // In case of event listeners
-                eventData = DVHelper.getObjectProperty(currData, parent + key).eventData;
-            }
-
-            that.onValueClick({
-                target: key,
-                data: eventData
-            });
-        }
-
-        if (targetElement.nodeName === 'SELECT') {
-            that._onChangeHandler(targetElement);
-        }
-
-        if (targetElement.nodeName === 'INPUT') {
-            that._onCheckBoxHandler(targetElement);
-        }
-
-        if (targetElement.nodeName === 'BUTTON') {
-            switch (targetElement.id) {
-                case 'control-invalidate' : that._onInvalidateElement(targetElement); break;
-                case 'control-focus' : that._onFocusElement(targetElement); break;
-                case 'control-copy to console' : that._onCopyElementToConsole(targetElement); break;
-                case 'control-copy html to console' : that._onCopyElementHTMLToConsole(targetElement); break;
-            }
-        }
-
-        if (targetElement.nodeName === 'SPAN' && targetElement.classList.contains('controlId')) {
-            that._onCopyElementToConsole(targetElement);
-        }
-
+        that._handleEditableValue(targetElement);
+        that._handleClickableValue(targetElement, event);
+        that._handleSelectElement(targetElement);
+        that._handleInputElement(targetElement);
+        that._handleButtonClick(targetElement);
+        that._handleControlIdSpan(targetElement);
     };
 };
 
@@ -516,6 +565,14 @@ DataView.prototype._onCopyElementHTMLToConsole = function (target) {
     propertyData.controlId = target.getAttribute('data-control-id');
     that.onCopyControlHTMLToConsole(propertyData);
 
+};
+
+DataView.prototype._onClearEvents = function (target) {
+    var controlId = this._data.own.options.controlId;
+
+    this.onClearEvents({
+        controlId: controlId
+    });
 };
 
 /**

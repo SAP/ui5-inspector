@@ -322,8 +322,8 @@ sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMe
 
         /**
          * Returns the default value for the given property.
-         * @param {sap.ui.core.Element} oControl 
-         * @param {string} sPropertyName 
+         * @param {sap.ui.core.Element} oControl
+         * @param {string} sPropertyName
          * @returns {*} The default value for the given property
          */
         function _getDefaultValueForProperty(oControl, sPropertyName) {
@@ -354,9 +354,9 @@ sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMe
                             debugMode: _getDebugModeInfo(),
                             statistics: []
                         },
-        
+
                         configurationBootstrap: window["sap-ui-config"] || Object.create(null),
-        
+
                         configurationComputed: {
                             theme: _getTheme(),
                             language: _getLanguage(),
@@ -369,13 +369,13 @@ sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMe
                             originInfo: _getOriginInfo(),
                             noDuplicateIds: _getNoDuplicateIds()
                         },
-        
+
                         libraries: _getLibraries(),
-        
+
                         loadedLibraries: _getLoadedLibraries(),
-        
+
                         loadedModules: _getAllDeclaredModules(),
-        
+
                         URLParameters: _getURLParameters()
                     }
                     resolve(frameworkInfo);
@@ -490,7 +490,9 @@ sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMe
                         }
                     }
 
-                    result.events[key].registry = currRegistry && currRegistry.map(function(currListener) {
+                    result.events[key].registry = currRegistry && currRegistry.filter(function(listener) {
+                        return !listener.fFunction.toString().includes('ui5-communication-with-injected-script');
+                    }).map(function(currListener) {
                         view = currListener.oListener && currListener.oListener.oView;
                         listener = Object.create(null);
                         listener.viewId = view && view.sId;
@@ -506,18 +508,119 @@ sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMe
             },
 
             /**
+             * Removes the event listeners from the controls
+             * @param {string} controlId
+             * @private
+             */
+            _removeEventListeners: function (control) {
+                if (control && control._attachedListeners) {
+                    Object.keys(control._attachedListeners).forEach(eventName => {
+                        control.detachEvent(eventName, control._attachedListeners[eventName]);
+                    });
+                    delete control._attachedListeners;
+                }
+            },
+
+            /**
+             * Cleares the logged fired events.
+             * @param {string} controlId
+             * @returns {Object}
+             * @private
+             */
+            _clearEvents: function (controlId) {
+                if (!window.persistentFiredEventsMap || !controlId) {
+                    return null;
+                }
+
+                const control = this._lastSelectedControl;
+                // Clear the events for the specific control
+                window.persistentFiredEventsMap.set(controlId, []);
+
+                // Return the updated events structure
+                return {
+                    own: this._prepareOwnOrInheritedEvents(control, control.getMetadata()),
+                    inherited: this._getInheritedEvents(control),
+                    fired: []
+                };
+            },
+
+            /**
              * Creates an object with all control events.
              * @param {string} controlId
              * @returns {Object}
              * @private
              */
             _getEvents: function (controlId) {
-                var control = _getElementById(controlId);
-                var events = Object.create(null);
+                var control = _getElementById(controlId),
+                    events = Object.create(null),
+                    firedEvents;
+
+                if (this._lastSelectedControl) {
+                    this._removeEventListeners(this._lastSelectedControl);
+                }
+
+                this._lastSelectedControl = _getElementById(controlId);
 
                 if (control) {
                     events.own = this._prepareOwnOrInheritedEvents(control, control.getMetadata());
                     events.inherited = this._getInheritedEvents(control);
+
+                    if (!window.persistentFiredEventsMap) {
+                        window.persistentFiredEventsMap = new Map();
+                    }
+
+                    if (!window.persistentFiredEventsMap.has(controlId)) {
+                        window.persistentFiredEventsMap.set(controlId, []);
+                    }
+
+                    firedEvents = window.persistentFiredEventsMap.get(controlId);
+                    var eventNames = Object.keys(control.getMetadata().getEvents() || {});
+
+                    if (!control._attachedListeners) {
+                        control._attachedListeners = {};
+                    }
+
+                    if (!window.eventQueue) {
+                        window.eventQueue = new Set();
+                    }
+
+                    eventNames.forEach(function (eventName) {
+                        if (!control._attachedListeners[eventName]) {
+                            var listener = function (event) {
+                                var eventData = {
+                                    eventName: eventName,
+                                    timestamp: new Date().toLocaleTimeString(),
+                                    parameters: event.getParameters(),
+                                };
+
+                                firedEvents.push(eventData);
+                                window.eventQueue.add(eventData);
+
+                                // Debounce the UI update
+                                if (window.updateTimeout) {
+                                    clearTimeout(window.updateTimeout);
+                                }
+
+                                window.updateTimeout = setTimeout(function() {
+                                    window.eventQueue.clear();
+
+                                    document.dispatchEvent(new CustomEvent('ui5-communication-with-injected-script', {
+                                        detail: {
+                                            action: 'do-event-fired',
+                                            controlId: controlId
+                                        }
+                                    }));
+                                }, 50); // Small delay to catch near-simultaneous events
+                            };
+
+                            control.attachEvent(eventName, listener);
+                            control._attachedListeners[eventName] = listener;
+                        }
+                    });
+
+                    events.fired = firedEvents.map(function (firedEvent) {
+                        return `${firedEvent.eventName} event was fired at ${firedEvent.timestamp}`;
+                    });
                 }
 
                 return events;
@@ -958,7 +1061,7 @@ sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMe
 
         /**
          * Global object that provide common information for all support tools
-         * @type {{getFrameworkInformation: Function, getRenderedControlTree: Function, getControlProperties: Function, getControlAggregations: Function, getControlEvents: Function, getControlBindingInformation: Function}}
+         * @type {{getFrameworkInformation: Function, getRenderedControlTree: Function, clearEvent: Function, getControlProperties: Function, getControlAggregations: Function, getControlEvents: Function, getControlBindingInformation: Function}}
          */
         return {
 
@@ -1028,6 +1131,9 @@ sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMe
                 return controlInformation._getEvents(controlId);
             },
 
+            clearEvent: function(controlId) {
+                return controlInformation._clearEvents(controlId);
+            },
             getRegisteredElements: elementRegistry.getRegisteredElements
         };
 

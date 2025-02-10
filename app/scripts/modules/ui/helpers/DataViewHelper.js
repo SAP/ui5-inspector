@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 /**
  * Generates attributes in HTML.
  * @param {Object} attributes
@@ -403,6 +405,45 @@ function _getObjectProperty(sourceObject, path) {
     }, sourceObject);
 }
 
+/**
+ * Clean up duplicate classes in HTML string.
+ * @param {string} value - HTML string that might contain class attributes
+ * @returns {string} - HTML string with unique classes
+ * @private
+ */
+function _cleanDuplicateClasses(value) {
+    if (!value.includes('class="')) {
+        return value;
+    }
+    return value.replace(/class="([^"]*)"/g, function(match, classString) {
+        var uniqueClasses = [...new Set(classString.split(/\s+/).filter(Boolean))];
+        return 'class="' + uniqueClasses.join(' ') + '"';
+    });
+}
+
+/**
+ * Escape HTML special characters.
+ * @param {string} value - String to escape
+ * @returns {string} - Escaped string
+ * @private
+ */
+function _escapeHTML(value) {
+    return _.escape(value);
+}
+
+/**
+ * Process HTML string value by cleaning classes and escaping
+ * @param {string} value - String to process
+ * @returns {string} - Processed string
+ * @private
+ */
+function _processHTMLString(value) {
+    if (value.includes('clickable-value')) {
+        return value;
+    }
+    return _escapeHTML(_cleanDuplicateClasses(value));
+}
+
 module.exports = {
     addArrow: _addArrow,
     addToolsButtons: _addToolsButtons,
@@ -426,5 +467,6 @@ module.exports = {
     wrapInSelectTag: _wrapInSelectTag,
     wrapInCheckBox: _wrapInCheckBox,
     valueNeedsQuotes: _valueNeedsQuotes,
-    createDefaultSpan: _createDefaultSpan
+    createDefaultSpan: _createDefaultSpan,
+    processHTMLString: _processHTMLString
 };

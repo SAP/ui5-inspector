@@ -10,7 +10,7 @@
 UI5 Inspector is a standard Chrome or Edge extension for debugging and getting to know UI5 applications.
 
 It's free and open source: UI5 Inspector is licensed under the Apache License, Version 2.0.
-See LICENSE.txt for more information.
+See [LICENSE.txt](https://github.com/SAP/ui5-inspector/blob/master/LICENSE.txt) for more information.
 
 ## Direct download and use
 

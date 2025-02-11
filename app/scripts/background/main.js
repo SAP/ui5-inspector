@@ -60,14 +60,20 @@
          * @param {Object} message
          */
         'do-script-injection': function (message) {
-            chrome.windows.getCurrent(w => {
-                chrome.tabs.query({ active: true, windowId: w.id }, tabs => {
+            const frameId = message.frameId;
+            chrome.windows.getCurrent().then(w => {
+                chrome.tabs.query({ active: true, windowId: w.id }).then(tabs => {
+                    const target = {
+                        tabId: tabs[0].id
+                    };
+                    // inject the script only into the frame
+                    // specified in the request from the devTools UI5 panel script;
+                    // If no frameId specified, the script will be injected into the main frame
+                    if (frameId !== undefined) {
+                        target.frameIds = [message.frameId];
+                    }
                     chrome.scripting.executeScript({
-                        target: {
-                            // inject the script only into the frame
-                            // specified in the request from the devTools UI5 panel script
-                            tabId: tabs[0].id, frameIds: [message.frameId]
-                        },
+                        target,
                         files: [message.file]
                     });
                 });

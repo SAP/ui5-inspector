@@ -1,8 +1,7 @@
-sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
-    function (jQuery, ElementMetadata) {
+sap.ui.define(["sap/ui/core/Core", "sap/ui/core/Element", "sap/ui/core/ElementMetadata"],
+    function (Core, Element, ElementMetadata) {
         "use strict";
 
-        var configurationInfo = sap.ui.getCore().getConfiguration();
         var BaseConfig = sap.ui.require('sap/base/config/_Configuration');
 
         // ================================================================================
@@ -27,10 +26,15 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
          * @returns {Object}
          * @private
          */
-        function _getLibraries(libraries) {
+        function _getLibraries() {
+            var VersionInfo = sap.ui.require('sap/ui/VersionInfo');
+            var libraries = VersionInfo?._content?.libraries;
+            if (!libraries && typeof sap.ui.getVersionInfo === 'function') {
+                libraries = sap.ui.getVersionInfo().libraries;
+            }
             var formattedLibraries = Object.create(null);
 
-            if (libraries.length > 0) {
+            if (libraries?.length > 0) {
                 libraries.forEach(function (element) {
                     formattedLibraries[element.name] = element.version;
                 });
@@ -45,10 +49,18 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
          * @private
          */
         function _getLoadedLibraries() {
-            var libraries = sap.ui.getCore().getLoadedLibraries();
+            var Lib = sap.ui.require('sap/ui/core/Lib');
+            var libraries = Object.create(null);
             var formattedLibraries = Object.create(null);
 
-            Object.keys(sap.ui.getCore().getLoadedLibraries()).forEach(function (element) {
+            if (typeof Lib?.all === 'function') {
+                libraries = Lib.all(); // obtains a map that contains the libraries that are already initialized
+            } else if (typeof sap.ui.getCore === 'function'
+                && typeof sap.ui.getCore().getLoadedLibraries === 'function') {
+                libraries = sap.ui.getCore().getLoadedLibraries()
+            }
+
+            Object.keys(libraries).forEach(function (element) {
                 formattedLibraries[element] = libraries[element].version;
             });
 
@@ -95,51 +107,280 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
             return vDebugInfo;
         }
 
+        /**
+         * Obtains the version info of the framework.
+         * @returns {Promise}
+         */
+        function _loadVersionInfo() {
+            var VersionInfo = sap.ui.require('sap/ui/VersionInfo');
+            if (VersionInfo) {
+                return VersionInfo.load();
+            }
+            if (typeof sap.ui.getVersionInfo === 'function') {
+                return Promise.resolve(sap.ui.getVersionInfo());
+            }
+        }
+
+        /**
+         * Returns all declared modules in a sorted array.
+         * @returns {Array|undefined}
+         */
+        function _getAllDeclaredModules() {
+            var LoaderExtensions = sap.ui.require('sap/base/util/LoaderExtensions'),
+                modules;;
+            if (typeof LoaderExtensions?.getAllRequiredModules === 'function') {
+                modules = LoaderExtensions.getAllRequiredModules();
+            } else if (jQuery?.sap && typeof jQuery.sap.getAllDeclaredModules === 'function') {
+                modules = jQuery.sap.getAllDeclaredModules();
+            }
+            if (modules) {
+                return modules.sort();
+            }
+        }
+
+        /**
+         * Returns all URL parameters.
+         */
+        function _getURLParameters() {
+            var oParams = new URLSearchParams(window.location.search);
+            return Array.from(oParams.keys()).reduce(function(oResult, sKey) {
+                oResult[sKey] = oParams.getAll(sKey);
+                return oResult;
+            }, {});
+        }
+
+        /**
+         * Obtains the legacy global configuration object
+         * @returns {Object}
+         */
+        function _getOptionalGlobalConfig() {
+            if (typeof sap.ui.getCore === 'function' && typeof sap.ui.getCore().getConfiguration === 'function') {
+                return sap.ui.getCore().getConfiguration();
+            }
+        }
+
+        /**
+         * Obtains the theme of the framework.
+         * @returns {string}
+         */
+        function _getTheme() {
+            var Theming = sap.ui.require('sap/ui/core/Theming');
+            if (typeof Theming?.getTheme === 'function') {
+                return Theming.getTheme();
+            }
+            return _getOptionalGlobalConfig()?.getTheme();
+        }
+
+        /**
+         * Obtains the language of the framework.
+         * @returns {string}
+         */
+        function _getLanguage() {
+            var Localization = sap.ui.require('sap/base/i18n/Localization');
+            if (typeof Localization?.getLanguage === 'function') {
+                return Localization.getLanguage();
+            }
+            return _getOptionalGlobalConfig()?.getLanguage();
+        }
+
+        /**
+         * Returns the format locale string with language and region code.
+         * @returns {string}
+         */
+        function _getFormatLocale() {
+            var Locale = sap.ui.require('sap/ui/core/Locale');
+            var Formatting = sap.ui.require('sap/base/i18n/Formatting');
+            if (typeof Formatting?.getLanguageTag === 'function') {
+                return Formatting.getLanguageTag().toString();
+            }
+            return _getOptionalGlobalConfig()?.getFormatLocale();
+        }
+
+        /**
+         * Returns a boolean value indicating whether the accessibility mode is enabled.
+         * @returns {boolean}
+         */
+        function _getAccessibility() {
+            var ControlBehavior = sap.ui.require('sap/ui/core/ControlBehavior');
+            if (typeof ControlBehavior?.isAccessibilityEnabled === 'function') {
+                return ControlBehavior.isAccessibilityEnabled();
+            }
+            return _getOptionalGlobalConfig()?.getAccessibility();
+        }
+
+        /**
+         * Returns a boolean value indicating whether the animation mode is enabled.
+         * @returns {boolean}
+         */
+        function _getAnimation() {
+            var ControlBehavior = sap.ui.require('sap/ui/core/ControlBehavior');
+            var AnimationMode = sap.ui.require('sap/ui/core/AnimationMode');
+            if (AnimationMode && typeof ControlBehavior.getAnimationMode === 'function') {
+                return (ControlBehavior.getAnimationMode() !== AnimationMode.minimal &&
+                    ControlBehavior.getAnimationMode() !== AnimationMode.none);
+            }
+            return _getOptionalGlobalConfig().getAnimation();
+        }
+
+        /**
+         * Returns a boolean value indicating whether the right-to-left mode is enabled.
+         * @returns {boolean}
+         */
+        function _getRTL() {
+            var Localization = sap.ui.require('sap/base/i18n/Localization');
+            if (typeof Localization?.getRTL === 'function') {
+                return Localization.getRTL();
+            }
+            return _getOptionalGlobalConfig().getRTL();
+        }
+
+        /**
+         * Returns a boolean value indicating whether the debug mode is enabled.
+         * @returns {boolean}
+         */
+        function _getDebug() {
+            var Supportability = sap.ui.require('sap/ui/core/Supportability');
+            if (typeof Supportability?.isDebugModeEnabled === 'function') {
+                return Supportability.isDebugModeEnabled();
+            }
+            return _getOptionalGlobalConfig().getDebug();
+        }
+
+        /**
+         * Returns a boolean value indicating whether the inspect mode is enabled.
+         * @returns {boolean}
+         */
+        function _getInspect() {
+            var Supportability = sap.ui.require('sap/ui/core/Supportability');
+            if (typeof Supportability?.isControlInspectorEnabled === 'function') {
+                return Supportability.isControlInspectorEnabled();
+            }
+            return _getOptionalGlobalConfig().getInspect();
+        }
+
+        /**
+         * Returns a boolean value indicating whether the text origin information is collected.
+         * @returns {boolean}
+         */
+        function _getOriginInfo() {
+            var Supportability = sap.ui.require('sap/ui/core/Supportability');
+            if (typeof Supportability?.collectOriginInfo === 'function') {
+                return Supportability.collectOriginInfo();
+            }
+            return _getOptionalGlobalConfig().getOriginInfo();
+        }
+
+        /**
+         * Returns a boolean value indicating whether there should be an exception on any duplicate element IDs.
+         * @returns {boolean}
+         */
+        function _getNoDuplicateIds() {
+            var oOptionalConfig = _getOptionalGlobalConfig();
+            if (oOptionalConfig) {
+                return oOptionalConfig.getNoDuplicateIds();
+            }
+            return true; // always true in 2.0
+        }
+
+        /**
+         * Returns the version of the framework.
+         * @returns {Object}
+         */
+        function _getVersion() {
+            var Version = sap.ui.require('sap/base/util/Version');
+            var VersionInfo = sap.ui.require('sap/ui/VersionInfo');
+            var versionStr = VersionInfo?._content?.version;
+            if (Version && versionStr) {
+                return Version(versionStr);
+            }
+            return _getOptionalGlobalConfig().getVersion();
+        }
+
+        /**
+         * Returns the registered element with the given ID, if any.
+         * @param {sap.ui.core.ID|null|undefined} sId ID of the element to search for
+         * @returns {sap.ui.core.Element|undefined} Element with the given ID or <code>undefined</code>
+         */
+        function _getElementById(sId) {
+            if (typeof Element.getElementById === 'function') {
+                return Element.getElementById(sId);
+            }
+            return sap.ui.getCore().byId(sId);
+        }
+
+        /**
+         * Returns an object with all elements, keyed by their ID
+         * @returns {Object}
+         */
+        function _getAllElements() {
+            var ElementRegistry = sap.ui.require('sap/ui/core/ElementRegistry');
+            if (ElementRegistry) {
+                return ElementRegistry.all();
+            }
+            return Element.registry.all();
+        }
+
+        /**
+         * Returns the default value for the given property.
+         * @param {sap.ui.core.Element} oControl 
+         * @param {string} sPropertyName 
+         * @returns {*} The default value for the given property
+         */
+        function _getDefaultValueForProperty(oControl, sPropertyName) {
+            var oProperty = oControl.getMetadata().getProperty(sPropertyName);
+            if (typeof oProperty.getDefaultValue === 'function') {
+                return oProperty.getDefaultValue();
+            }
+            return oProperty.defaultValue;
+        }
 
         /**
          * Gets all the relevant information for the framework.
-         * @returns {Object}
+         * @returns {Promise}
          * @private
          */
         function _getFrameworkInformation() {
-            let oVersionInfo = sap.ui.getVersionInfo();
-
-            return {
-                commonInformation: {
-                    frameworkName: _getFrameworkName(oVersionInfo.name),
-                    version: sap.ui.getCore().getConfiguration().getVersion().toString(),
-                    buildTime: oVersionInfo.buildTimestamp,
-                    userAgent: navigator.userAgent,
-                    applicationHREF: window.location.href,
-                    documentTitle: document.title,
-                    documentMode: document.documentMode || "",
-                    debugMode: _getDebugModeInfo(),
-                    statistics: []
-                },
-
-                configurationBootstrap: window["sap-ui-config"] || Object.create(null),
-
-                configurationComputed: {
-                    theme: configurationInfo.getTheme(),
-                    language: configurationInfo.getLanguage(),
-                    formatLocale: configurationInfo.getFormatLocale(),
-                    accessibility: configurationInfo.getAccessibility(),
-                    animation: configurationInfo.getAnimation(),
-                    rtl: configurationInfo.getRTL(),
-                    debug: configurationInfo.getDebug(),
-                    inspect: configurationInfo.getInspect(),
-                    originInfo: configurationInfo.getOriginInfo(),
-                    noDuplicateIds: configurationInfo.getNoDuplicateIds()
-                },
-
-                libraries: _getLibraries(oVersionInfo.libraries),
-
-                loadedLibraries: _getLoadedLibraries(),
-
-                loadedModules: jQuery.sap.getAllDeclaredModules().sort(),
-
-                URLParameters: jQuery.sap.getUriParameters().mParams
-            };
+            return new Promise(function(resolve, reject) {
+                _loadVersionInfo().then(function(oVersionInfo) {
+                    var frameworkInfo = {
+                        commonInformation: {
+                            frameworkName: _getFrameworkName(oVersionInfo.name),
+                            version: oVersionInfo.version,
+                            buildTime: oVersionInfo.buildTimestamp,
+                            userAgent: navigator.userAgent,
+                            applicationHREF: window.location.href,
+                            documentTitle: document.title,
+                            documentMode: document.documentMode || "",
+                            debugMode: _getDebugModeInfo(),
+                            statistics: []
+                        },
+        
+                        configurationBootstrap: window["sap-ui-config"] || Object.create(null),
+        
+                        configurationComputed: {
+                            theme: _getTheme(),
+                            language: _getLanguage(),
+                            formatLocale: _getFormatLocale(),
+                            accessibility: _getAccessibility(),
+                            animation: _getAnimation(),
+                            rtl: _getRTL(),
+                            debug: _getDebug(),
+                            inspect: _getInspect(),
+                            originInfo: _getOriginInfo(),
+                            noDuplicateIds: _getNoDuplicateIds()
+                        },
+        
+                        libraries: _getLibraries(),
+        
+                        loadedLibraries: _getLoadedLibraries(),
+        
+                        loadedModules: _getAllDeclaredModules(),
+        
+                        URLParameters: _getURLParameters()
+                    }
+                    resolve(frameworkInfo);
+                });
+            });
         }
 
         // ================================================================================
@@ -161,7 +402,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                 var childNode = node.firstElementChild;
                 var results = resultArray;
                 var subResult = results;
-                var control = sap.ui.getCore().byId(node.id);
+                var control = _getElementById(node.id);
 
                 if (node.getAttribute("data-sap-ui") && control) {
                     results.push({
@@ -271,7 +512,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
              * @private
              */
             _getEvents: function (controlId) {
-                var control = sap.ui.getCore().byId(controlId);
+                var control = _getElementById(controlId);
                 var events = Object.create(null);
 
                 if (control) {
@@ -303,7 +544,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     result.properties[key] = Object.create(null);
                     result.properties[key].value = control.getProperty(key);
                     result.properties[key].type = controlPropertiesFromMetadata[key].getType().getName ? controlPropertiesFromMetadata[key].getType().getName() : "";
-                    result.properties[key].isDefault = control.getMetadata().getProperty(key).getDefaultValue() === control.getProperty(key);
+                    result.properties[key].isDefault = _getDefaultValueForProperty(control, key) === control.getProperty(key);
                 });
 
                 return result;
@@ -328,7 +569,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
                     result.properties[key] = Object.create(null);
                     result.properties[key].value = inheritedMetadataProperties[key].get(control);
                     result.properties[key].type = inheritedMetadataProperties[key].getType().getName ? inheritedMetadataProperties[key].getType().getName() : "";
-                    result.properties[key].isDefault = control.getMetadata().getProperty(key).getDefaultValue() === control.getProperty(key);
+                    result.properties[key].isDefault = _getDefaultValueForProperty(control, key) === control.getProperty(key);
                 });
 
                 return result;
@@ -360,7 +601,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
              * @private
              */
             _getProperties: function (controlId) {
-                var control = sap.ui.getCore().byId(controlId);
+                var control = _getElementById(controlId);
                 var properties = Object.create(null);
 
                 if (control) {
@@ -451,7 +692,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
              * @private
              */
             _getAggregations: function (controlId) {
-                var control = sap.ui.getCore().byId(controlId);
+                var control = _getElementById(controlId);
                 var aggregations = Object.create(null);
 
                 if (control) {
@@ -651,7 +892,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
              * @private
              */
             _getBindingContextsForControl: function(control) {
-                var bindingContexts = jQuery.extend({},
+                var bindingContexts = Object.assign({},
                     control.oPropagatedProperties && control.oPropagatedProperties.oBindingContexts,
                     control.oBindingContexts,
                     control.mElementBindingContexts
@@ -680,20 +921,19 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
 
         var elementRegistry = {
             getRegisteredElements: function () {
-                var iFrameWorkMinorVersion = sap.ui.getCore().getConfiguration().getVersion().getMinor(),
-                    isSupported = iFrameWorkMinorVersion >= 67,
+                var isSupported = _getVersion().compareTo("1.67") >= 0,
                     aRegisteredElements = [],
                     oElements;
 
                 if (isSupported) {
-                    oElements = sap.ui.core.Element.registry.all();
+                    oElements = _getAllElements();
 
                     Object.keys(oElements).forEach(function (sKey) {
                         var oElement = oElements[sKey];
                         var oParent = oElement.getParent();
-						var sElementId = oElement.getId();
-						var sControllerName = oElement._xContent && sap.ui.getCore().byId(sElementId).getControllerName();
-						var sControllerRelPath = sControllerName && sap.ui.require.toUrl(sControllerName.replaceAll('.', '/') + '.controller.js');
+                        var sElementId = oElement.getId();
+                        var sControllerName = oElement._xContent && _getElementById(sElementId).getControllerName();
+                        var sControllerRelPath = sControllerName && sap.ui.require.toUrl(sControllerName.replaceAll('.', '/') + '.controller.js');
 
                         aRegisteredElements.push({
                             id: sElementId,
@@ -764,7 +1004,7 @@ sap.ui.define(["jquery.sap.global", "sap/ui/core/ElementMetadata"],
              */
             getControlBindings: function (controlId) {
                 var result = Object.create(null);
-                var control = sap.ui.getCore().byId(controlId);
+                var control = _getElementById(controlId);
 
                 if (!control) {
                     return result;

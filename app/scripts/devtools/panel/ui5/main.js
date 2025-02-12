@@ -524,6 +524,18 @@
         },
 
         /**
+         * Handler for fired events.
+         * @param {Object} message
+         */
+
+        'on-event-fired': function (message, messageSender) {
+            var frameId = messageSender.frameId;
+            if (framesSelect.getSelectedId() === frameId) {
+                controlEvents.setData(message.controlEvents);
+            }
+        },
+
+        /**
          * Handler for ControlTree element selecting.
          * @param {Object} message
          */

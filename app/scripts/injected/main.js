@@ -131,37 +131,19 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
          */
         'do-control-select': function (event) {
             var controlId = event.detail.target;
-            var controlProperties = ToolsAPI.getControlProperties(controlId);
-            var controlBindings = ToolsAPI.getControlBindings(controlId);
-            var controlAggregations = ToolsAPI.getControlAggregations(controlId);
-            var controlEvents = ToolsAPI.getControlEvents(controlId);
             var control = controlUtils.getElementById(controlId);
 
-            if (control && control.getMetadata) {
-                var eventNames = Object.keys(control.getMetadata().getEvents() || {});
-                var listener;
+            if (ToolsAPI._lastSelectedControl !== control) {
+                ToolsAPI.removeEventListeners(ToolsAPI._lastSelectedControl);
+                ToolsAPI._lastSelectedControl = control;
+                ToolsAPI.attachEventListeners(control);
+            }
 
-                eventNames.forEach(function(eventName) {
-                    if (!control._realtimeListeners) {
-                        control._realtimeListeners = {};
-                    }
-
-                    if (control._realtimeListeners[eventName]) {
-                        control.detachEvent(eventName, control._realtimeListeners[eventName]);
-                    }
-
-                    listener = function() {
-                        document.dispatchEvent(new CustomEvent('ui5-communication-with-injected-script', {
-                            detail: {
-                                action: 'do-event-fired',
-                                controlId: controlId
-                            }
-                        }));
-                    };
-
-                    control.attachEvent(eventName, listener);
-                    control._realtimeListeners[eventName] = listener;
-                });
+            if (control) {
+                var controlProperties = ToolsAPI.getControlProperties(controlId);
+                var controlBindings = ToolsAPI.getControlBindings(controlId);
+                var controlAggregations = ToolsAPI.getControlAggregations(controlId);
+                var controlEvents = ToolsAPI.getControlEvents(controlId);
 
                 message.send({
                     action: 'on-control-select',
@@ -175,23 +157,16 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
         },
 
         /**
-         * Updates the fired events section
+         * Updates the fired events section.
          * @param {Object} event
          */
         'do-event-fired': function (event) {
             var controlId = event.detail.controlId;
-            var controlProperties = ToolsAPI.getControlProperties(controlId);
-            var controlBindings = ToolsAPI.getControlBindings(controlId);
-            var controlAggregations = ToolsAPI.getControlAggregations(controlId);
             var controlEvents = ToolsAPI.getControlEvents(controlId);
 
             message.send({
-                action: 'on-control-select',
-                controlProperties: controlUtils.getControlPropertiesFormattedForDataView(controlId, controlProperties),
-                controlBindings: controlUtils.getControlBindingsFormattedForDataView(controlBindings),
-                controlAggregations: controlUtils.getControlAggregationsFormattedForDataView(controlId, controlAggregations),
-                controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents),
-                controlActions: controlUtils.getControlActionsFormattedForDataView(controlId)
+                action: 'on-event-fired',
+                controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
             });
         },
 
@@ -347,23 +322,24 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             console.log(selectedElement);
 
         },
+
         /**
          * Clears the logged fired events.
          * @param {Object} event
          */
         'do-control-clear-events': function (event) {
             var controlId = event.detail.target;
-            var control = controlUtils.getElementById(controlId);
+            var clearedEvents = ToolsAPI.clearEvents(controlId);
 
-            var clearedEvents = ToolsAPI.clearEvent(controlId);
+            if (clearedEvents) {
+                message.send({
+                    action: 'on-control-select',
+                    controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, clearedEvents),
+                });
+            }
 
-            // Reselect the control with cleared events
-            this['do-control-select']({
-                detail: {
-                    target: controlId
-                }
-            });
         },
+
         /**
          * Handler to copy the element into a temp variable on the console
          * @param {Object} event

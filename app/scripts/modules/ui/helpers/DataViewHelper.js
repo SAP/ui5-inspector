@@ -437,7 +437,7 @@ function _escapeHTML(value) {
  * @returns {string} - Processed string
  * @private
  */
-function _processHTMLString(value) {
+function _formatHTMLString(value) {
     if (value.includes('clickable-value')) {
         return value;
     }
@@ -468,5 +468,5 @@ module.exports = {
     wrapInCheckBox: _wrapInCheckBox,
     valueNeedsQuotes: _valueNeedsQuotes,
     createDefaultSpan: _createDefaultSpan,
-    processHTMLString: _processHTMLString
+    formatHTMLString: _formatHTMLString
 };

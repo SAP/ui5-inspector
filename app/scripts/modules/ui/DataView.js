@@ -229,7 +229,7 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
     }
 
     if (typeof vValue === 'string') {
-        vValue = DVHelper.processHTMLString(vValue);
+        vValue = DVHelper.formatHTMLString(vValue);
     }
 
     if (vValue && typeof vValue === 'object') {

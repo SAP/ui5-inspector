@@ -432,7 +432,7 @@ function _escapeHTML(value) {
 }
 
 /**
- * Process HTML string value by cleaning classes and escaping
+ * Format HTML string value by cleaning classes and escaping
  * @param {string} value - String to process
  * @returns {string} - Processed string
  * @private

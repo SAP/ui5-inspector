@@ -581,6 +581,19 @@ var controlEvents = (function () {
             evts[key] = _formatEventValues(key, evts[key].paramsType, listenerConfig);
         }
 
+        // Format fired events
+        if (events.fired && Array.isArray(events.fired)) {
+            events.fired = _assembleDataToView({
+                title: 'Fired Events',
+                data: events.fired.map(function (eventDetails) {
+                    return _assembleDataToView({
+                        title: eventDetails,
+                        expandable: false,
+                    });
+                })
+            });
+        }
+
         events[OWN] = _assembleDataToView({
             controlId: controlId,
             expandable: false,

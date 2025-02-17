@@ -236,6 +236,10 @@ DataView.prototype._generateHTMLForKeyValuePair = function (key, currentView) {
         };
     }
 
+    if (typeof vValue === 'string') {
+        vValue = DVHelper.formatHTMLString(vValue);
+    }
+
     if (vValue && typeof vValue === 'object') {
         valueHTML = JSONFormatter.formatJSONtoHTML(vValue);
     } else if (typeof type === 'object') {

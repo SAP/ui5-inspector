@@ -524,11 +524,11 @@
         },
 
         /**
-         * Handler for fired events.
+         * Event update handler.
          * @param {Object} message
          */
 
-        'on-event-fired': function (message, messageSender) {
+        'on-event-update': function (message, messageSender) {
             var frameId = messageSender.frameId;
             if (framesSelect.getSelectedId() === frameId) {
                 controlEvents.setData(message.controlEvents);

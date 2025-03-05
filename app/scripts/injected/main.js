@@ -165,7 +165,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
             var controlEvents = ToolsAPI.getControlEvents(controlId);
 
             message.send({
-                action: 'on-event-fired',
+                action: 'on-event-update',
                 controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, controlEvents)
             });
         },
@@ -333,7 +333,7 @@ sap.ui.require(['ToolsAPI'], function (ToolsAPI) {
 
             if (clearedEvents) {
                 message.send({
-                    action: 'on-control-select',
+                    action: 'on-event-update',
                     controlEvents: controlUtils.getControlEventsFormattedForDataView(controlId, clearedEvents),
                 });
             }

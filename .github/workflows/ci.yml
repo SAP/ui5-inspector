@@ -12,7 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Clear npm cache
+        run: npm cache clean --force
+
+      - name: Remove package-lock.json
+        run: rm -f package-lock.json
+
       - name: Install NPM dependencies
-        run: npm ci
+        run: npm install
+
       - name: Run tests
         run: grunt test

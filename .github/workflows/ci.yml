@@ -13,6 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install NPM dependencies
-        run: npm install
+        run: npm ci
       - name: Run tests
         run: grunt test

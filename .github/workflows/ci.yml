@@ -30,8 +30,15 @@ jobs:
       - name: Install dependencies with retry
         run: |
           for i in {1..3}; do
-            npm install && break || sleep 5;
+            npm install --verbose && break || sleep 5;
           done
+
+      - name: Install Grunt globally
+        run: npm install -g grunt-cli
 
       - name: Run tests
         run: grunt test
+
+      - name: Debugging npm logs
+        if: failure()
+        run: cat ~/.npm/_logs/* || true

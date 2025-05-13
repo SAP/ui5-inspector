@@ -1,22 +1,37 @@
-# This is a basic workflow to automate the creation of the build artifact
 name: CI
-# Controls when the workflow will run
 on:
+  push:
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+    branches:
+      - master
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '16'
-          cache: 'npm'
-      - name: Install NPM dependencies
-        run: npm ci
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies with retry
+        run: |
+          for i in {1..3}; do
+            npm install && break || sleep 5;
+          done
+
       - name: Run tests
         run: grunt test

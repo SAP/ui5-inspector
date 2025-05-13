@@ -12,10 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Remove package-lock.json
-        run: rm -f package-lock.json
- 
       - name: Install NPM dependencies
         run: npm install
       - name: Run tests

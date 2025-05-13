@@ -7,9 +7,7 @@
     "SAP SE <*@sap.com>"
   ],
   "dependencies": {
-    "coveralls": "^3.1.0",
-    "lodash": "^4.17.21",
-    "mocha": "^10.8.2"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@actions/core": "^1.9.1",
@@ -27,6 +25,7 @@
     "browserify-istanbul": "^3.0.1",
     "chai": "~4.2.0",
     "chrome-stub": "^1.0.2",
+    "coveralls": "^3.1.0",
     "grunt": "^1.4.1",
     "grunt-banner": "~0.6.0",
     "grunt-browserify": "^6.0.0",
@@ -54,6 +53,7 @@
     "karma-sinon": "^1.0.5",
     "load-grunt-config": "~3.0.1",
     "load-grunt-tasks": "~5.1.0",
+    "mocha": "^10.8.2",
     "prettify-xml": "^1.2.0",
     "semantic-release": "^19.0.3",
     "sinon": "~9.0.2",

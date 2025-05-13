@@ -13,10 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Debug Network
-        run: |
-         nslookup int.repositories.cloud.sap
-         ping -c 4 int.repositories.cloud.sap
+      - name: Set NPM Registry
+        run: npm config set registry https://registry.npmjs.org/
 
       - name: Install NPM dependencies
         run: |
